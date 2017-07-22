@@ -1,0 +1,22 @@
+### PROTOTYPE
+
+* GpioUserInputSource
+* Re-initialize Git repo
+
+
+### IMPROVEMENT
+
+* Real airdata (airdata calculation from sentences)
+* Better timer (not looping)
+
+
+### DONE
+
+* FakeDataSource (sentences from back-calculated airdata)
+* Fake/approximate airdata calculation from sentences
+* Pull in https://github.com/benhoyt/inih
+* Choose a reliable INI (or other config) file library
+* Settings persistence
+* Generate a file of sentences
+* How will we send sentences from computer to XBee?
+* SerialDataSource (sentences from serial port)

@@ -1,0 +1,35 @@
+Design of Controller module
+===========================
+
+enum Command {
+  adjust_mode_on
+  adjust_mode_off
+  adjust_up
+  adjust_down
+  adjust_next
+}
+
+data_queue := new queue<string>
+command_queue := new queue<Command>
+
+Data thread
+  while true:
+    data := read_data()
+    data_queue.add(data)
+
+Input thread
+  while true:
+    input := read_input()
+    switch (input) {
+      handle timers etc. ...
+    }
+    command := compute the command
+    command_queue.add(command)
+
+Display thread
+  on timer tick:
+    inputs <- input_queue.drain()
+    data <- data_queue.drain()
+    apply inputs
+    apply data sentences
+    paint display
