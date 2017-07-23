@@ -1,3 +1,4 @@
 arduino/libraries/**
 display/external/**
 **/*~
+display/cmake-build-debug/**
