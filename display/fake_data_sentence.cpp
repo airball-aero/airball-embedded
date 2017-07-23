@@ -5,11 +5,12 @@
 #include "aerodynamics.h"
 
 // All engineering values in this module are in SI units:
-//     pressure -- pascals = newtons per meter squared
-//     length   -- meters
-//     speed    -- meters per second
-//     angle    -- radians
-//     density  -- kilograms per meter cubed
+//     pressure    -- pascals = newtons per meter squared
+//     temperature -- degrees Kelvin
+//     length      -- meters
+//     speed       -- meters per second
+//     angle       -- radians
+//     density     -- kilograms per meter cubed
 
 namespace airball {
 
@@ -21,6 +22,11 @@ struct Model {
 constexpr static Model kBaroPressure{
     .min =  75000,
     .max = 101325,
+};
+
+constexpr static Model kTemperature{
+    .min =  273,
+    .max =  273 + 20,
 };
 
 constexpr static Model kAlpha{
@@ -35,7 +41,7 @@ constexpr static Model kBeta{
 
 constexpr static Model kIas{
     .min = knots_to_meters_per_second(120),
-    .max = knots_to_meters_per_second(45),
+    .max = knots_to_meters_per_second(0),
 };
 
 constexpr static double kProbeHalfAngle = degrees_to_radians(45);
@@ -51,6 +57,7 @@ double magnitude(double ax, double ay) {
 
 std::string make_fake_data_sentence(double phase_ratio) {
   double baro_pressure = interpolate_value(phase_ratio, &kBaroPressure);
+  double temperature = interpolate_value(phase_ratio, &kTemperature);
   double dynamic_pressure = ias_to_q(interpolate_value(phase_ratio, &kIas));
   double alpha = interpolate_value(phase_ratio, &kAlpha);
   double beta = interpolate_value(phase_ratio, &kBeta);
@@ -76,6 +83,7 @@ std::string make_fake_data_sentence(double phase_ratio) {
 
   std::ostrstream result;
   result << baro_pressure << ","
+         << temperature << ","
          << pressure_center << ","
          << delta_p_alpha << ","
          << delta_p_beta << std::ends;

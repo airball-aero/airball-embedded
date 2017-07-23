@@ -26,6 +26,8 @@ constexpr double kAlphaRefRadius = 20;
 
 constexpr double kAlphaRefGapDegrees = 40;
 
+constexpr double kLowSpeedThresholdAirballRadius = 0.1 * (kWidth / 2.0);
+
 constexpr double kAlphaRefTopAngle0 = M_PI + (kAlphaRefGapDegrees / 2 / 180 * M_PI);
 constexpr double kAlphaRefTopAngle1 =      - (kAlphaRefGapDegrees / 2 / 180 * M_PI);
 
@@ -43,6 +45,16 @@ constexpr Color kAirballFill(0, 0, 255);
 constexpr Stroke kAirballCrosshairsStroke(
     Color(255, 255, 255),
     2);
+
+constexpr double kLowSpeedAirballStrokeWidth =
+    4.0;
+
+constexpr Stroke kLowSpeedAirballStroke(
+    Color(255, 255, 255),
+    kLowSpeedAirballStrokeWidth);
+
+constexpr double kLowSpeedAirballArcRadius =
+    kLowSpeedThresholdAirballRadius - kLowSpeedAirballStrokeWidth / 2.0;
 
 constexpr Stroke kTotemPoleStroke(
     Color(255, 255, 0),
@@ -116,21 +128,31 @@ void Display::paintBackground() {
 void Display::paintAirball() {
   Point center(betaToX(airdata_->beta()), alphaToY((airdata_->alpha())));
   double radius = iasToRadius(airdata_->ias());
-  disc(
-      screen_->cr(),
-      center,
-      radius,
-      kAirballFill);
-  line(
-      screen_->cr(),
-      Point(center.x(), center.y() - radius),
-      Point(center.x(), center.y() + radius),
-      kAirballCrosshairsStroke);
-  line(
-      screen_->cr(),
-      Point(center.x() - radius, center.y()),
-      Point(center.x() + radius, center.y()),
-      kAirballCrosshairsStroke);
+  if (radius < kLowSpeedThresholdAirballRadius) {
+    arc(
+        screen_->cr(),
+        center,
+        kLowSpeedAirballArcRadius,
+        0,
+        2.0 * M_PI,
+        kLowSpeedAirballStroke);
+  } else {
+    disc(
+        screen_->cr(),
+        center,
+        radius,
+        kAirballFill);
+    line(
+        screen_->cr(),
+        Point(center.x(), center.y() - radius),
+        Point(center.x(), center.y() + radius),
+        kAirballCrosshairsStroke);
+    line(
+        screen_->cr(),
+        Point(center.x() - radius, center.y()),
+        Point(center.x() + radius, center.y()),
+        kAirballCrosshairsStroke);
+  }
 }
 
 void Display::paintTotemPole() {

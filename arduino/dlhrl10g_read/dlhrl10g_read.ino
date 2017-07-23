@@ -91,9 +91,16 @@ void printValueGage(double value, double range, char symbol) {
   Serial.println();
 }
 
-void sendSentence(double baro, double dp0, double dpAlpha, double dpBeta) {
+void sendSentence(
+     double baro,
+     double temp,
+     double dp0,
+     double dpAlpha,
+     double dpBeta) {
   Serial1.print(baro);
   Serial1.print(",");
+  Serial1.print(temp);
+  Serial1.print(",");  
   Serial1.print(dp0);
   Serial1.print(",");
   Serial1.print(dpAlpha);
@@ -135,10 +142,8 @@ void tcascan() {
 Adafruit_BMP280 bmp;
 
 void setup() {
-//    while (!Serial);
     while (!Serial1);
     Wire.begin();
-//    Serial.begin(9600);
     Serial1.begin(9600);
     tcascan();
     sendMuxChipSelect(0x70, 0x00);
@@ -158,7 +163,8 @@ void loop() {
 
   sendMuxChipSelect(0x70, 0x00);
   double p0 = bmp.readPressure();
-
+  double t = bmp.readTemperature();
+  
   sendMuxChipSelect(0x70, 0x01);
   double dp0 = scalePressureReadingGage(
       readPressureSensor(0x29),
@@ -174,7 +180,7 @@ void loop() {
       readPressureSensor(0x29),
       PRESSURE_RANGE);
 
-  sendSentence(p0, dp0, dpA, dpB);
+  sendSentence(p0, t, dp0, dpA, dpB);
 
   delay(50);
- }
+}

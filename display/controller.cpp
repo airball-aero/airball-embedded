@@ -72,7 +72,7 @@ void apply_command(Settings &s, Command c) {
 
 template <typename T>
 void foreach(std::vector<T> v, const std::function<void(const T&)>& f) {
-  for (typename std::vector<T>::iterator it = v.begin(); it != v.end(); ++it) {
+ for (auto it = v.begin(); it != v.end(); ++it) {
     f(*it);
   }
 }
@@ -186,6 +186,8 @@ void Controller::run() {
       time_start = std::chrono::steady_clock::now();
       std::lock_guard<std::mutex> lock(input_mutex);
       auto locked_input_mutex = since(time_start);
+      /*
+       * TODO: Come up with a better way to log metrics.
       std::cout
           << num_commands << ","
           << num_data_sentences << ","
@@ -193,6 +195,7 @@ void Controller::run() {
           << data_sentences_applied << ","
           << painted << ","
           << locked_input_mutex << std::endl;
+      */
       if (!running) { break; }
     }
   });

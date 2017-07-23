@@ -10,15 +10,15 @@ namespace airball {
 
 void Airdata::update_from_sentence(const std::string& sentence) {
   double baro;
+  double temp;
   double delta_p_0;
   double delta_p_alpha;
   double delta_p_beta;
   int cnt = sscanf(
       sentence.c_str(),
-      "%lf,%lf,%lf,%lf",
-      &baro, &delta_p_0, &delta_p_alpha, &delta_p_beta);
-  if (cnt != 4) {
-    std::cout << "Could not parse sentence \"" << sentence << "\"" << std::endl;
+      "%lf,%lf,%lf,%lf,%lf",
+      &baro, &temp, &delta_p_0, &delta_p_alpha, &delta_p_beta);
+  if (cnt != 5) {
     valid_ = false;
     return;
   }
