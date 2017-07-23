@@ -5,58 +5,58 @@
       <config projectName="airball" targetName="fake_data" />
       <config projectName="airball" targetName="NightlyTest" />
       <config projectName="airball" targetName="NightlyUpdate" />
+      <config projectName="airball" targetName="ContinuousTest" />
       <config projectName="airball" targetName="ExperimentalConfigure" />
-      <config projectName="airball" targetName="travis_doc" />
+      <config projectName="airball" targetName="capitalize" />
       <config projectName="airball" targetName="jsonx" />
       <config projectName="airball" targetName="tutorial" />
-      <config projectName="airball" targetName="runUnitTests" />
+      <config projectName="airball" targetName="NightlyMemoryCheck" />
+      <config projectName="airball" targetName="ExperimentalUpdate" />
       <config projectName="airball" targetName="ab" />
       <config projectName="airball" targetName="gtest_main" />
       <config projectName="airball" targetName="lookaheadparser" />
       <config projectName="airball" targetName="doc" />
+      <config projectName="airball" targetName="simpledom" />
       <config projectName="airball" targetName="user_input_source_test" />
       <config projectName="airball" targetName="condense" />
-      <config projectName="airball" targetName="Nightly" />
+      <config projectName="airball" targetName="filterkey" />
       <config projectName="airball" targetName="ExperimentalMemCheck" />
       <config projectName="airball" targetName="ab_device" />
       <config projectName="airball" targetName="examples" />
       <config projectName="airball" targetName="prettyauto" />
       <config projectName="airball" targetName="NightlyMemCheck" />
-      <config projectName="airball" targetName="serial_data_source_test" />
-      <config projectName="airball" targetName="ContinuousSubmit" />
+      <config projectName="airball" targetName="ExperimentalCoverage" />
       <config projectName="airball" targetName="NightlyBuild" />
-      <config projectName="airball" targetName="ContinuousMemCheck" />
+      <config projectName="airball" targetName="runUnitTests" />
       <config projectName="airball" targetName="messagereader" />
       <config projectName="airball" targetName="ExperimentalTest" />
+      <config projectName="airball" targetName="pretty" />
       <config projectName="airball" targetName="ContinuousConfigure" />
-      <config projectName="airball" targetName="simplepullreader" />
       <config projectName="airball" targetName="ContinuousBuild" />
       <config projectName="airball" targetName="simplereader" />
       <config projectName="airball" targetName="NightlyConfigure" />
-      <config projectName="airball" targetName="capitalize" />
+      <config projectName="airball" targetName="simplepullreader" />
       <config projectName="airball" targetName="airball_core" />
-      <config projectName="airball" targetName="filterkeydom" />
+      <config projectName="airball" targetName="ContinuousSubmit" />
       <config projectName="airball" targetName="ContinuousStart" />
-      <config projectName="airball" targetName="ExperimentalCoverage" />
+      <config projectName="airball" targetName="travis_doc" />
       <config projectName="airball" targetName="NightlyStart" />
-      <config projectName="airball" targetName="ExperimentalUpdate" />
+      <config projectName="airball" targetName="ContinuousMemCheck" />
       <config projectName="airball" targetName="parsebyparts" />
       <config projectName="airball" targetName="NightlyCoverage" />
       <config projectName="airball" targetName="Continuous" />
       <config projectName="airball" targetName="ExperimentalStart" />
       <config projectName="airball" targetName="simplewriter" />
-      <config projectName="airball" targetName="NightlyMemoryCheck" />
-      <config projectName="airball" targetName="pretty" />
+      <config projectName="airball" targetName="filterkeydom" />
       <config projectName="airball" targetName="ContinuousCoverage" />
-      <config projectName="airball" targetName="NightlySubmit" />
       <config projectName="airball" targetName="Experimental" />
-      <config projectName="airball" targetName="filterkey" />
+      <config projectName="airball" targetName="NightlySubmit" />
       <config projectName="airball" targetName="serialize" />
       <config projectName="airball" targetName="user_input_source" />
       <config projectName="airball" targetName="ExperimentalBuild" />
       <config projectName="airball" targetName="gtest" />
-      <config projectName="airball" targetName="ContinuousTest" />
-      <config projectName="airball" targetName="simpledom" />
+      <config projectName="airball" targetName="Nightly" />
+      <config projectName="airball" targetName="serial_data_source_test" />
       <config projectName="airball" targetName="ExperimentalSubmit" />
       <config projectName="airball" targetName="schemavalidator" />
       <config projectName="airball" targetName="ContinuousUpdate" />
@@ -68,12 +68,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="51395f5d-f55b-49c1-ba64-a153847f7a20" name="Default" comment="Changed to read and support temperature in data sentences.&#10;Now switches to white circle as airball when the IAS is too&#10;small to reasonably display.">
+    <list default="true" id="51395f5d-f55b-49c1-ba64-a153847f7a20" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../arduino/dlhrl10g_read/dlhrl10g_read.ino" afterPath="$PROJECT_DIR$/../arduino/dlhrl10g_read/dlhrl10g_read.ino" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/airdata.cpp" afterPath="$PROJECT_DIR$/airdata.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller.cpp" afterPath="$PROJECT_DIR$/controller.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/display.cpp" afterPath="$PROJECT_DIR$/display.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fake_data_sentence.cpp" afterPath="$PROJECT_DIR$/fake_data_sentence.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -86,21 +83,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="fake_data_sentence.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fake_data_sentence.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="32" column="33" lean-forward="false" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+            <state relative-caret-position="288">
+              <caret line="18" column="13" lean-forward="false" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -108,33 +95,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="456">
-              <caret line="447" column="53" lean-forward="true" selection-start-line="447" selection-start-column="53" selection-end-line="447" selection-end-column="53" />
-              <folding>
-                <marker date="1500788634778" expanded="true" signature="69985:70027" ph="..." />
-                <marker date="1500788634778" expanded="true" signature="69985:70044" ph="..." />
-                <marker date="1500788634778" expanded="true" signature="69985:70062" ph="..." />
-                <marker date="1500788634778" expanded="true" signature="69985:70075" ph="..." />
-                <marker date="1500788634778" expanded="true" signature="69985:70090" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dlhrl10g_read.ino" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../arduino/dlhrl10g_read/dlhrl10g_read.ino">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <caret line="447" column="16" lean-forward="false" selection-start-line="447" selection-start-column="16" selection-end-line="447" selection-end-column="16" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="airdata.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="airdata.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/airdata.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="256">
@@ -146,24 +117,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="display.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/display.cpp">
+      <file leaf-file-name="aerodynamics.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aerodynamics.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="641">
-              <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#20#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="display.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/display.h">
+      <file leaf-file-name="display.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/display.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="22" column="28" lean-forward="false" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-              <folding />
+            <state relative-caret-position="1456">
+              <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#20#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -178,8 +149,8 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fake_data_sentence.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fake_data_sentence.h">
+      <file leaf-file-name="data_source.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data_source.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -188,14 +159,32 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ab_main.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ab_main.cpp">
+      <file leaf-file-name="delay_timer.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/delay_timer.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-              </folding>
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="doxygen.config" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/doxygen.config">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="128">
+              <caret line="8" column="79" lean-forward="false" selection-start-line="8" selection-start-column="79" selection-end-line="8" selection-end-column="79" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fake_data_main.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fake_data_main.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -215,9 +204,9 @@
       <list>
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
         <option value="$PROJECT_DIR$/controller.cpp" />
-        <option value="$PROJECT_DIR$/fake_data_sentence.cpp" />
         <option value="$PROJECT_DIR$/airdata.cpp" />
         <option value="$PROJECT_DIR$/display.cpp" />
+        <option value="$PROJECT_DIR$/fake_data_sentence.cpp" />
       </list>
     </option>
   </component>
@@ -659,7 +648,8 @@
       <workItem from="1500774889331" duration="1022000" />
       <workItem from="1500778475216" duration="1159000" />
       <workItem from="1500779655899" duration="4244000" />
-      <workItem from="1500788518366" duration="213000" />
+      <workItem from="1500788518366" duration="1241000" />
+      <workItem from="1500789983515" duration="6000" />
     </task>
     <task id="LOCAL-00001" summary="Removed some defunct files.">
       <created>1500778499326</created>
@@ -675,11 +665,18 @@
       <option name="project" value="LOCAL" />
       <updated>1500779493919</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Changed to read and support temperature in data sentences.&#10;Now switches to white circle as airball when the IAS is too&#10;small to reasonably display.">
+      <created>1500788740538</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1500788740538</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7177000" />
+    <option name="totallyTimeSpent" value="8211000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -691,11 +688,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
+    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26091763" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2642344" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.49806523" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32879582" sideWeight="0.31896076" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -706,6 +702,7 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -747,6 +744,8 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="Removed some defunct files." />
     <MESSAGE value="Added IDE setup files, updated gitignore to ignore the CMake&#10;output files that are automatically produced by CLion." />
     <MESSAGE value="Changed to read and support temperature in data sentences.&#10;Now switches to white circle as airball when the IAS is too&#10;small to reasonably display." />
@@ -759,34 +758,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/airdata.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/display.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1456">
-          <caret line="91" column="0" lean-forward="true" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/display.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="352">
@@ -835,9 +806,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -872,6 +840,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -904,6 +873,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -911,6 +883,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -948,13 +921,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fake_data_main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -963,6 +930,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1018,13 +988,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/doxygen.config">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="8" column="79" lean-forward="true" selection-start-line="8" selection-start-column="79" selection-end-line="8" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/units.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1036,7 +999,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1044,7 +1006,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1062,9 +1023,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1102,14 +1060,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controller.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3024">
-          <caret line="189" column="56" lean-forward="false" selection-start-line="189" selection-start-column="56" selection-end-line="189" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../arduino/dlhrl10g_read/dlhrl10g_read.ino">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1118,37 +1068,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fake_data_sentence.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="32" column="33" lean-forward="false" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="447" column="53" lean-forward="true" selection-start-line="447" selection-start-column="53" selection-end-line="447" selection-end-column="53" />
-          <folding>
-            <marker date="1500788634778" expanded="true" signature="69985:70027" ph="..." />
-            <marker date="1500788634778" expanded="true" signature="69985:70044" ph="..." />
-            <marker date="1500788634778" expanded="true" signature="69985:70062" ph="..." />
-            <marker date="1500788634778" expanded="true" signature="69985:70075" ph="..." />
-            <marker date="1500788634778" expanded="true" signature="69985:70090" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/display.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="641">
+        <state relative-caret-position="1456">
           <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aerodynamics.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1159,6 +1093,64 @@
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controller.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3024">
+          <caret line="189" column="56" lean-forward="false" selection-start-line="189" selection-start-column="56" selection-end-line="189" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_source.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/delay_timer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doxygen.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="8" column="79" lean-forward="false" selection-start-line="8" selection-start-column="79" selection-end-line="8" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fake_data_main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fake_data_sentence.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="18" column="13" lean-forward="false" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="447" column="16" lean-forward="false" selection-start-line="447" selection-start-column="16" selection-end-line="447" selection-end-column="16" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -25,8 +25,8 @@ constexpr static Model kBaroPressure{
 };
 
 constexpr static Model kTemperature{
-    .min =  273,
-    .max =  273 + 20,
+    .min =  273.15,
+    .max =  273.15 + 20,
 };
 
 constexpr static Model kAlpha{

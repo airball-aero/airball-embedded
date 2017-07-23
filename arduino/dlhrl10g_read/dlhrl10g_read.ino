@@ -44,6 +44,10 @@ unsigned long readPressureSensor(byte address) {
   return int_raw_value;
 }
 
+double celsiusToKelvin(double celsius) {
+  return celsius + 273.15;
+}
+
 double pressureTransferFunction(
     double raw_value,
     double zero_ref,
@@ -53,7 +57,7 @@ double pressureTransferFunction(
       ((raw_value - zero_ref) / full_scale_ref)
       * ((double) 1.25)
       * fss;    
- }
+}
 
 double scalePressureReadingGage(unsigned long digital, double range) {
   double zero_ref = 0.1 * (double)(((unsigned long) 1) << 24);
@@ -163,7 +167,7 @@ void loop() {
 
   sendMuxChipSelect(0x70, 0x00);
   double p0 = bmp.readPressure();
-  double t = bmp.readTemperature();
+  double t = celsiusToKelvin(bmp.readTemperature());
   
   sendMuxChipSelect(0x70, 0x01);
   double dp0 = scalePressureReadingGage(
