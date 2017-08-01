@@ -14,6 +14,14 @@
 
 namespace airball {
 
+double gage_pressure_at_point(
+    double dynamic_pressure,
+    double angle_from_stagnation_point) {
+  return
+      dynamic_pressure *
+      (1.0 - 9.0 / 4.0 * pow(cos(angle_from_stagnation_point - M_PI / 2.0), 2));
+}
+
 struct Model {
   double min;
   double max;
@@ -40,15 +48,15 @@ constexpr static Model kBeta{
 };
 
 constexpr static Model kIas{
-    .min = knots_to_meters_per_second(120),
+    .min = knots_to_meters_per_second(100),
     .max = knots_to_meters_per_second(0),
 };
 
 constexpr static double kProbeHalfAngle = degrees_to_radians(45);
 
-double interpolate_value(double phase_ratio, const Model *m) {
+double interpolate_value(double phase_ratio, const Model& m) {
   double factor = (sin(phase_ratio * 2.0 * M_PI) + 1.0) / 2.0;
-  return m->min + factor * (m->max - m->min);
+  return m.min + factor * (m.max - m.min);
 }
 
 double magnitude(double ax, double ay) {
@@ -56,11 +64,11 @@ double magnitude(double ax, double ay) {
 }
 
 std::string make_fake_data_sentence(double phase_ratio) {
-  double baro_pressure = interpolate_value(phase_ratio, &kBaroPressure);
-  double temperature = interpolate_value(phase_ratio, &kTemperature);
-  double dynamic_pressure = ias_to_q(interpolate_value(phase_ratio, &kIas));
-  double alpha = interpolate_value(phase_ratio, &kAlpha);
-  double beta = interpolate_value(phase_ratio, &kBeta);
+  double baro_pressure = interpolate_value(phase_ratio, kBaroPressure);
+  double temperature = interpolate_value(phase_ratio, kTemperature);
+  double dynamic_pressure = ias_to_q(interpolate_value(phase_ratio, kIas));
+  double alpha = interpolate_value(phase_ratio, kAlpha);
+  double beta = interpolate_value(phase_ratio, kBeta);
 
   double pressure_center = gage_pressure_at_point(
       dynamic_pressure,

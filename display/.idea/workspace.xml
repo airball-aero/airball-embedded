@@ -2,64 +2,65 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
-      <config projectName="airball" targetName="fake_data" />
-      <config projectName="airball" targetName="NightlyTest" />
-      <config projectName="airball" targetName="NightlyUpdate" />
-      <config projectName="airball" targetName="ContinuousTest" />
-      <config projectName="airball" targetName="ExperimentalConfigure" />
-      <config projectName="airball" targetName="capitalize" />
       <config projectName="airball" targetName="jsonx" />
-      <config projectName="airball" targetName="tutorial" />
-      <config projectName="airball" targetName="NightlyMemoryCheck" />
-      <config projectName="airball" targetName="ExperimentalUpdate" />
-      <config projectName="airball" targetName="ab" />
-      <config projectName="airball" targetName="gtest_main" />
-      <config projectName="airball" targetName="lookaheadparser" />
-      <config projectName="airball" targetName="doc" />
-      <config projectName="airball" targetName="simpledom" />
-      <config projectName="airball" targetName="user_input_source_test" />
-      <config projectName="airball" targetName="condense" />
-      <config projectName="airball" targetName="filterkey" />
-      <config projectName="airball" targetName="ExperimentalMemCheck" />
-      <config projectName="airball" targetName="ab_device" />
-      <config projectName="airball" targetName="examples" />
-      <config projectName="airball" targetName="prettyauto" />
-      <config projectName="airball" targetName="NightlyMemCheck" />
-      <config projectName="airball" targetName="ExperimentalCoverage" />
-      <config projectName="airball" targetName="NightlyBuild" />
-      <config projectName="airball" targetName="runUnitTests" />
-      <config projectName="airball" targetName="messagereader" />
-      <config projectName="airball" targetName="ExperimentalTest" />
-      <config projectName="airball" targetName="pretty" />
-      <config projectName="airball" targetName="ContinuousConfigure" />
       <config projectName="airball" targetName="ContinuousBuild" />
       <config projectName="airball" targetName="simplereader" />
-      <config projectName="airball" targetName="NightlyConfigure" />
-      <config projectName="airball" targetName="simplepullreader" />
-      <config projectName="airball" targetName="airball_core" />
-      <config projectName="airball" targetName="ContinuousSubmit" />
       <config projectName="airball" targetName="ContinuousStart" />
-      <config projectName="airball" targetName="travis_doc" />
-      <config projectName="airball" targetName="NightlyStart" />
-      <config projectName="airball" targetName="ContinuousMemCheck" />
-      <config projectName="airball" targetName="parsebyparts" />
       <config projectName="airball" targetName="NightlyCoverage" />
+      <config projectName="airball" targetName="ContinuousCoverage" />
+      <config projectName="airball" targetName="NightlyTest" />
+      <config projectName="airball" targetName="prettyauto" />
+      <config projectName="airball" targetName="gtest_main" />
+      <config projectName="airball" targetName="serialize" />
+      <config projectName="airball" targetName="simpledom" />
+      <config projectName="airball" targetName="condense" />
+      <config projectName="airball" targetName="airdata_plot" />
+      <config projectName="airball" targetName="ab" />
+      <config projectName="airball" targetName="user_input_source_test" />
+      <config projectName="airball" targetName="ExperimentalCoverage" />
+      <config projectName="airball" targetName="airball_core" />
+      <config projectName="airball" targetName="ContinuousTest" />
+      <config projectName="airball" targetName="ExperimentalTest" />
+      <config projectName="airball" targetName="ContinuousSubmit" />
+      <config projectName="airball" targetName="NightlyUpdate" />
+      <config projectName="airball" targetName="schemavalidator" />
+      <config projectName="airball" targetName="NightlyStart" />
+      <config projectName="airball" targetName="runUnitTests" />
+      <config projectName="airball" targetName="pretty" />
+      <config projectName="airball" targetName="ExperimentalUpdate" />
       <config projectName="airball" targetName="Continuous" />
       <config projectName="airball" targetName="ExperimentalStart" />
-      <config projectName="airball" targetName="simplewriter" />
-      <config projectName="airball" targetName="filterkeydom" />
-      <config projectName="airball" targetName="ContinuousCoverage" />
-      <config projectName="airball" targetName="Experimental" />
-      <config projectName="airball" targetName="NightlySubmit" />
-      <config projectName="airball" targetName="serialize" />
-      <config projectName="airball" targetName="user_input_source" />
-      <config projectName="airball" targetName="ExperimentalBuild" />
-      <config projectName="airball" targetName="gtest" />
-      <config projectName="airball" targetName="Nightly" />
-      <config projectName="airball" targetName="serial_data_source_test" />
+      <config projectName="airball" targetName="fake_data" />
       <config projectName="airball" targetName="ExperimentalSubmit" />
-      <config projectName="airball" targetName="schemavalidator" />
+      <config projectName="airball" targetName="NightlySubmit" />
+      <config projectName="airball" targetName="serial_data_source_test" />
+      <config projectName="airball" targetName="NightlyConfigure" />
+      <config projectName="airball" targetName="ExperimentalConfigure" />
+      <config projectName="airball" targetName="simplepullreader" />
+      <config projectName="airball" targetName="ContinuousConfigure" />
+      <config projectName="airball" targetName="doc" />
+      <config projectName="airball" targetName="parsebyparts" />
+      <config projectName="airball" targetName="tutorial" />
+      <config projectName="airball" targetName="travis_doc" />
+      <config projectName="airball" targetName="Nightly" />
+      <config projectName="airball" targetName="Experimental" />
+      <config projectName="airball" targetName="NightlyMemCheck" />
+      <config projectName="airball" targetName="ab_device" />
+      <config projectName="airball" targetName="capitalize" />
+      <config projectName="airball" targetName="NightlyBuild" />
       <config projectName="airball" targetName="ContinuousUpdate" />
+      <config projectName="airball" targetName="lookaheadparser" />
+      <config projectName="airball" targetName="NightlyMemoryCheck" />
+      <config projectName="airball" targetName="filterkey" />
+      <config projectName="airball" targetName="gtest" />
+      <config projectName="airball" targetName="ExperimentalMemCheck" />
+      <config projectName="airball" targetName="user_input_source" />
+      <config projectName="airball" targetName="ContinuousMemCheck" />
+      <config projectName="airball" targetName="simplewriter" />
+      <config projectName="airball" targetName="messagereader" />
+      <config projectName="airball" targetName="examples" />
+      <config projectName="airball" targetName="filterkeydom" />
+      <config projectName="airball" targetName="ExperimentalBuild" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -69,8 +70,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51395f5d-f55b-49c1-ba64-a153847f7a20" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../arduino/dlhrl10g_read/dlhrl10g_read.ino" afterPath="$PROJECT_DIR$/../arduino/dlhrl10g_read/dlhrl10g_read.ino" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/airdata_plot_main.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/airdata_test.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/interpolation_table.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/interpolation_table.h" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/interpolation_table_test.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aerodynamics.cpp" afterPath="$PROJECT_DIR$/aerodynamics.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aerodynamics.h" afterPath="$PROJECT_DIR$/aerodynamics.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aerodynamics_test.cpp" afterPath="$PROJECT_DIR$/aerodynamics_test.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/airdata.cpp" afterPath="$PROJECT_DIR$/airdata.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/airdata.h" afterPath="$PROJECT_DIR$/airdata.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fake_data_sentence.cpp" afterPath="$PROJECT_DIR$/fake_data_sentence.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -81,25 +92,56 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="fake_data_sentence.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fake_data_sentence.cpp">
+      <file leaf-file-name="airdata_test.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/airdata_test.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="18" column="13" lean-forward="false" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+            <state relative-caret-position="96">
+              <caret line="8" column="9" lean-forward="true" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fake_data_sentence.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fake_data_sentence.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="interpolation_table.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/interpolation_table.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="581">
+              <caret line="42" column="14" lean-forward="false" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
               <folding>
-                <element signature="e#0#29#0" expanded="true" />
+                <element signature="e#0#16#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <file leaf-file-name="interpolation_table_test.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/interpolation_table_test.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="447" column="16" lean-forward="false" selection-start-line="447" selection-start-column="16" selection-end-line="447" selection-end-column="16" />
+            <state relative-caret-position="848">
+              <caret line="54" column="13" lean-forward="true" selection-start-line="54" selection-start-column="13" selection-end-line="54" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="airdata.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/airdata.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="693">
+              <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -108,11 +150,31 @@
       <file leaf-file-name="airdata.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/airdata.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="16" column="12" lean-forward="false" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
+            <state relative-caret-position="661">
+              <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="airdata_plot_main.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/airdata_plot_main.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="128">
+              <caret line="8" column="27" lean-forward="false" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
               <folding>
-                <element signature="e#0#20#0" expanded="true" />
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="aerodynamics_test.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aerodynamics_test.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="16">
+              <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -120,70 +182,18 @@
       <file leaf-file-name="aerodynamics.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/aerodynamics.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="80">
+              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="display.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/display.cpp">
+      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1456">
-              <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#20#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="controller.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controller.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3024">
-              <caret line="189" column="56" lean-forward="false" selection-start-line="189" selection-start-column="56" selection-end-line="189" selection-end-column="56" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="data_source.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data_source.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="delay_timer.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/delay_timer.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="doxygen.config" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/doxygen.config">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="128">
-              <caret line="8" column="79" lean-forward="false" selection-start-line="8" selection-start-column="79" selection-end-line="8" selection-end-column="79" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fake_data_main.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fake_data_main.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="352">
+              <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -202,19 +212,29 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/.idea/workspace.xml" />
         <option value="$PROJECT_DIR$/controller.cpp" />
-        <option value="$PROJECT_DIR$/airdata.cpp" />
         <option value="$PROJECT_DIR$/display.cpp" />
+        <option value="$PROJECT_DIR$/.idea/workspace.xml" />
+        <option value="$PROJECT_DIR$/aerodynamics.cpp" />
+        <option value="$PROJECT_DIR$/aerodynamics.h" />
+        <option value="$PROJECT_DIR$/airdata.h" />
+        <option value="$PROJECT_DIR$/aerodynamics_test.cpp" />
+        <option value="$PROJECT_DIR$/interpolation_table.h" />
+        <option value="$PROJECT_DIR$/interpolation_table.cpp" />
+        <option value="$PROJECT_DIR$/interpolation_table_test.cpp" />
+        <option value="$PROJECT_DIR$/airdata_plot_main.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/fake_data_sentence.cpp" />
+        <option value="$PROJECT_DIR$/airdata.cpp" />
+        <option value="$PROJECT_DIR$/airdata_test.cpp" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="64" />
-    <option name="y" value="-11" />
-    <option name="width" value="1857" />
-    <option name="height" value="1092" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="282" />
+    <option name="y" value="108" />
+    <option name="width" value="1348" />
+    <option name="height" value="922" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -234,13 +254,16 @@
     <panes>
       <pane id="ProjectPane">
         <subPane>
-          <expand>
-            <path>
-              <item name="airball" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="display" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="airball" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="display" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -261,93 +284,14 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.ab">
-    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
+  <component name="RunManager" selected="Google Test.All in aerodynamics_test.cpp">
+    <configuration default="false" name="All in interpolation_table_test.cpp" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="runUnitTests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="runUnitTests" TEST_PATTERN="InterpolationTable.*:InterpolationTable/*.*:*/InterpolationTable.*/*:*/InterpolationTable/*.*" TEST_MODE="PATTERN">
       <envs />
+      <method />
     </configuration>
-    <configuration name="Continuous" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="Continuous" CONFIG_NAME="Debug">
+    <configuration default="false" name="All in aerodynamics_test.cpp" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="runUnitTests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="runUnitTests" TEST_PATTERN="Aerodynamics.*:Aerodynamics/*.*:*/Aerodynamics.*/*:*/Aerodynamics/*.*" TEST_MODE="PATTERN">
       <envs />
-    </configuration>
-    <configuration name="ContinuousBuild" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousBuild" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousBuild">
-      <envs />
-    </configuration>
-    <configuration name="ContinuousConfigure" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousConfigure" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousConfigure">
-      <envs />
-    </configuration>
-    <configuration name="ContinuousCoverage" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousCoverage" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousCoverage">
-      <envs />
-    </configuration>
-    <configuration name="ContinuousMemCheck" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousMemCheck" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousMemCheck">
-      <envs />
-    </configuration>
-    <configuration name="ContinuousStart" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousStart" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousStart">
-      <envs />
-    </configuration>
-    <configuration name="ContinuousSubmit" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousSubmit" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousSubmit">
-      <envs />
-    </configuration>
-    <configuration name="ContinuousTest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousTest">
-      <envs />
-    </configuration>
-    <configuration name="ContinuousUpdate" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousUpdate" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousUpdate">
-      <envs />
-    </configuration>
-    <configuration name="Experimental" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="Experimental" CONFIG_NAME="Debug">
-      <envs />
-    </configuration>
-    <configuration name="ExperimentalBuild" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalBuild" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalBuild">
-      <envs />
-    </configuration>
-    <configuration name="ExperimentalConfigure" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalConfigure" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalConfigure">
-      <envs />
-    </configuration>
-    <configuration name="ExperimentalCoverage" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalCoverage" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalCoverage">
-      <envs />
-    </configuration>
-    <configuration name="ExperimentalMemCheck" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalMemCheck" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalMemCheck">
-      <envs />
-    </configuration>
-    <configuration name="ExperimentalStart" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalStart" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalStart">
-      <envs />
-    </configuration>
-    <configuration name="ExperimentalSubmit" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalSubmit" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalSubmit">
-      <envs />
-    </configuration>
-    <configuration name="ExperimentalTest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalTest">
-      <envs />
-    </configuration>
-    <configuration name="ExperimentalUpdate" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalUpdate" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalUpdate">
-      <envs />
-    </configuration>
-    <configuration name="Nightly" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="Nightly" CONFIG_NAME="Debug">
-      <envs />
-    </configuration>
-    <configuration name="NightlyBuild" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyBuild" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyBuild">
-      <envs />
-    </configuration>
-    <configuration name="NightlyConfigure" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyConfigure" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyConfigure">
-      <envs />
-    </configuration>
-    <configuration name="NightlyCoverage" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyCoverage" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyCoverage">
-      <envs />
-    </configuration>
-    <configuration name="NightlyMemCheck" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyMemCheck" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyMemCheck">
-      <envs />
-    </configuration>
-    <configuration name="NightlyMemoryCheck" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyMemoryCheck" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyMemoryCheck">
-      <envs />
-    </configuration>
-    <configuration name="NightlyStart" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyStart" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyStart">
-      <envs />
-    </configuration>
-    <configuration name="NightlySubmit" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlySubmit" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlySubmit">
-      <envs />
-    </configuration>
-    <configuration name="NightlyTest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyTest">
-      <envs />
-    </configuration>
-    <configuration name="NightlyUpdate" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyUpdate" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyUpdate">
-      <envs />
+      <method />
     </configuration>
     <configuration default="true" type="CLion_Remote" factoryName="GDB Remote Debug" remoteCommand="" symbolFile="" sysroot="">
       <method />
@@ -479,157 +423,316 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method />
     </configuration>
-    <configuration name="ab" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ab" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ab">
+    <configuration default="false" name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
       <envs />
+      <method />
     </configuration>
-    <configuration name="ab_device" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ab_device" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ab_device">
+    <configuration default="false" name="ab" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ab" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ab">
       <envs />
+      <method />
     </configuration>
-    <configuration name="airball_core" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="airball_core" CONFIG_NAME="Debug">
+    <configuration default="false" name="ab_device" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ab_device" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ab_device">
       <envs />
+      <method />
     </configuration>
-    <configuration name="capitalize" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="capitalize" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="capitalize">
+    <configuration default="false" name="airball_core" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="airball_core" CONFIG_NAME="Debug">
       <envs />
+      <method />
     </configuration>
-    <configuration name="condense" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="condense" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="condense">
+    <configuration default="false" name="airdata_plot" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="airdata_plot" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="airdata_plot">
       <envs />
+      <method />
     </configuration>
-    <configuration name="doc" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="doc" CONFIG_NAME="Debug">
+    <configuration default="false" name="fake_data" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="fake_data" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="fake_data">
       <envs />
+      <method />
     </configuration>
-    <configuration name="examples" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="examples" CONFIG_NAME="Debug">
+    <configuration default="false" name="runUnitTests" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="runUnitTests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="runUnitTests" TEST_MODE="SUITE_TEST">
       <envs />
+      <method />
     </configuration>
-    <configuration name="fake_data" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="fake_data" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="fake_data">
+    <configuration default="false" name="serial_data_source_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="serial_data_source_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="serial_data_source_test">
       <envs />
+      <method />
     </configuration>
-    <configuration name="filterkey" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="filterkey" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="filterkey">
+    <configuration default="false" name="user_input_source" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="user_input_source" CONFIG_NAME="Debug">
       <envs />
+      <method />
     </configuration>
-    <configuration name="filterkeydom" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="filterkeydom" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="filterkeydom">
+    <configuration default="false" name="user_input_source_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="user_input_source_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="user_input_source_test">
       <envs />
+      <method />
     </configuration>
-    <configuration name="gtest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="gtest" CONFIG_NAME="Debug">
+    <configuration default="false" name="gtest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="gtest" CONFIG_NAME="Debug">
       <envs />
+      <method />
     </configuration>
-    <configuration name="gtest_main" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="gtest_main" CONFIG_NAME="Debug">
+    <configuration default="false" name="gtest_main" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="gtest_main" CONFIG_NAME="Debug">
       <envs />
+      <method />
     </configuration>
-    <configuration name="jsonx" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="jsonx" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="jsonx">
+    <configuration default="false" name="Continuous" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="Continuous" CONFIG_NAME="Debug">
       <envs />
+      <method />
     </configuration>
-    <configuration name="lookaheadparser" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="lookaheadparser" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="lookaheadparser">
+    <configuration default="false" name="ContinuousBuild" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousBuild" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousBuild">
       <envs />
+      <method />
     </configuration>
-    <configuration name="messagereader" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="messagereader" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="messagereader">
+    <configuration default="false" name="ContinuousConfigure" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousConfigure" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousConfigure">
       <envs />
+      <method />
     </configuration>
-    <configuration name="parsebyparts" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="parsebyparts" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="parsebyparts">
+    <configuration default="false" name="ContinuousCoverage" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousCoverage" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousCoverage">
       <envs />
+      <method />
     </configuration>
-    <configuration name="pretty" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="pretty" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="pretty">
+    <configuration default="false" name="ContinuousMemCheck" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousMemCheck" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousMemCheck">
       <envs />
+      <method />
     </configuration>
-    <configuration name="prettyauto" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="prettyauto" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="prettyauto">
+    <configuration default="false" name="ContinuousStart" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousStart" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousStart">
       <envs />
+      <method />
     </configuration>
-    <configuration name="runUnitTests" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="runUnitTests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="runUnitTests" TEST_MODE="SUITE_TEST">
+    <configuration default="false" name="ContinuousSubmit" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousSubmit" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousSubmit">
       <envs />
+      <method />
     </configuration>
-    <configuration name="schemavalidator" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="schemavalidator" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="schemavalidator">
+    <configuration default="false" name="ContinuousTest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousTest">
       <envs />
+      <method />
     </configuration>
-    <configuration name="serial_data_source_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="serial_data_source_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="serial_data_source_test">
+    <configuration default="false" name="ContinuousUpdate" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ContinuousUpdate" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ContinuousUpdate">
       <envs />
+      <method />
     </configuration>
-    <configuration name="serialize" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="serialize" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="serialize">
+    <configuration default="false" name="Experimental" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="Experimental" CONFIG_NAME="Debug">
       <envs />
+      <method />
     </configuration>
-    <configuration name="simpledom" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="simpledom" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="simpledom">
+    <configuration default="false" name="ExperimentalBuild" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalBuild" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalBuild">
       <envs />
+      <method />
     </configuration>
-    <configuration name="simplepullreader" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="simplepullreader" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="simplepullreader">
+    <configuration default="false" name="ExperimentalConfigure" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalConfigure" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalConfigure">
       <envs />
+      <method />
     </configuration>
-    <configuration name="simplereader" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="simplereader" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="simplereader">
+    <configuration default="false" name="ExperimentalCoverage" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalCoverage" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalCoverage">
       <envs />
+      <method />
     </configuration>
-    <configuration name="simplewriter" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="simplewriter" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="simplewriter">
+    <configuration default="false" name="ExperimentalMemCheck" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalMemCheck" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalMemCheck">
       <envs />
+      <method />
     </configuration>
-    <configuration name="travis_doc" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="travis_doc" CONFIG_NAME="Debug">
+    <configuration default="false" name="ExperimentalStart" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalStart" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalStart">
       <envs />
+      <method />
     </configuration>
-    <configuration name="tutorial" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="tutorial" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="tutorial">
+    <configuration default="false" name="ExperimentalSubmit" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalSubmit" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalSubmit">
       <envs />
+      <method />
     </configuration>
-    <configuration name="user_input_source" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="user_input_source" CONFIG_NAME="Debug">
+    <configuration default="false" name="ExperimentalTest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalTest">
       <envs />
+      <method />
     </configuration>
-    <configuration name="user_input_source_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="user_input_source_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="user_input_source_test">
+    <configuration default="false" name="ExperimentalUpdate" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="ExperimentalUpdate" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="ExperimentalUpdate">
       <envs />
+      <method />
     </configuration>
-    <list size="59">
+    <configuration default="false" name="Nightly" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="Nightly" CONFIG_NAME="Debug">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="NightlyBuild" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyBuild" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyBuild">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="NightlyConfigure" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyConfigure" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyConfigure">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="NightlyCoverage" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyCoverage" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyCoverage">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="NightlyMemCheck" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyMemCheck" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyMemCheck">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="NightlyMemoryCheck" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyMemoryCheck" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyMemoryCheck">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="NightlyStart" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyStart" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyStart">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="NightlySubmit" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlySubmit" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlySubmit">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="NightlyTest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyTest">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="NightlyUpdate" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="NightlyUpdate" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="NightlyUpdate">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="travis_doc" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="travis_doc" CONFIG_NAME="Debug">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="doc" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="doc" CONFIG_NAME="Debug">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="capitalize" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="capitalize" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="capitalize">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="condense" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="condense" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="condense">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="examples" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="examples" CONFIG_NAME="Debug">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="filterkey" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="filterkey" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="filterkey">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="filterkeydom" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="filterkeydom" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="filterkeydom">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="jsonx" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="jsonx" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="jsonx">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="lookaheadparser" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="lookaheadparser" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="lookaheadparser">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="messagereader" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="messagereader" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="messagereader">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="parsebyparts" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="parsebyparts" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="parsebyparts">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="pretty" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="pretty" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="pretty">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="prettyauto" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="prettyauto" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="prettyauto">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="schemavalidator" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="schemavalidator" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="schemavalidator">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="serialize" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="serialize" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="serialize">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="simpledom" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="simpledom" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="simpledom">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="simplepullreader" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="simplepullreader" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="simplepullreader">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="simplereader" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="simplereader" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="simplereader">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="simplewriter" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="simplewriter" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="simplewriter">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="tutorial" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="airball" TARGET_NAME="tutorial" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="airball" RUN_TARGET_NAME="tutorial">
+      <envs />
+      <method />
+    </configuration>
+    <list size="62">
       <item index="0" class="java.lang.String" itemvalue="Application.Build All" />
       <item index="1" class="java.lang.String" itemvalue="Application.ab" />
       <item index="2" class="java.lang.String" itemvalue="Application.ab_device" />
       <item index="3" class="java.lang.String" itemvalue="Application.airball_core" />
-      <item index="4" class="java.lang.String" itemvalue="Application.fake_data" />
-      <item index="5" class="java.lang.String" itemvalue="Google Test.runUnitTests" />
-      <item index="6" class="java.lang.String" itemvalue="Application.serial_data_source_test" />
-      <item index="7" class="java.lang.String" itemvalue="Application.user_input_source" />
-      <item index="8" class="java.lang.String" itemvalue="Application.user_input_source_test" />
-      <item index="9" class="java.lang.String" itemvalue="Application.gtest" />
-      <item index="10" class="java.lang.String" itemvalue="Application.gtest_main" />
-      <item index="11" class="java.lang.String" itemvalue="Application.Continuous" />
-      <item index="12" class="java.lang.String" itemvalue="Application.ContinuousBuild" />
-      <item index="13" class="java.lang.String" itemvalue="Application.ContinuousConfigure" />
-      <item index="14" class="java.lang.String" itemvalue="Application.ContinuousCoverage" />
-      <item index="15" class="java.lang.String" itemvalue="Application.ContinuousMemCheck" />
-      <item index="16" class="java.lang.String" itemvalue="Application.ContinuousStart" />
-      <item index="17" class="java.lang.String" itemvalue="Application.ContinuousSubmit" />
-      <item index="18" class="java.lang.String" itemvalue="Application.ContinuousTest" />
-      <item index="19" class="java.lang.String" itemvalue="Application.ContinuousUpdate" />
-      <item index="20" class="java.lang.String" itemvalue="Application.Experimental" />
-      <item index="21" class="java.lang.String" itemvalue="Application.ExperimentalBuild" />
-      <item index="22" class="java.lang.String" itemvalue="Application.ExperimentalConfigure" />
-      <item index="23" class="java.lang.String" itemvalue="Application.ExperimentalCoverage" />
-      <item index="24" class="java.lang.String" itemvalue="Application.ExperimentalMemCheck" />
-      <item index="25" class="java.lang.String" itemvalue="Application.ExperimentalStart" />
-      <item index="26" class="java.lang.String" itemvalue="Application.ExperimentalSubmit" />
-      <item index="27" class="java.lang.String" itemvalue="Application.ExperimentalTest" />
-      <item index="28" class="java.lang.String" itemvalue="Application.ExperimentalUpdate" />
-      <item index="29" class="java.lang.String" itemvalue="Application.Nightly" />
-      <item index="30" class="java.lang.String" itemvalue="Application.NightlyBuild" />
-      <item index="31" class="java.lang.String" itemvalue="Application.NightlyConfigure" />
-      <item index="32" class="java.lang.String" itemvalue="Application.NightlyCoverage" />
-      <item index="33" class="java.lang.String" itemvalue="Application.NightlyMemCheck" />
-      <item index="34" class="java.lang.String" itemvalue="Application.NightlyMemoryCheck" />
-      <item index="35" class="java.lang.String" itemvalue="Application.NightlyStart" />
-      <item index="36" class="java.lang.String" itemvalue="Application.NightlySubmit" />
-      <item index="37" class="java.lang.String" itemvalue="Application.NightlyTest" />
-      <item index="38" class="java.lang.String" itemvalue="Application.NightlyUpdate" />
-      <item index="39" class="java.lang.String" itemvalue="Application.travis_doc" />
-      <item index="40" class="java.lang.String" itemvalue="Application.doc" />
-      <item index="41" class="java.lang.String" itemvalue="Application.capitalize" />
-      <item index="42" class="java.lang.String" itemvalue="Application.condense" />
-      <item index="43" class="java.lang.String" itemvalue="Application.examples" />
-      <item index="44" class="java.lang.String" itemvalue="Application.filterkey" />
-      <item index="45" class="java.lang.String" itemvalue="Application.filterkeydom" />
-      <item index="46" class="java.lang.String" itemvalue="Application.jsonx" />
-      <item index="47" class="java.lang.String" itemvalue="Application.lookaheadparser" />
-      <item index="48" class="java.lang.String" itemvalue="Application.messagereader" />
-      <item index="49" class="java.lang.String" itemvalue="Application.parsebyparts" />
-      <item index="50" class="java.lang.String" itemvalue="Application.pretty" />
-      <item index="51" class="java.lang.String" itemvalue="Application.prettyauto" />
-      <item index="52" class="java.lang.String" itemvalue="Application.schemavalidator" />
-      <item index="53" class="java.lang.String" itemvalue="Application.serialize" />
-      <item index="54" class="java.lang.String" itemvalue="Application.simpledom" />
-      <item index="55" class="java.lang.String" itemvalue="Application.simplepullreader" />
-      <item index="56" class="java.lang.String" itemvalue="Application.simplereader" />
-      <item index="57" class="java.lang.String" itemvalue="Application.simplewriter" />
-      <item index="58" class="java.lang.String" itemvalue="Application.tutorial" />
+      <item index="4" class="java.lang.String" itemvalue="Application.airdata_plot" />
+      <item index="5" class="java.lang.String" itemvalue="Application.fake_data" />
+      <item index="6" class="java.lang.String" itemvalue="Google Test.runUnitTests" />
+      <item index="7" class="java.lang.String" itemvalue="Application.serial_data_source_test" />
+      <item index="8" class="java.lang.String" itemvalue="Application.user_input_source" />
+      <item index="9" class="java.lang.String" itemvalue="Application.user_input_source_test" />
+      <item index="10" class="java.lang.String" itemvalue="Application.gtest" />
+      <item index="11" class="java.lang.String" itemvalue="Application.gtest_main" />
+      <item index="12" class="java.lang.String" itemvalue="Application.Continuous" />
+      <item index="13" class="java.lang.String" itemvalue="Application.ContinuousBuild" />
+      <item index="14" class="java.lang.String" itemvalue="Application.ContinuousConfigure" />
+      <item index="15" class="java.lang.String" itemvalue="Application.ContinuousCoverage" />
+      <item index="16" class="java.lang.String" itemvalue="Application.ContinuousMemCheck" />
+      <item index="17" class="java.lang.String" itemvalue="Application.ContinuousStart" />
+      <item index="18" class="java.lang.String" itemvalue="Application.ContinuousSubmit" />
+      <item index="19" class="java.lang.String" itemvalue="Application.ContinuousTest" />
+      <item index="20" class="java.lang.String" itemvalue="Application.ContinuousUpdate" />
+      <item index="21" class="java.lang.String" itemvalue="Application.Experimental" />
+      <item index="22" class="java.lang.String" itemvalue="Application.ExperimentalBuild" />
+      <item index="23" class="java.lang.String" itemvalue="Application.ExperimentalConfigure" />
+      <item index="24" class="java.lang.String" itemvalue="Application.ExperimentalCoverage" />
+      <item index="25" class="java.lang.String" itemvalue="Application.ExperimentalMemCheck" />
+      <item index="26" class="java.lang.String" itemvalue="Application.ExperimentalStart" />
+      <item index="27" class="java.lang.String" itemvalue="Application.ExperimentalSubmit" />
+      <item index="28" class="java.lang.String" itemvalue="Application.ExperimentalTest" />
+      <item index="29" class="java.lang.String" itemvalue="Application.ExperimentalUpdate" />
+      <item index="30" class="java.lang.String" itemvalue="Application.Nightly" />
+      <item index="31" class="java.lang.String" itemvalue="Application.NightlyBuild" />
+      <item index="32" class="java.lang.String" itemvalue="Application.NightlyConfigure" />
+      <item index="33" class="java.lang.String" itemvalue="Application.NightlyCoverage" />
+      <item index="34" class="java.lang.String" itemvalue="Application.NightlyMemCheck" />
+      <item index="35" class="java.lang.String" itemvalue="Application.NightlyMemoryCheck" />
+      <item index="36" class="java.lang.String" itemvalue="Application.NightlyStart" />
+      <item index="37" class="java.lang.String" itemvalue="Application.NightlySubmit" />
+      <item index="38" class="java.lang.String" itemvalue="Application.NightlyTest" />
+      <item index="39" class="java.lang.String" itemvalue="Application.NightlyUpdate" />
+      <item index="40" class="java.lang.String" itemvalue="Application.travis_doc" />
+      <item index="41" class="java.lang.String" itemvalue="Application.doc" />
+      <item index="42" class="java.lang.String" itemvalue="Application.capitalize" />
+      <item index="43" class="java.lang.String" itemvalue="Application.condense" />
+      <item index="44" class="java.lang.String" itemvalue="Application.examples" />
+      <item index="45" class="java.lang.String" itemvalue="Application.filterkey" />
+      <item index="46" class="java.lang.String" itemvalue="Application.filterkeydom" />
+      <item index="47" class="java.lang.String" itemvalue="Application.jsonx" />
+      <item index="48" class="java.lang.String" itemvalue="Application.lookaheadparser" />
+      <item index="49" class="java.lang.String" itemvalue="Application.messagereader" />
+      <item index="50" class="java.lang.String" itemvalue="Application.parsebyparts" />
+      <item index="51" class="java.lang.String" itemvalue="Application.pretty" />
+      <item index="52" class="java.lang.String" itemvalue="Application.prettyauto" />
+      <item index="53" class="java.lang.String" itemvalue="Application.schemavalidator" />
+      <item index="54" class="java.lang.String" itemvalue="Application.serialize" />
+      <item index="55" class="java.lang.String" itemvalue="Application.simpledom" />
+      <item index="56" class="java.lang.String" itemvalue="Application.simplepullreader" />
+      <item index="57" class="java.lang.String" itemvalue="Application.simplereader" />
+      <item index="58" class="java.lang.String" itemvalue="Application.simplewriter" />
+      <item index="59" class="java.lang.String" itemvalue="Application.tutorial" />
+      <item index="60" class="java.lang.String" itemvalue="Google Test.All in interpolation_table_test.cpp" />
+      <item index="61" class="java.lang.String" itemvalue="Google Test.All in aerodynamics_test.cpp" />
     </list>
+    <recent_temporary>
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="Google Test.All in aerodynamics_test.cpp" />
+        <item index="1" class="java.lang.String" itemvalue="Google Test.All in interpolation_table_test.cpp" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -649,7 +752,9 @@
       <workItem from="1500778475216" duration="1159000" />
       <workItem from="1500779655899" duration="4244000" />
       <workItem from="1500788518366" duration="1241000" />
-      <workItem from="1500789983515" duration="6000" />
+      <workItem from="1500789983515" duration="1236000" />
+      <workItem from="1501201044526" duration="20940000" />
+      <workItem from="1501440716988" duration="5528000" />
     </task>
     <task id="LOCAL-00001" summary="Removed some defunct files.">
       <created>1500778499326</created>
@@ -672,11 +777,50 @@
       <option name="project" value="LOCAL" />
       <updated>1500788740538</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Temperatures in Kelvin throughout.">
+      <created>1500790009364</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1500790009368</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 09h 51m 31s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 10h 10m 47s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 10h 12m 11s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 10h 13m 40s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 10h 16m 48s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 10h 19m 37s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 10h 19m 49s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 10h 21m 43s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 10h 24m 41s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_aerodynamics_test_cpp - 2017.07.30 at 10h 36m 59s.xml">
+      <configuration name="All in aerodynamics_test.cpp" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+  </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8211000" />
+    <option name="totallyTimeSpent" value="35909000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -688,21 +832,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
+    <frame x="282" y="108" width="1348" height="922" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2642344" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18397626" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.49806523" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32879582" sideWeight="0.31896076" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26387435" sideWeight="0.6810393" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.49806523" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32879582" sideWeight="0.31896076" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26387435" sideWeight="0.6810393" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901832" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -749,7 +894,8 @@
     <MESSAGE value="Removed some defunct files." />
     <MESSAGE value="Added IDE setup files, updated gitignore to ignore the CMake&#10;output files that are automatically produced by CLion." />
     <MESSAGE value="Changed to read and support temperature in data sentences.&#10;Now switches to white circle as airball when the IAS is too&#10;small to reasonably display." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed to read and support temperature in data sentences.&#10;Now switches to white circle as airball when the IAS is too&#10;small to reasonably display." />
+    <MESSAGE value="Temperatures in Kelvin throughout." />
+    <option name="LAST_COMMIT_MESSAGE" value="Temperatures in Kelvin throughout." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -758,92 +904,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/display.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="22" column="28" lean-forward="true" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controller.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3024">
-          <caret line="189" column="56" lean-forward="false" selection-start-line="189" selection-start-column="56" selection-end-line="189" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fake_data_sentence.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ab_main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/one_shot_timer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="13" column="19" lean-forward="false" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/serial_data_source_test_main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fake_data_sentence.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
-          <caret line="32" column="33" lean-forward="true" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="0">
-            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/delay_timer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/delay_timer_test.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fake_data_main.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -863,9 +923,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="208">
           <caret line="13" column="19" lean-forward="true" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -873,9 +930,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#17#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -917,22 +971,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/delay_timer_test.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/controller.txt" />
     <entry file="file://$PROJECT_DIR$/one_shot_timer.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#17#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -979,12 +1022,53 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="80">
-            <caret line="5" column="32" lean-forward="true" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
-          </first_editor>
-          <second_editor />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serial_data_source_test_main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/display.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="22" column="28" lean-forward="false" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../arduino/dlhrl10g_read/dlhrl10g_read.ino">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/display.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1456">
+          <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_source.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/delay_timer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="616">
+          <caret line="457" column="31" lean-forward="true" selection-start-line="457" selection-start-column="31" selection-end-line="457" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -992,6 +1076,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1002,10 +1087,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/airdata.h">
+    <entry file="file://$PROJECT_DIR$/delay_timer_test.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="577">
+          <caret line="44" column="13" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1013,109 +1098,35 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="208">
           <caret line="13" column="19" lean-forward="false" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/serial_data_source_test_main.cpp">
+    <entry file="file://$PROJECT_DIR$/user_input_source_test_main.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fake_data_sentence.h">
+    <entry file="file://$PROJECT_DIR$/one_shot_timer_test.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aerodynamics.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ab_main.cpp">
+    <entry file="file://$PROJECT_DIR$/interpolation_table.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/display.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="22" column="28" lean-forward="false" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../arduino/dlhrl10g_read/dlhrl10g_read.ino">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/display.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1456">
-          <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aerodynamics.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/airdata.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="16" column="12" lean-forward="false" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controller.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3024">
-          <caret line="189" column="56" lean-forward="false" selection-start-line="189" selection-start-column="56" selection-end-line="189" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data_source.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/delay_timer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="384">
+          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1128,7 +1139,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fake_data_main.cpp">
+    <entry file="file://$PROJECT_DIR$/ab_device_main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="10" column="10" lean-forward="false" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#23#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ab_main.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1136,21 +1157,111 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/fake_data_main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="1" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controller.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="551">
+          <caret line="189" column="56" lean-forward="false" selection-start-line="189" selection-start-column="56" selection-end-line="189" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/fake_data_sentence.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="18" column="13" lean-forward="false" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+        <state relative-caret-position="37">
+          <caret line="59" column="1" lean-forward="false" selection-start-line="59" selection-start-column="1" selection-end-line="59" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aerodynamics_test.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aerodynamics.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/airdata.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="693">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/airdata.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="661">
+          <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fake_data_sentence.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interpolation_table.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="581">
+          <caret line="42" column="14" lean-forward="false" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
           <folding>
-            <element signature="e#0#29#0" expanded="true" />
+            <element signature="e#0#16#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+    <entry file="file://$PROJECT_DIR$/interpolation_table_test.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="447" column="16" lean-forward="false" selection-start-line="447" selection-start-column="16" selection-end-line="447" selection-end-column="16" />
+        <state relative-caret-position="848">
+          <caret line="54" column="13" lean-forward="true" selection-start-line="54" selection-start-column="13" selection-end-line="54" selection-end-column="13" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/airdata_test.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="8" column="9" lean-forward="true" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/airdata_plot_main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="8" column="27" lean-forward="false" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

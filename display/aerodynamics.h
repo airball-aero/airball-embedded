@@ -4,17 +4,6 @@
 namespace airball {
 
 /**
- * Compute the gage pressure on a sphere subjected to a fluid stream.
- *
- * @param dynamic_pressure the dynamic pressure of the stream.
- * @param angle_from_stagnation_point the total angle from the stagnation point.
- * @return the gage pressure.
- */
-double gage_pressure_at_point(
-    double dynamic_pressure,
-    double angle_from_stagnation_point);
-
-/**
  * Compute the dynamic pressure given indicated air speed.
  *
  * @param ias indicated air speed.
