@@ -6,7 +6,6 @@
 int main(int argc, char **argv) {
   airball::Controller c(airball::Screen::NewFramebufferScreen(),
                         airball::UserInputSource::NewGpioInputSource(2, 3, 4),
-			airball::DataSource::NewFakeDataSource());
-//                        airball::DataSource::NewSerialDataSource("/dev/ttyAMA0"));
+                        airball::DataSource::NewSerialDataSource("/dev/ttyAMA0"));
   c.run();
 }
