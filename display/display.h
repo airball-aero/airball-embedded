@@ -26,9 +26,9 @@ private:
   void paintCowCatcher();
   void paintAdjusting();
 
-  double alphaToY(const double alpha);
-  double betaToX(const double beta);
-  double iasToRadius(const double ias);
+  double alpha_to_y(const double alpha);
+  double beta_to_x(const double beta);
+  double airspeed_to_radius(const double ias);
 
   Screen* screen_;
   const Airdata* airdata_;

@@ -6,7 +6,7 @@
 namespace airball {
 
 void Color::apply(cairo_t *cr) const {
-  cairo_set_source_rgb(cr, r_, g_, b_);
+  cairo_set_source_rgba(cr, r_, g_, b_, a_);
 }
 
 void Stroke::apply(cairo_t *cr) const {

@@ -73,6 +73,7 @@ void Airdata::update_from_sentence(
   alpha_ = - radians_to_degrees(alpha_radians);
   beta_ = radians_to_degrees(beta_radians);
   ias_ = meters_per_second_to_knots(q_to_ias(free_stream_q));
+  tas_ = meters_per_second_to_knots(q_to_tas(free_stream_q, baro, temp));
   valid_ = !isnan(alpha_) && !isnan(beta_);
 }
 

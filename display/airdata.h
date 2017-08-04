@@ -10,13 +10,16 @@ class Airdata {
 public:
   Airdata();
 
-  // Airdata: Indicated air speed
+  // Indicated air speed
   double ias() const {return ias_;}
 
-  // Airdata: Angle of attack
+  // True air speed
+  double tas() const {return tas_;}
+
+  // Angle of attack
   double alpha() const {return alpha_;}
 
-  // Airdata: Angle of yaw
+  // Angle of yaw
   double beta() const {return beta_;}
 
   // Returns true if the data is valid. If not, display a red X indicating system failure.
@@ -32,12 +35,10 @@ public:
       const double delta_p_0,
       const double delta_p_alpha,
       const double delta_p_beta);
-
-  std::string get_table_as_csv();
-
 private:
   InterpolationTable dpr_to_angle;
   double ias_;
+  double tas_;
   double alpha_;
   double beta_;
   bool valid_;

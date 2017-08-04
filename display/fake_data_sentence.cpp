@@ -28,7 +28,7 @@ struct Model {
 };
 
 constexpr static Model kBaroPressure{
-    .min =  75000,
+    .min =  20000,
     .max = 101325,
 };
 

@@ -1,6 +1,7 @@
 #include "display.h"
 
 #include <math.h>
+#include <iostream>
 
 #include "widgets.h"
 
@@ -46,8 +47,13 @@ constexpr Stroke kAirballCrosshairsStroke(
     Color(255, 255, 255),
     2);
 
-constexpr double kLowSpeedAirballStrokeWidth =
-    4.0;
+constexpr double kLowSpeedAirballStrokeWidth = 4.0;
+
+constexpr Color kTasRingColor(255, 0, 255);
+
+constexpr double kTasRingStrokeWidth = 3.0;
+
+constexpr double kTasThresholdRatio = 0.25;
 
 constexpr Stroke kLowSpeedAirballStroke(
     Color(255, 255, 255),
@@ -85,17 +91,17 @@ constexpr int kAdjustingValueBufSize = 128;
 
 ///////////////////////////////////////////////////////////////////////
 
-double Display::alphaToY(const double alpha) {
+double Display::alpha_to_y(const double alpha) {
   double ratio = (alpha - settings_->alpha_min()) / (settings_->alpha_stall() - settings_->alpha_min());
   return kDisplayRegionYMin + ratio * kDisplayRegionHeight;
 }
 
-double Display::betaToX(const double beta) {
+double Display::beta_to_x(const double beta) {
   double ratio = beta / settings_->beta_full_scale();
   return kDisplayRegionHalfWidth * (1.0 + ratio);
 }
 
-double Display::iasToRadius(const double ias) {
+double Display::airspeed_to_radius(const double ias) {
   double ratio = ias / settings_->ias_full_scale();
   return ratio * kWidth / 2;
 }
@@ -126,8 +132,8 @@ void Display::paintBackground() {
 }
 
 void Display::paintAirball() {
-  Point center(betaToX(airdata_->beta()), alphaToY((airdata_->alpha())));
-  double radius = iasToRadius(airdata_->ias());
+  Point center(beta_to_x(airdata_->beta()), alpha_to_y((airdata_->alpha())));
+  double radius = airspeed_to_radius(airdata_->ias());
   if (radius < kLowSpeedThresholdAirballRadius) {
     arc(
         screen_->cr(),
@@ -137,6 +143,25 @@ void Display::paintAirball() {
         2.0 * M_PI,
         kLowSpeedAirballStroke);
   } else {
+    double tas_stroke_alpha;
+    if (airdata_->tas() < airdata_->ias() || airdata_->ias() == 0) {
+      tas_stroke_alpha = 0;
+    } else {
+      double ias_squared = airdata_->ias() * airdata_->ias();
+      double tas_squared = airdata_->tas() * airdata_->tas();
+      double ratio = (tas_squared - ias_squared) / ias_squared;
+      tas_stroke_alpha = (ratio > kTasThresholdRatio)
+          ? 1.0 : (ratio / kTasThresholdRatio);
+    }
+    arc(
+        screen_->cr(),
+        center,
+        airspeed_to_radius(airdata_->tas()),
+        0,
+        2.0 * M_PI,
+        Stroke(
+            kTasRingColor.with_alpha(tas_stroke_alpha),
+            kTasRingStrokeWidth));
     disc(
         screen_->cr(),
         center,
@@ -165,23 +190,23 @@ void Display::paintTotemPoleLine() {
   line(
       screen_->cr(),
       Point(kDisplayXMid, 0),
-      Point(kDisplayXMid, alphaToY(settings_->alpha_ref()) - kAlphaRefRadius),
+      Point(kDisplayXMid, alpha_to_y(settings_->alpha_ref()) - kAlphaRefRadius),
       kTotemPoleStroke);
   line(
       screen_->cr(),
-      Point(kDisplayXMid, alphaToY(settings_->alpha_ref()) + kAlphaRefRadius),
+      Point(kDisplayXMid, alpha_to_y(settings_->alpha_ref()) + kAlphaRefRadius),
       Point(kDisplayXMid, kDisplayRegionYMax),
       kTotemPoleStroke);
   arc(
       screen_->cr(),
-      Point(kDisplayXMid, alphaToY(settings_->alpha_ref())),
+      Point(kDisplayXMid, alpha_to_y(settings_->alpha_ref())),
       kAlphaRefRadius,
       kAlphaRefTopAngle0,
       kAlphaRefTopAngle1,
       kTotemPoleStroke);
   arc(
       screen_->cr(),
-      Point(kDisplayXMid, alphaToY(settings_->alpha_ref())),
+      Point(kDisplayXMid, alpha_to_y(settings_->alpha_ref())),
       kAlphaRefRadius,
       kAlphaRefBotAngle0,
       kAlphaRefBotAngle1,
@@ -193,37 +218,37 @@ void Display::paintTotemPoleAlphaX() {
       screen_->cr(),
       Point(
           kDisplayXMid - 3 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_x())),
+          alpha_to_y(settings_->alpha_x())),
       Point(
           kDisplayXMid - 2 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_x())),
+          alpha_to_y(settings_->alpha_x())),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid - 2 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_x())),
+          alpha_to_y(settings_->alpha_x())),
       Point(
           kDisplayXMid - 3 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
+          alpha_to_y(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid + 3 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_x())),
+          alpha_to_y(settings_->alpha_x())),
       Point(
           kDisplayXMid + 2 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_x())),
+          alpha_to_y(settings_->alpha_x())),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid + 2 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_x())),
+          alpha_to_y(settings_->alpha_x())),
       Point(
           kDisplayXMid + 3 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
+          alpha_to_y(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
       kTotemPoleStroke);
 }
 
@@ -232,37 +257,37 @@ void Display::paintTotemPoleAlphaY() {
       screen_->cr(),
       Point(
           kDisplayXMid - 4 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_y())),
+          alpha_to_y(settings_->alpha_y())),
       Point(
           kDisplayXMid - 5 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_y())),
+          alpha_to_y(settings_->alpha_y())),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid - 5 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_y())),
+          alpha_to_y(settings_->alpha_y())),
       Point(
           kDisplayXMid - 6 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_y()) - kTotemPoleAlphaUnit),
+          alpha_to_y(settings_->alpha_y()) - kTotemPoleAlphaUnit),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid + 4 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_y())),
+          alpha_to_y(settings_->alpha_y())),
       Point(
           kDisplayXMid + 5 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_y())),
+          alpha_to_y(settings_->alpha_y())),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid + 5 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_y())),
+          alpha_to_y(settings_->alpha_y())),
       Point(
           kDisplayXMid + 6 * kTotemPoleAlphaUnit,
-          alphaToY(settings_->alpha_y()) - kTotemPoleAlphaUnit),
+          alpha_to_y(settings_->alpha_y()) - kTotemPoleAlphaUnit),
       kTotemPoleStroke);
 }
 

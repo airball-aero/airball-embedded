@@ -29,18 +29,23 @@ private:
 
 class Color {
 public:
-  constexpr Color(double r, double g, double b) : r_(r), g_(g), b_(b) {}
+  constexpr Color(double r, double g, double b) : r_(r), g_(g), b_(b), a_(1) {}
+  constexpr Color(double r, double g, double b, double a) : r_(r), g_(g), b_(b), a_(a) {}
   constexpr Color(int r, int g, int b)
       : Color(hexToRatio(r), hexToRatio(g), hexToRatio(b)) {}
+  constexpr Color with_alpha(double a) const {
+    return Color(r_, g_, b_, a);
+  }
   double r() const {return r_;}
   double g() const {return g_;}
   double b() const {return b_;}
+  double a() const {return a_;}
   void apply(cairo_t *cr) const;
 private:
   static constexpr double hexToRatio(int hex) {
     return (double) hex / (double) 0xff;
   }
-  const double r_, g_, b_;
+  const double r_, g_, b_, a_;
 };
 
 class Stroke {
