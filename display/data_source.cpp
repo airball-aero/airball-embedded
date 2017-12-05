@@ -10,6 +10,7 @@
 #include <termios.h>
 #include <sstream>
 #include <poll.h>
+#include <regex>
 #include "fake_data_sentence.h"
 
 namespace airball {
@@ -88,7 +89,8 @@ std::string SerialDataSource::next_data_sentence() {
     s << c;
   }
 
-  return s.str();
+  auto result = s.str();
+  return result.erase(result.find_last_not_of(" \n\r\t") + 1);
 }
 
 DataSource* DataSource::NewSerialDataSource(const std::string& device) {

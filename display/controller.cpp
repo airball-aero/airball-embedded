@@ -88,13 +88,15 @@ std::ostream& operator<<(
   out << duration.count();
 }
 
-Controller::Controller(Screen *screen,
-                       UserInputSource *input,
-                       DataSource *data)
-    : screen_(screen), input_(input), data_(data) {}
+Controller::Controller(Screen* screen,
+                       UserInputSource* input,
+                       DataSource* data,
+                       DataLogger* logger)
+    : screen_(screen), input_(input), data_(data), logger_(logger) {}
 
 void Controller::run() {
   InputQueue<std::string> data;
+  InputQueue<std::string> log;
   InputQueue<Command> commands;
 
   std::mutex input_mutex;
@@ -154,8 +156,15 @@ void Controller::run() {
   });
 
   std::thread data_thread([&]() {
+    int i = 0;
     while (true) {
-      data.put(data_->next_data_sentence());
+      auto sentence = data_->next_data_sentence();
+      data.put(sentence);
+      logger_->log(sentence);
+      if (i++ > 512) {
+        logger_->flush();
+        i = 0;
+      }
       std::lock_guard<std::mutex> lock(input_mutex);
       if (!running) { break; }
     }

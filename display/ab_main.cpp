@@ -6,6 +6,7 @@
 #include "screen.h"
 #include "data_source.h"
 #include "user_input_source.h"
+#include "data_logger.h"
 
 template <class T> struct Option {
   std::string arg;
@@ -67,6 +68,23 @@ static Options<airball::DataSource, 2> DATA_SOURCE_OPTIONS = {
     },
 };
 
+static Options<airball::DataLogger, 2> DATA_LOGGER_OPTIONS = {
+    .values = {
+        {
+            .arg = std::string("--logger_fake"),
+            .make = [](){
+              return airball::DataLogger::NewFakeDataLogger();
+            },
+        },
+        {
+            .arg = std::string("--logger_file"),
+            .make = [](){
+              return airball::DataLogger::NewFileDataLogger("/tmp/airball.log");
+            },
+        },
+    },
+};
+
 template <class T, int N> std::unique_ptr<T> make(
     const Options<T, N> &options,
     int argc,
@@ -85,9 +103,11 @@ int main(int argc, char** argv) {
   auto screen = make(SCREEN_OPTIONS, argc, argv);
   auto user_input_source = make(USER_INPUT_SOURCE_OPTIONS, argc, argv);
   auto data_source = make(DATA_SOURCE_OPTIONS, argc, argv);
+  auto data_logger = make(DATA_LOGGER_OPTIONS, argc, argv);
   airball::Controller c(
       screen.get(),
       user_input_source.get(),
-      data_source.get());
+      data_source.get(),
+      data_logger.get());
   c.run();
 }

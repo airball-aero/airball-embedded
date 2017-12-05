@@ -17,9 +17,9 @@ include_directories(external/rapidjson/include)
 
 add_library(airball_core
         widgets.cpp airdata.cpp settings.cpp display.cpp one_shot_timer.cpp
-        controller.cpp controller.h data_source.cpp screen.cpp
+        controller.cpp data_source.cpp screen.cpp
         user_input_source.cpp delay_timer.cpp aerodynamics.cpp
-        fake_data_sentence.cpp interpolation_table.cpp)
+        fake_data_sentence.cpp interpolation_table.cpp data_logger.cpp)
 
 add_library(user_input_source
         user_input_source.cpp)
