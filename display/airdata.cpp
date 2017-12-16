@@ -41,7 +41,7 @@ double single_point_sphere_pressure_coefficient(double a) {
 }
 
 void populate_table(InterpolationTable& table) {
-  for (int i = 0; i <= kTableSteps; i++) {
+  for (int i = -1; i <= kTableSteps; i++) {
     double ratio = ((double) i) / ((double) kTableSteps);
     double angle = kTableAngleMin + ratio * (kTableAngleMax - kTableAngleMin);
     table.put(angle, dpr_for_probe(angle));

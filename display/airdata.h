@@ -28,7 +28,7 @@ public:
   // Commands this model to update its contents based on the given sensor data.
   void update_from_sentence(const std::string& sentence);
 
-  // Commands this model to update its contents bsaed on the given sensor data.
+  // Commands this model to update its contents based on the given sensor data.
   void update_from_sentence(
       const double baro,
       const double temp,
