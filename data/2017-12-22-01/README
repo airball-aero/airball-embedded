@@ -1,0 +1,3 @@
+Probe with possibly damaged board sitting on the desk, sending data. The
+two files are for on-battery and on-USB-power operation. Lots of spikes
+in the readings which are as of yet unexplained.
