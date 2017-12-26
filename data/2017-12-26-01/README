@@ -1,0 +1,5 @@
+This is a test run on the road with a probe with no baro sensor but
+all the other sensors installed. Attempting to figure out where the
+problem of "spikes" in the data comes from. The data is quiet on the
+bench but as seen here, after driving for a while, the spikes come
+in. Suspecting poor board manufacture.
