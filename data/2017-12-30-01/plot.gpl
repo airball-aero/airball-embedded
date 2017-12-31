@@ -1,0 +1,20 @@
+set datafile separator ","
+set xlabel "sample number"
+# set multiplot layout 4, 1
+start=15000
+end=30000
+
+start=27100
+end=27200
+
+# set ylabel "temperature (K)"
+# plot[start:end] "plot.csv" using 0:2 with lines ls 1
+
+set ylabel "delta P 0 (Pa)"
+plot[start:end] "plot.csv" using 0:3 with lines ls 1
+
+# set ylabel "delta P alpha (Pa)"
+# plot[start:end] "plot.csv" using 0:4 with lines ls 1
+
+# set ylabel "delta P beta (Pa)"
+# plot[start:end] "plot.csv" using 0:5 with lines ls 1
