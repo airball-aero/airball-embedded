@@ -2,3 +2,11 @@ arduino/libraries/**
 display/external/**
 **/*~
 display/cmake-build-debug/**
+eagle/**/*.b#?
+eagle/**/*.s#?
+eagle/**/*.l#?
+eagle/**/*.pro
+eagle/**/*.gpi
+eagle/**/*.ger
+eagle/**/*.dri
+eagle/**/*.xln
