@@ -2,6 +2,7 @@ arduino/libraries/**
 display/external/**
 **/*~
 display/cmake-build-debug/**
+display/build/**
 eagle/**/*.b#?
 eagle/**/*.s#?
 eagle/**/*.l#?
