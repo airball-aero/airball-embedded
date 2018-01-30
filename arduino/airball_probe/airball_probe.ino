@@ -3,7 +3,7 @@
 #include <TimerOne.h>
 #include <TI_TCA9548A.h>
 #include <AllSensors_DLHR.h>
-#include <SparkFunTMP102.h>
+#include <Temperature_LM75_Derived.h>
 
 // Which pin is the TCA9548A reset pin tied to?
 #define MUX_RESET 4
@@ -13,9 +13,6 @@
 #define MUX_CHANNEL_dpA 2
 #define MUX_CHANNEL_dpB 3
 #define MUX_CHANNEL_oat 4
-
-// The I2C address of the TMP102 OAT sensor.
-#define I2C_ADDRESS_oat 0x48
 
 // How frequently (in uS) should measurements be taken?
 #define MEASUREMENT_INTERVAL_US 50000
@@ -29,7 +26,7 @@ AllSensors_DLHR_L10D_8 dpA(&Wire);
 AllSensors_DLHR_L10D_8 dpB(&Wire);
 
 // The OAT sensor.
-TMP102 oat(I2C_ADDRESS_oat);
+TI_TMP102 oat(&Wire);
 
 // A global variable and callback function to track whether the timer has fired and it's time
 // to collect a new measurement.
@@ -104,7 +101,7 @@ void completeMeasurementAndReport() {
   dpB.startMeasurement();
 
   // Collect the OAT while pressure measurements are still in progress.
-  float oat_temperature = oat.readTempC();
+  float oat_temperature = oat.readTemperatureC();
 
   // Something is racy between TMP102 and the pressure sensor reading sequence; moving too quickly
   // results in occasional bad data from the first pressure sensor.
