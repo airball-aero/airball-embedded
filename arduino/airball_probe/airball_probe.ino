@@ -3,16 +3,18 @@
 #include <TimerOne.h>
 #include <TI_TCA9548A.h>
 #include <AllSensors_DLHR.h>
+#include <AllSensors_DLV.h>
 #include <Temperature_LM75_Derived.h>
 
 // Which pin is the TCA9548A reset pin tied to?
 #define MUX_RESET 4
 
 // The channel configuration for the sensors.
-#define MUX_CHANNEL_dp0 0
-#define MUX_CHANNEL_dpA 2
-#define MUX_CHANNEL_dpB 3
-#define MUX_CHANNEL_oat 4
+#define MUX_CHANNEL_dp0   0
+#define MUX_CHANNEL_baro  1
+#define MUX_CHANNEL_dpA   2
+#define MUX_CHANNEL_dpB   3
+#define MUX_CHANNEL_oat   4
 
 // How frequently (in uS) should measurements be taken?
 #define MEASUREMENT_INTERVAL_US 50000
@@ -24,6 +26,8 @@ TI_TCA9548A mux(&Wire);
 AllSensors_DLHR_L10G_8 dp0(&Wire);
 AllSensors_DLHR_L10D_8 dpA(&Wire);
 AllSensors_DLHR_L10D_8 dpB(&Wire);
+
+AllSensors_DLV_015A baro(&Wire);
 
 // The OAT sensor.
 TI_TMP102 oat(&Wire);
@@ -57,6 +61,7 @@ void setup() {
   dp0.setPressureUnit(AllSensors_DLHR::PressureUnit::PASCAL);
   dpA.setPressureUnit(AllSensors_DLHR::PressureUnit::PASCAL);
   dpB.setPressureUnit(AllSensors_DLHR::PressureUnit::PASCAL);
+  baro.setPressureUnit(AllSensors_DLV::PressureUnit::PASCAL);
 
   // Set up a timer to trigger a new measurement.
   Timer1.initialize(MEASUREMENT_INTERVAL_US);
@@ -73,12 +78,12 @@ void appendFloat(char *buf, float value, char const *delim) {
 
 // Construct a telemetry sentence and send it to the provided stream (typically a Serial object).
 char sentence[128];
-void sendSentence(Stream *stream, float qnh, float oat, float dp0, float dpA, float dpB) {
+void sendSentence(Stream *stream, float baro, float oat, float dp0, float dpA, float dpB) {
   // Start with an empty string.
   sentence[0] = 0;
 
   // Append all variables to the sentence buffer, separated by commas and ended by a CR/NL.
-  appendFloat(sentence, qnh, ",");
+  appendFloat(sentence, baro, ",");
   appendFloat(sentence, oat, ",");
   appendFloat(sentence, dp0, ",");
   appendFloat(sentence, dpA, ",");
@@ -118,8 +123,11 @@ void completeMeasurementAndReport() {
   mux.selectChannel(MUX_CHANNEL_dpB);
   dpB.readData(true);
 
+  mux.selectChannel(MUX_CHANNEL_baro);
+  baro.readData();
+
   // Send the data sentence to the display.
-  sendSentence(&Serial1, 0.0, oat_temperature, dp0.pressure, dpA.pressure, dpB.pressure);
+  sendSentence(&Serial1, baro.pressure, oat_temperature, dp0.pressure, dpA.pressure, dpB.pressure);
 }
 
 void loop() {
