@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.5" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
@@ -2744,10 +2744,10 @@ Source: http://catalog.tycoelectronics.com ... JPN_CD_1376408_S.pdf</description
 <vertex x="-32.625" y="-2.5"/>
 </polygon>
 <wire x1="-35.5" y1="31" x2="33.5" y2="31" width="0.127" layer="21" style="shortdash"/>
-<hole x="-31.7" y="27" drill="2.3"/>
+<hole x="-31.7" y="27" drill="3"/>
 <circle x="-31.7" y="27" radius="2.5" width="0" layer="29"/>
 <circle x="-31.7" y="27" radius="2.5" width="0" layer="41"/>
-<hole x="29.9" y="27" drill="2.3"/>
+<hole x="29.9" y="27" drill="3"/>
 <circle x="29.9" y="27" radius="2.5" width="0" layer="41"/>
 <circle x="29.9" y="27" radius="2.5" width="0" layer="29"/>
 <circle x="-31.7" y="27" radius="2.5" width="0" layer="42"/>
@@ -2966,10 +2966,19 @@ Source: &lt;a href= "http://www.hirose.co.jp/cataloge_hp/e58605370.pdf"&gt;Data 
 </polygon>
 </package>
 <package name="NHD-4.3-480272EF-ASXN">
-<wire x1="-52.75" y1="33.6" x2="-52.75" y2="-33.6" width="0.508" layer="51"/>
-<wire x1="-52.75" y1="-33.6" x2="52.75" y2="-33.6" width="0.508" layer="51"/>
-<wire x1="52.75" y1="-33.6" x2="52.75" y2="33.6" width="0.508" layer="51"/>
-<wire x1="52.75" y1="33.6" x2="-52.75" y2="33.6" width="0.508" layer="51"/>
+<wire x1="-52.75" y1="31.11" x2="-52.75" y2="-36.09" width="0.508" layer="51"/>
+<wire x1="-52.75" y1="-36.09" x2="52.75" y2="-36.09" width="0.508" layer="51"/>
+<wire x1="52.75" y1="-36.09" x2="52.75" y2="31.11" width="0.508" layer="51"/>
+<wire x1="52.75" y1="31.11" x2="-52.75" y2="31.11" width="0.508" layer="51"/>
+<wire x1="-34" y1="-36" x2="-34" y2="9" width="0.127" layer="21"/>
+<wire x1="-34" y1="9" x2="-13.5" y2="9" width="0.127" layer="21"/>
+<wire x1="-13.5" y1="9" x2="-13.5" y2="-11" width="0.127" layer="21"/>
+<wire x1="-13.5" y1="-11" x2="11.5" y2="-11" width="0.127" layer="21"/>
+<wire x1="11.5" y1="-11" x2="11.5" y2="-36" width="0.127" layer="21"/>
+<wire x1="-47.52" y1="26.93" x2="47.52" y2="26.93" width="0.127" layer="21" style="shortdash"/>
+<wire x1="47.52" y1="26.93" x2="47.52" y2="-26.93" width="0.127" layer="21" style="shortdash"/>
+<wire x1="47.52" y1="-26.93" x2="-47.52" y2="-26.93" width="0.127" layer="21" style="shortdash"/>
+<wire x1="-47.52" y1="-26.93" x2="-47.52" y2="26.93" width="0.127" layer="21" style="shortdash"/>
 </package>
 <package name="SOT353-5">
 <smd name="1" x="-0.65" y="-1.1" dx="0.9" dy="0.4" layer="1" rot="R90"/>
