@@ -49,6 +49,11 @@ public:
   double beta_full_scale() const;
 
   /**
+   * @return the display setting, constant bias to angle of yaw.
+   */
+  double beta_bias() const;
+
+  /**
    * @return whether the settings are currently being adjusted.
    */
   bool adjusting() const;

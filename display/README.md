@@ -19,11 +19,13 @@ https://github.com/miloyip/rapidjson
 To build the system, in the top level directory (here), do:
 
 ```
-cmake CMakeLists.txt --build build
+mkdir build
+cd build
+cmake ..
 ```
 
-This will create a directory `build` that will contain all the generated
-`Makefile`s. Now `cd` into that directory and type:
+This new directory `build` will contain all the generated `Makefile`s. In this
+directory, to build a given target, type:
 
 ```
 make <target>

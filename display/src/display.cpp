@@ -97,7 +97,7 @@ double Display::alpha_to_y(const double alpha) {
 }
 
 double Display::beta_to_x(const double beta) {
-  double ratio = beta / settings_->beta_full_scale();
+  double ratio = (beta + settings_->beta_bias()) / settings_->beta_full_scale();
   return kDisplayRegionHalfWidth * (1.0 + ratio);
 }
 

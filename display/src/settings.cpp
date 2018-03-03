@@ -103,6 +103,17 @@ constexpr Parameter BETA_FULL_SCALE = {
     .count_default=(long int)(20.0 / ANGULAR_PARAMETER_SCALE),
 };
 
+constexpr Parameter BETA_BIAS = {
+    .name="beta_bias",
+    .display_name = "β bias",
+    ANGULAR_PARAMETER_DISPLAY_UNITS,
+    .offset=0,
+    .scale=ANGULAR_PARAMETER_SCALE,
+    .count_min=0,
+    .count_max=ANGULAR_PARAMETER_ABSMAX,
+    .count_default=0,
+};
+
 constexpr const Parameter* ALL_SETTINGS[]{
     &IAS_FULL_SCALE,
     &ALPHA_STALL,
@@ -111,6 +122,7 @@ constexpr const Parameter* ALL_SETTINGS[]{
     &ALPHA_Y,
     &ALPHA_REF,
     &BETA_FULL_SCALE,
+    &BETA_BIAS,
 };
 
 constexpr const int NUM_SETTINGS =
@@ -201,6 +213,10 @@ double Settings::alpha_ref() const {
 
 double Settings::beta_full_scale() const {
   return get_value(&BETA_FULL_SCALE);
+}
+
+double Settings::beta_bias() const {
+  return get_value(&BETA_BIAS);
 }
 
 bool Settings::adjusting() const {
