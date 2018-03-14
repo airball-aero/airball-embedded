@@ -29,4 +29,6 @@ situated. Our observation is below:
 ![Yaw positions](yaw-positions.png)
 
 In post-processing, and based on the display settings, we can
-determine the yaw variation between the different flight conditions.
+determine the yaw variation between the different flight
+conditions. The settings file is included. Beta max was set at 300
+counts which equates to +/- 15 degrees full scale.
