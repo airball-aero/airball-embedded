@@ -23,20 +23,35 @@
  */
 
 #include <iostream>
+#include <string>
 #include "data_source.h"
 #include "airdata.h"
 
+/**
+ * Reads lines of probe data from stdin, and writes out the lines as read and
+ * adds columns for the computed values using the current Airdata
+ * implementation. The added columns are:
+ *
+ *     IAS (m/s)
+ *     TAS (m/s)
+ *     alpha (radians)
+ *     beta (radians)
+ *     free stream Q (Pa)
+ */
 int main(int argc, char** argv) {
   airball::Airdata airdata;
-  airball::DataSource* data_source = airball::DataSource::NewFakeDataSource();
-  for (int i = 0; i < 5000; i++) {
-    auto s = data_source->next_data_sentence();
+  std::string s;
+  while (true) {
+    std::getline(std::cin, s);
+    if (s == "") { break; }
     airdata.update_from_sentence(s);
     std::cout
         << s << ","
+        << airdata.ias() << ","
+        << airdata.tas() << ","
         << airdata.alpha() << ","
         << airdata.beta() << ","
-        << airdata.ias() << ","
+        << airdata.free_stream_q()
         << std::endl;
   }
 }

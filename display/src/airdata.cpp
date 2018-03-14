@@ -86,18 +86,13 @@ void Airdata::update_from_sentence(
     const double delta_p_0,
     const double delta_p_alpha,
     const double delta_p_beta) {
-  const double alpha_radians =
-      find_dpr_to_angle(dpr_to_angle, delta_p_alpha / delta_p_0);
-  const double beta_radians =
-      find_dpr_to_angle(dpr_to_angle, delta_p_beta / delta_p_0);
-  const double total_radians =
-      sqrt(alpha_radians * alpha_radians + beta_radians * beta_radians);
-  const double free_stream_q = delta_p_0 /
-      single_point_sphere_pressure_coefficient(total_radians);
-  alpha_ = - radians_to_degrees(alpha_radians);
-  beta_ = radians_to_degrees(beta_radians);
-  ias_ = meters_per_second_to_knots(q_to_ias(free_stream_q));
-  tas_ = meters_per_second_to_knots(q_to_tas(free_stream_q, baro, temp));
+  alpha_ = - find_dpr_to_angle(dpr_to_angle, delta_p_alpha / delta_p_0);
+  beta_ = find_dpr_to_angle(dpr_to_angle, delta_p_beta / delta_p_0);
+  const double total_angle = sqrt(alpha_ * alpha_ + beta_ * beta_);
+  free_stream_q_ = delta_p_0 /
+      single_point_sphere_pressure_coefficient(total_angle);
+  ias_ = q_to_ias(free_stream_q_);
+  tas_ = q_to_tas(free_stream_q_, baro, temp);
   valid_ = !isnan(alpha_) && !isnan(beta_);
 }
 

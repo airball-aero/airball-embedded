@@ -46,6 +46,9 @@ public:
   // Angle of yaw
   double beta() const {return beta_;}
 
+  // Free stream dynamic pressure
+  double free_stream_q() const {return free_stream_q_;}
+
   // Returns true if the data is valid. If not, display a red X indicating system failure.
   bool valid() const {return valid_;}
 
@@ -65,6 +68,7 @@ private:
   double tas_;
   double alpha_;
   double beta_;
+  double free_stream_q_;
   bool valid_;
 };
 

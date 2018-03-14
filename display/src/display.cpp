@@ -27,6 +27,7 @@
 #include <math.h>
 #include <iostream>
 
+#include "units.h"
 #include "widgets.h"
 
 namespace airball {
@@ -116,17 +117,21 @@ constexpr int kAdjustingValueBufSize = 128;
 ///////////////////////////////////////////////////////////////////////
 
 double Display::alpha_to_y(const double alpha) {
-  double ratio = (alpha - settings_->alpha_min()) / (settings_->alpha_stall() - settings_->alpha_min());
+  double alpha_degrees = radians_to_degrees(alpha);
+  double ratio = (alpha_degrees - settings_->alpha_min())
+                 / (settings_->alpha_stall() - settings_->alpha_min());
   return kDisplayRegionYMin + ratio * kDisplayRegionHeight;
 }
 
 double Display::beta_to_x(const double beta) {
-  double ratio = (beta + settings_->beta_bias()) / settings_->beta_full_scale();
+  double beta_degrees = radians_to_degrees(beta);
+  double ratio = (beta_degrees + settings_->beta_bias()) / settings_->beta_full_scale();
   return kDisplayRegionHalfWidth * (1.0 + ratio);
 }
 
-double Display::airspeed_to_radius(const double ias) {
-  double ratio = ias / settings_->ias_full_scale();
+double Display::airspeed_to_radius(const double airspeed) {
+  double airspeed_knots = meters_per_second_to_knots(airspeed);
+  double ratio = airspeed_knots / settings_->ias_full_scale();
   return ratio * kWidth / 2;
 }
 
