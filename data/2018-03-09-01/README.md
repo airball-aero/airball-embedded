@@ -15,6 +15,11 @@ Total Hobbs time was 1.7 hours. We targeted a peak altitude of 11,500
 feet. At peak altitude, we measured a pressure altitude of 11,300
 feet, at 0 degrees C and 83 KIAS.
 
+At no time, including peak altitude, did we observe the TAS "ring"
+show up on the display. It is unclear if this is due to a bug in the
+software or whether the algorithm that hides that ring unless the
+TAS-IAS spread is large enough is too aggressive.
+
 We planned to fly the software with the "beta bias" adjustment, but
 again due to a failure of setup we did not have that version
 installed. So instead we centered the inclinometer ball at different
