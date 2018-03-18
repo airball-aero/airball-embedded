@@ -28,11 +28,58 @@
 
 namespace airball {
 
-TEST(Airdata, simplething) {
+TEST(Airdata, simple_zero_condition) {
   Airdata ad;
-  ad.update_from_sentence(0.0, 273.0, 10.0, 0.0, 0.0);
+  ad.update_from_sentence(101.3e+03, 15.0, 6000, 0.0, 0.0);
   EXPECT_NEAR(0.0, ad.alpha(), 0.001);
   EXPECT_NEAR(0.0, ad.beta(), 0.001);
+}
+
+TEST(Airdata, ias_test) {
+  Airdata ad;
+  ad.update_from_sentence(101.3e+03, 15.0, 6125, 0.0, 0.0);
+  EXPECT_NEAR(100, ad.ias(), 0.02);
+}
+
+TEST(Airdata, tas_test) {
+  Airdata ad;
+  // At standard pressure, T=226.85, dry air density = 0.706
+  // At that density, Q=3530, true airspeed=100
+  // TODO: Add a test for nonstandard pressure
+  ad.update_from_sentence(101.3e+03, 226.85, 3530, 0.0, 0.0);
+  EXPECT_NEAR(100, ad.tas(), 0.02);
+}
+
+// To a very rough approximation, for small deflctions, we know that the
+// nondimensional pressure difference between top and bottom holes is related
+// to the angle of attack via a scaling factor (angle in radians):
+//   alpha = (dpAlpha / dp0) * .2
+
+TEST(Airdata, alpha_test) {
+  Airdata ad;
+  ad.update_from_sentence(101.3e+03, 15.0, 100, 10, 0);
+  EXPECT_NEAR(-0.02, ad.alpha(), 0.01);
+  EXPECT_NEAR(0, ad.beta(), 0.01);
+}
+
+TEST(Airdata, beta_test) {
+  Airdata ad;
+  ad.update_from_sentence(101.3e+03, 15.0, 100, 0, 10);
+  EXPECT_NEAR(0, ad.alpha(), 0.01);
+  EXPECT_NEAR(0.02, ad.beta(), 0.01);
+}
+
+TEST(Airdata, alpha_beta_test) {
+  Airdata ad;
+  ad.update_from_sentence(101.3e+03, 15.0, 6125, 612.5, 612.5);
+  EXPECT_NEAR(-0.0222, ad.alpha(), 0.01);
+  EXPECT_NEAR(0.0222, ad.beta(), 0.01);
+}
+
+TEST(Airdata, ias_deflected_test) {
+  Airdata ad;
+  ad.update_from_sentence(101.3e+03, 15.0, 6125, 612.5, 612.5);
+  EXPECT_NEAR(100.111, ad.ias(), 0.01);
 }
 
 } // namespace airball

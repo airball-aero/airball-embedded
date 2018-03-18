@@ -28,14 +28,24 @@
 
 namespace airball {
 
-TEST(Airdata, ias_to_q) {
-  EXPECT_EQ(6000, ias_to_q(100));
-  EXPECT_EQ(0.6, ias_to_q(1));
+TEST(Aerodynamics, ias_to_q) {
+  EXPECT_EQ(6125, ias_to_q(100));
+  EXPECT_EQ(0.6125, ias_to_q(1));
 }
 
 TEST(Aerodynamics, q_to_ias) {
-  EXPECT_EQ(100, q_to_ias(6000));
-  EXPECT_EQ(1, q_to_ias(0.6));
+  EXPECT_EQ(100, q_to_ias(6125));
+  EXPECT_EQ(1, q_to_ias(0.6125));
+}
+
+TEST(Aerodynamics, dry_air_density) {
+  EXPECT_NEAR(0.0117, dry_air_density(1000, 25), 0.001);
+  EXPECT_NEAR(1.225, dry_air_density(101.3e+03, 15), 0.001);
+}
+
+TEST(Aerodynamics, q_to_tas) {
+  EXPECT_NEAR(100, q_to_tas(6125, 101.3e+03, 15), .1);
+  EXPECT_NEAR(10, q_to_tas(61.25, 101.3e+03, 15), 0.01);
 }
 
 } // namespace airball

@@ -24,11 +24,13 @@
 
 #include "aerodynamics.h"
 
+#include "units.h"
+
 #include <math.h>
 
 namespace airball {
 
-constexpr static double kDensityAirStandard = 1.2;
+constexpr static double kDensityAirStandard = 1.225;
 constexpr static double kDryAirGasConstant = 287.058;
 
 double ias_to_q(double ias) {
@@ -40,7 +42,7 @@ double q_to_ias(double q) {
 }
 
 double dry_air_density(double p, double t) {
-  return p / (kDryAirGasConstant * t);
+  return p / (kDryAirGasConstant * celsius_to_kelvin(t));
 }
 
 double q_to_tas(double q, double p, double t) {

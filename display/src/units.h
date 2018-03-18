@@ -43,4 +43,8 @@ constexpr double degrees_to_radians(double v) {
   return v / 180 * M_PI;
 }
 
+constexpr double celsius_to_kelvin(double v) {
+  return v + 273.15;
+}
+
 #endif  // AIRBALL_UNITS_H
