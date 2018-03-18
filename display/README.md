@@ -32,13 +32,32 @@ the system needs to be compiled from scratch on the Raspberry Pi as well.
 
 ## Building
 
-You need to create a subdirectory called `external` and download into
-it the following:
+### Install system dependencies ###
+
+Install the Cairo library (which will pull in X11-related dependencies as well):
 
 ```
-https://github.com/google/googletest
-https://github.com/miloyip/rapidjson
+sudo apt install libcairo2-dev
 ```
+
+### Clone this repository ###
+
+First you'll need to get this repository on your machine:
+
+```
+git clone https://github.com/airball-aero/airball-embedded.git
+cd airball-embedded/display
+````
+
+Then you will need to create a subdirectory called `external` and clone a couple of dependencies into it:
+
+```
+mkdir external
+git clone https://github.com/google/googletest external/googletest
+git clone https://github.com/miloyip/rapidjson external/rapidjson
+```
+
+### Build Airball ###
 
 To build the system, in the top level directory (here), do:
 

@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 
+#include <cmath>
+
 #include <gtest/gtest.h>
 #include "delay_timer.h"
 
