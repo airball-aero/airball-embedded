@@ -1,8 +1,8 @@
 arduino/libraries/**
 display/external/**
 **/*~
-display/cmake-build-debug/**
-display/build/**
+**/cmake-build-debug/**
+**/build/**
 eagle/**/*.b#?
 eagle/**/*.s#?
 eagle/**/*.l#?
@@ -11,3 +11,6 @@ eagle/**/*.gpi
 eagle/**/*.ger
 eagle/**/*.dri
 eagle/**/*.xln
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/dictionaries/*
