@@ -75,7 +75,7 @@ static Options<airball::UserInputSource, 2> USER_INPUT_SOURCE_OPTIONS = {
     },
 };
 
-static Options<airball::DataSource, 2> DATA_SOURCE_OPTIONS = {
+static Options<airball::DataSource, 3> DATA_SOURCE_OPTIONS = {
     .values = {
         {
             .arg = std::string("--data_fake"),
@@ -87,6 +87,12 @@ static Options<airball::DataSource, 2> DATA_SOURCE_OPTIONS = {
             .arg = std::string("--data_serial"),
             .make = [](){
               return airball::DataSource::NewSerialDataSource("/dev/ttyS0");
+            },
+        },
+        {
+            .arg = std::string("--data_replay"),
+            .make = [](){
+              return airball::DataSource::NewReplayDataSource("./airball.log");
             },
         },
     },

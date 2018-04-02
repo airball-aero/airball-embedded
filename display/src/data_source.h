@@ -61,6 +61,13 @@ public:
    * @return a DataSource.
    */
   static DataSource* NewFakeDataSource();
+
+  /**
+   * Creates a new DataSource that replays a given log file.
+   *
+   * @return a DataSource.
+   */
+  static DataSource* NewReplayDataSource(const std::string& file);
 };
 
 }  // namespace airball

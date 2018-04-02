@@ -133,7 +133,7 @@ constexpr Parameter BETA_BIAS = {
     ANGULAR_PARAMETER_DISPLAY_UNITS,
     .offset=0,
     .scale=ANGULAR_PARAMETER_SCALE,
-    .count_min=0,
+    .count_min=-ANGULAR_PARAMETER_ABSMAX,
     .count_max=ANGULAR_PARAMETER_ABSMAX,
     .count_default=0,
 };
