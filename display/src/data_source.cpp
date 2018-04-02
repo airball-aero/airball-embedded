@@ -35,6 +35,7 @@
 #include <sstream>
 #include <poll.h>
 #include <regex>
+#include <fstream>
 #include "fake_data_sentence.h"
 
 namespace airball {
@@ -117,12 +118,34 @@ std::string SerialDataSource::next_data_sentence() {
   return result.erase(result.find_last_not_of(" \n\r\t") + 1);
 }
 
+class ReplayDataSource : public DataSource {
+public:
+  ReplayDataSource(const std::string& file);
+  virtual std::string next_data_sentence() override;
+private:
+  std::ifstream ifs_;
+};
+
+ReplayDataSource::ReplayDataSource(const std::string& file)
+    : ifs_(file, std::ios::in) { }
+
+std::string ReplayDataSource::next_data_sentence() {
+  std::this_thread::sleep_for(kInterval);
+  std::string s;
+  getline(ifs_, s);
+  return s;
+}
+
 DataSource* DataSource::NewSerialDataSource(const std::string& device) {
   return new SerialDataSource(device);
 }
 
 DataSource* DataSource::NewFakeDataSource() {
   return new FakeDataSource();
+}
+
+DataSource* DataSource::NewReplayDataSource(const std::string& file) {
+  return new ReplayDataSource(file);
 }
 
 }  // namespace airball

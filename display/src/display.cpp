@@ -117,14 +117,20 @@ constexpr int kAdjustingValueBufSize = 128;
 ///////////////////////////////////////////////////////////////////////
 
 double Display::alpha_to_y(const double alpha) {
-  double alpha_degrees = radians_to_degrees(alpha);
+  return alpha_degrees_to_y(radians_to_degrees(alpha));
+}
+
+double Display::alpha_degrees_to_y(const double alpha_degrees) {
   double ratio = (alpha_degrees - settings_->alpha_min())
                  / (settings_->alpha_stall() - settings_->alpha_min());
   return kDisplayRegionYMin + ratio * kDisplayRegionHeight;
 }
 
 double Display::beta_to_x(const double beta) {
-  double beta_degrees = radians_to_degrees(beta);
+  return beta_degrees_to_x(radians_to_degrees(beta));
+}
+
+double Display::beta_degrees_to_x(const double beta_degrees) {
   double ratio = (beta_degrees + settings_->beta_bias()) / settings_->beta_full_scale();
   return kDisplayRegionHalfWidth * (1.0 + ratio);
 }
@@ -219,23 +225,23 @@ void Display::paintTotemPoleLine() {
   line(
       screen_->cr(),
       Point(kDisplayXMid, 0),
-      Point(kDisplayXMid, alpha_to_y(settings_->alpha_ref()) - kAlphaRefRadius),
+      Point(kDisplayXMid, alpha_degrees_to_y(settings_->alpha_ref()) - kAlphaRefRadius),
       kTotemPoleStroke);
   line(
       screen_->cr(),
-      Point(kDisplayXMid, alpha_to_y(settings_->alpha_ref()) + kAlphaRefRadius),
+      Point(kDisplayXMid, alpha_degrees_to_y(settings_->alpha_ref()) + kAlphaRefRadius),
       Point(kDisplayXMid, kDisplayRegionYMax),
       kTotemPoleStroke);
   arc(
       screen_->cr(),
-      Point(kDisplayXMid, alpha_to_y(settings_->alpha_ref())),
+      Point(kDisplayXMid, alpha_degrees_to_y(settings_->alpha_ref())),
       kAlphaRefRadius,
       kAlphaRefTopAngle0,
       kAlphaRefTopAngle1,
       kTotemPoleStroke);
   arc(
       screen_->cr(),
-      Point(kDisplayXMid, alpha_to_y(settings_->alpha_ref())),
+      Point(kDisplayXMid, alpha_degrees_to_y(settings_->alpha_ref())),
       kAlphaRefRadius,
       kAlphaRefBotAngle0,
       kAlphaRefBotAngle1,
@@ -247,37 +253,37 @@ void Display::paintTotemPoleAlphaX() {
       screen_->cr(),
       Point(
           kDisplayXMid - 3 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_x())),
+          alpha_degrees_to_y(settings_->alpha_x())),
       Point(
           kDisplayXMid - 2 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_x())),
+          alpha_degrees_to_y(settings_->alpha_x())),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid - 2 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_x())),
+          alpha_degrees_to_y(settings_->alpha_x())),
       Point(
           kDisplayXMid - 3 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
+          alpha_degrees_to_y(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid + 3 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_x())),
+          alpha_degrees_to_y(settings_->alpha_x())),
       Point(
           kDisplayXMid + 2 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_x())),
+          alpha_degrees_to_y(settings_->alpha_x())),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid + 2 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_x())),
+          alpha_degrees_to_y(settings_->alpha_x())),
       Point(
           kDisplayXMid + 3 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
+          alpha_degrees_to_y(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
       kTotemPoleStroke);
 }
 
@@ -286,37 +292,37 @@ void Display::paintTotemPoleAlphaY() {
       screen_->cr(),
       Point(
           kDisplayXMid - 4 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_y())),
+          alpha_degrees_to_y(settings_->alpha_y())),
       Point(
           kDisplayXMid - 5 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_y())),
+          alpha_degrees_to_y(settings_->alpha_y())),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid - 5 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_y())),
+          alpha_degrees_to_y(settings_->alpha_y())),
       Point(
           kDisplayXMid - 6 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_y()) - kTotemPoleAlphaUnit),
+          alpha_degrees_to_y(settings_->alpha_y()) - kTotemPoleAlphaUnit),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid + 4 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_y())),
+          alpha_degrees_to_y(settings_->alpha_y())),
       Point(
           kDisplayXMid + 5 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_y())),
+          alpha_degrees_to_y(settings_->alpha_y())),
       kTotemPoleStroke);
   line(
       screen_->cr(),
       Point(
           kDisplayXMid + 5 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_y())),
+          alpha_degrees_to_y(settings_->alpha_y())),
       Point(
           kDisplayXMid + 6 * kTotemPoleAlphaUnit,
-          alpha_to_y(settings_->alpha_y()) - kTotemPoleAlphaUnit),
+          alpha_degrees_to_y(settings_->alpha_y()) - kTotemPoleAlphaUnit),
       kTotemPoleStroke);
 }
 

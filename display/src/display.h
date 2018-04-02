@@ -52,6 +52,10 @@ private:
 
   double alpha_to_y(const double alpha);
   double beta_to_x(const double beta);
+
+  double alpha_degrees_to_y(const double alpha_degrees);
+  double beta_degrees_to_x(const double beta_degrees);
+
   double airspeed_to_radius(const double ias);
 
   Screen* screen_;
