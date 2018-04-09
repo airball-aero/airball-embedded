@@ -22,13 +22,14 @@
  THE SOFTWARE.
 -->
 
-# Airball Display Source
+# Airball Telemetry and Display Source
 
 ## Introduction
 
-This is the source tree for the Airball display. It is intended to be compiled
-on a Linux system. The actual display runs on a Raspberry Pi, and at the moment
-the system needs to be compiled from scratch on the Raspberry Pi as well.
+This is the source tree for the Airball telemetry and display
+system. It is intended to be compiled on a Linux system. The actual
+display runs on a Raspberry Pi, and at the moment the system needs to
+be compiled from scratch on the Raspberry Pi as well.
 
 ## Building
 
