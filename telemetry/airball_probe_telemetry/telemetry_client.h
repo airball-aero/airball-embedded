@@ -12,7 +12,7 @@ public:
   /**
    * The common base class of all Airball telemetry.
    */
-  class Datum {}
+  class Datum {};
 
   /**
    * A sample of airdata acquired by the Airball probe.
@@ -36,7 +36,7 @@ public:
 
     /** The yaw axis pressure hole difference (Pa) */
     const double dpB;
-  }
+  };
 
   /**
    * A message describing the technical status of the Airball probe.
@@ -57,7 +57,7 @@ public:
 
     /** The battery capacity as a ratio of full scale [0..1] */
     const double capacity_ratio;
-  }
+  };
 
   /**
    * A message describing the technical status of the wireless link to
@@ -75,7 +75,7 @@ public:
     const double rssi_ratio;
   }
 
-  virtual ~TelemetryClient() {};
+  virtual ~TelemetryClient() {}
 
   /**
    * Blocks until a Datum is available, then returns it.
