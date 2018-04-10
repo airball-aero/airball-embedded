@@ -1,6 +1,8 @@
 #ifndef AIRBALL_TELEMETRY_SYSTEM_STATUS_H
 #define AIRBALL_TELEMETRY_SYSTEM_STATUS_H
 
+#include <chrono>
+
 #include "../airball_probe_telemetry/telemetry_client.h"
 
 namespace airball {
@@ -11,6 +13,8 @@ namespace airball {
  */
 class SystemStatus {
 public:
+  SystemStatus();
+
   /**
    * Adds a datum to the system status. All data from the probe is expected to
    * be sent here.
@@ -34,9 +38,17 @@ public:
    * 0.0 to 1.0, suitable for displaying to the user.
    */
   double battery_health() const;
+
+private:
+  void update(TelemetryClient::Airdata d);
+  void update(TelemetryClient::LinkStatus d);
+  void update(TelemetryClient::ProbeStatus d);
+
+  double link_quality_;
+  double battery_health_;
+  std::chrono::system_clock::time_point last_airdata_time_;
 };
 
 }  // namespace airball
 
-
-#endif //AIRBALL_TELEMETRY_SYSTEM_STATUS_H
+#endif  // AIRBALL_TELEMETRY_SYSTEM_STATUS_H

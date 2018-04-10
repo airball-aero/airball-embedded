@@ -44,5 +44,5 @@ enable_testing()
 add_executable(runUnitTests
         aerodynamics_test.cpp one_shot_timer_test.cpp delay_timer_test.cpp
         interpolation_table_test.cpp airdata_test.cpp
-        fake_telemetry_client_test.cpp)
+        fake_telemetry_client_test.cpp system_status_test.cpp)
 target_link_libraries(runUnitTests gtest gtest_main airball_core)
