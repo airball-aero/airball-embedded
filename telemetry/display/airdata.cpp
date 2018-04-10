@@ -80,37 +80,15 @@ Airdata::Airdata() {
   populate_table(dpr_to_angle);
 }
 
-void Airdata::update_from_sentence(
-    const double baro,
-    const double temp,
-    const double delta_p_0,
-    const double delta_p_alpha,
-    const double delta_p_beta) {
-  alpha_ = - find_dpr_to_angle(dpr_to_angle, delta_p_alpha / delta_p_0);
-  beta_ = find_dpr_to_angle(dpr_to_angle, delta_p_beta / delta_p_0);
+void Airdata::update(TelemetryClient::Airdata d) {
+  alpha_ = - find_dpr_to_angle(dpr_to_angle, d.dpA / d.dp0);
+  beta_ = find_dpr_to_angle(dpr_to_angle, d.dpB / d.dp0);
   const double total_angle = sqrt(alpha_ * alpha_ + beta_ * beta_);
-  free_stream_q_ = delta_p_0 /
+  free_stream_q_ = d.dp0 /
       single_point_sphere_pressure_coefficient(total_angle);
   ias_ = q_to_ias(free_stream_q_);
-  tas_ = q_to_tas(free_stream_q_, baro, temp);
+  tas_ = q_to_tas(free_stream_q_, d.baro, d.oat);
   valid_ = !isnan(alpha_) && !isnan(beta_);
-}
-
-void Airdata::update_from_sentence(const std::string& sentence) {
-  double baro;
-  double temp;
-  double delta_p_0;
-  double delta_p_alpha;
-  double delta_p_beta;
-  int cnt = sscanf(
-      sentence.c_str(),
-      "%lf,%lf,%lf,%lf,%lf",
-      &baro, &temp, &delta_p_0, &delta_p_alpha, &delta_p_beta);
-  if (cnt != 5) {
-    valid_ = false;
-    return;
-  }
-  update_from_sentence(baro, temp, delta_p_0, delta_p_alpha, delta_p_beta);
 }
 
 } // namespace airball

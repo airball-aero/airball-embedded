@@ -10,77 +10,73 @@ namespace airball {
 class TelemetryClient {
 public:
   /**
-   * The common base class of all Airball telemetry.
-   */
-  class Datum {};
-
-  /**
    * A sample of airdata acquired by the Airball probe.
    */
-  class Airdata : public Datum {
-  public:
-    Airdata(double baro, double oat, double dp0, double dpA, double dpB)
-      : baro(baro), oat(oat), dp0(dp0), dpA(dpA), dpB(dpB) {}
-    
+  struct Airdata {
     /** The barometric pressure (Pa) */
-    const double baro;
+    double baro;
     
     /** The outside air temperature (degrees C) */
-    const double oat;
+    double oat;
 
     /** The center hole gage pressure (Pa) */
-    const double dp0;
+    double dp0;
 
     /** The AoA axis pressure hole difference (Pa) */
-    const double dpA;
+    double dpA;
 
     /** The yaw axis pressure hole difference (Pa) */
-    const double dpB;
+    double dpB;
   };
 
   /**
    * A message describing the technical status of the Airball probe.
    */
-  class ProbeStatus : public Datum {
-  public:
-    ProbeStatus(double voltage, double current, double capacity, double capacity_pct)
-      : voltage(voltage), current(current), capacity(capacity), capacity_pct(capacity_pct) {}
-
+  struct ProbeStatus {
     /** The battery voltage (V) */
-    const double voltage;
+    double voltage;
 
     /** The battery current (A) */
-    const double current;
+    double current;
 
     /** The battery capacity (Ah) */
-    const double capacity;
+    double capacity;
 
     /** The battery capacity as a ratio of full scale [0..1] */
-    const double capacity_ratio;
+    double capacity_ratio;
   };
 
   /**
    * A message describing the technical status of the wireless link to
    * the Airball probe.
    */
-  class LinkStatus : public Datum {
-  public:
-    LinkStatus(double rssi)
-      : rssi(rssi) {}
-
+  struct LinkStatus {
     /**
      * The Received Signal Strength Indicator (RSSI) as a proportion of
      * the manufacturer specified maximum [0..1]
      */
-    const double rssi_ratio;
-  }
+    double rssi_ratio;
+  };
 
-  virtual ~TelemetryClient() {}
+  enum DatumType {
+    AIRDATA,
+    PROBE_STATUS,
+    LINK_STATUS,
+  };
+
+  struct Datum {
+    DatumType type;
+    union {
+      Airdata airdata;
+      ProbeStatus probe_status;
+      LinkStatus link_status;
+    };
+  };
 
   /**
    * Blocks until a Datum is available, then returns it.
    */
-  Datum get() = 0;
+  virtual Datum get() = 0;
 };
 
 }  // namespace airball

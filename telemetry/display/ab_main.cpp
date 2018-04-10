@@ -28,9 +28,9 @@
 
 #include "controller.h"
 #include "screen.h"
-#include "data_source.h"
 #include "user_input_source.h"
 #include "data_logger.h"
+#include "fake_telemetry_client.h"
 
 template <class T> struct Option {
   std::string arg;
@@ -75,24 +75,12 @@ static Options<airball::UserInputSource, 2> USER_INPUT_SOURCE_OPTIONS = {
     },
 };
 
-static Options<airball::DataSource, 3> DATA_SOURCE_OPTIONS = {
+static Options<airball::TelemetryClient, 1> TELEMETRY_CLIENT_OPTIONS = {
     .values = {
         {
-            .arg = std::string("--data_fake"),
+            .arg = std::string("--telemetry_fake"),
             .make = [](){
-              return airball::DataSource::NewFakeDataSource();
-            },
-        },
-        {
-            .arg = std::string("--data_serial"),
-            .make = [](){
-              return airball::DataSource::NewSerialDataSource("/dev/ttyS0");
-            },
-        },
-        {
-            .arg = std::string("--data_replay"),
-            .make = [](){
-              return airball::DataSource::NewReplayDataSource("./airball.log");
+              return new airball::FakeTelemetryClient();
             },
         },
     },
@@ -132,12 +120,12 @@ template <class T, int N> std::unique_ptr<T> make(
 int main(int argc, char** argv) {
   auto screen = make(SCREEN_OPTIONS, argc, argv);
   auto user_input_source = make(USER_INPUT_SOURCE_OPTIONS, argc, argv);
-  auto data_source = make(DATA_SOURCE_OPTIONS, argc, argv);
+  auto telemetry_client = make(TELEMETRY_CLIENT_OPTIONS, argc, argv);
   auto data_logger = make(DATA_LOGGER_OPTIONS, argc, argv);
   airball::Controller c(
       screen.get(),
       user_input_source.get(),
-      data_source.get(),
+      telemetry_client.get(),
       data_logger.get());
   c.run();
 }

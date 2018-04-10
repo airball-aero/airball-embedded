@@ -27,6 +27,7 @@
 
 #include <string>
 #include "interpolation_table.h"
+#include "../airball_probe_telemetry/telemetry_client.h"
 
 namespace airball {
 
@@ -53,15 +54,7 @@ public:
   bool valid() const {return valid_;}
 
   // Commands this model to update its contents based on the given sensor data.
-  void update_from_sentence(const std::string& sentence);
-
-  // Commands this model to update its contents based on the given sensor data.
-  void update_from_sentence(
-      const double baro,
-      const double temp,
-      const double delta_p_0,
-      const double delta_p_alpha,
-      const double delta_p_beta);
+  void update(TelemetryClient::Airdata d);
 private:
   InterpolationTable dpr_to_angle;
   double ias_;

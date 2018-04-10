@@ -114,12 +114,12 @@ std::ostream& operator<<(
 
 Controller::Controller(Screen* screen,
                        UserInputSource* input,
-                       DataSource* data,
+                       TelemetryClient* telemetry,
                        DataLogger* logger)
-    : screen_(screen), input_(input), data_(data), logger_(logger) {}
+    : screen_(screen), input_(input), telemetry_(telemetry), logger_(logger) {}
 
 void Controller::run() {
-  InputQueue<std::string> data;
+  InputQueue<TelemetryClient::Airdata> data;
   InputQueue<std::string> log;
   InputQueue<Command> commands;
 
@@ -180,14 +180,17 @@ void Controller::run() {
   });
 
   std::thread data_thread([&]() {
-    int i = 0;
     while (true) {
-      auto sentence = data_->next_data_sentence();
-      data.put(sentence);
-      logger_->log(sentence);
-      if (i++ > 512) {
-        logger_->flush();
-        i = 0;
+      // TODO(ihab): Handle other telemetry types
+      TelemetryClient::Datum datum = telemetry_->get();
+      switch (datum.type) {
+        case TelemetryClient::AIRDATA:
+          data.put(datum.airdata);
+          break;
+        case TelemetryClient::LINK_STATUS:
+        case TelemetryClient::PROBE_STATUS:
+          // TODO(ihab): Handle other telemetry types
+          break;
       }
       std::lock_guard<std::mutex> lock(input_mutex);
       if (!running) { break; }
@@ -198,7 +201,6 @@ void Controller::run() {
     Settings settings(kSettingsPath);
     Airdata airdata;
     Display display(screen_, &airdata, &settings);
-    airdata.update_from_sentence("");
     while (true) {
       auto time_start = std::chrono::steady_clock::now();
       int num_commands = 0;
@@ -208,10 +210,12 @@ void Controller::run() {
       });
       auto commands_applied = since(time_start);
       int num_data_sentences = 0;
-      foreach<std::string>(data.get(), [&](const std::string& s) {
-        num_data_sentences++;
-        airdata.update_from_sentence(s);
-      });
+      foreach<TelemetryClient::Airdata>(
+          data.get(),
+          [&](const TelemetryClient::Airdata& s) {
+            num_data_sentences++;
+            airdata.update(s);
+          });
       auto data_sentences_applied = since(time_start);
       display.paint();
       auto painted = since(time_start);

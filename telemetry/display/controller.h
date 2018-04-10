@@ -29,8 +29,8 @@
 
 #include "screen.h"
 #include "user_input_source.h"
-#include "data_source.h"
 #include "data_logger.h"
+#include "../airball_probe_telemetry/telemetry_client.h"
 
 namespace airball {
 
@@ -51,7 +51,7 @@ public:
    */
   Controller(Screen* screen,
              UserInputSource* input,
-             DataSource* data,
+             TelemetryClient* telemetry,
              DataLogger* logger);
 
   /**
@@ -62,7 +62,7 @@ public:
 private:
   Screen* screen_;
   UserInputSource* input_;
-  DataSource* data_;
+  TelemetryClient* telemetry_;
   DataLogger* logger_;
 };
 
