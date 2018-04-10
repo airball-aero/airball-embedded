@@ -22,9 +22,9 @@
 
 add_library(airball_core
         widgets.cpp airdata.cpp settings.cpp display.cpp one_shot_timer.cpp
-        controller.cpp screen.cpp
-        user_input_source.cpp delay_timer.cpp aerodynamics.cpp
-        fake_telemetry_client.cpp interpolation_table.cpp data_logger.cpp)
+        controller.cpp screen.cpp user_input_source.cpp delay_timer.cpp
+        aerodynamics.cpp fake_telemetry_client.cpp interpolation_table.cpp
+        data_logger.cpp system_status.cpp)
 
 add_library(user_input_source
         user_input_source.cpp)
@@ -39,9 +39,6 @@ target_link_libraries(ab_device airball_core)
 
 add_executable(user_input_source_test user_input_source_test_main.cpp)
 target_link_libraries(user_input_source_test user_input_source)
-
-add_executable(serial_data_source_test serial_data_source_test_main.cpp)
-target_link_libraries(serial_data_source_test airball_core)
 
 enable_testing()
 add_executable(runUnitTests

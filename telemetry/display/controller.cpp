@@ -27,6 +27,7 @@
 #include "airdata.h"
 #include "display.h"
 #include "delay_timer.h"
+#include "system_status.h"
 
 #include <iostream>
 #include <thread>
@@ -119,7 +120,7 @@ Controller::Controller(Screen* screen,
     : screen_(screen), input_(input), telemetry_(telemetry), logger_(logger) {}
 
 void Controller::run() {
-  InputQueue<TelemetryClient::Airdata> data;
+  InputQueue<TelemetryClient::Datum> data;
   InputQueue<std::string> log;
   InputQueue<Command> commands;
 
@@ -182,16 +183,7 @@ void Controller::run() {
   std::thread data_thread([&]() {
     while (true) {
       // TODO(ihab): Handle other telemetry types
-      TelemetryClient::Datum datum = telemetry_->get();
-      switch (datum.type) {
-        case TelemetryClient::AIRDATA:
-          data.put(datum.airdata);
-          break;
-        case TelemetryClient::LINK_STATUS:
-        case TelemetryClient::PROBE_STATUS:
-          // TODO(ihab): Handle other telemetry types
-          break;
-      }
+      data.put(telemetry_->get());
       std::lock_guard<std::mutex> lock(input_mutex);
       if (!running) { break; }
     }
@@ -199,40 +191,31 @@ void Controller::run() {
 
   std::thread paint_thread([&]() {
     Settings settings(kSettingsPath);
+    SystemStatus status;
     Airdata airdata;
-    Display display(screen_, &airdata, &settings);
+    Display display(screen_, &airdata, &settings, &status);
+
     while (true) {
-      auto time_start = std::chrono::steady_clock::now();
-      int num_commands = 0;
       foreach<Command>(commands.get(), [&](const Command& c) {
-        num_commands++;
         apply_command(settings, c);
       });
-      auto commands_applied = since(time_start);
-      int num_data_sentences = 0;
-      foreach<TelemetryClient::Airdata>(
+
+      foreach<TelemetryClient::Datum>(
           data.get(),
-          [&](const TelemetryClient::Airdata& s) {
-            num_data_sentences++;
-            airdata.update(s);
+          [&](const TelemetryClient::Datum& d) {
+            if (d.type == TelemetryClient::AIRDATA) {
+              airdata.update(d.airdata);
+            }
+            status.update(d);
           });
-      auto data_sentences_applied = since(time_start);
+
       display.paint();
-      auto painted = since(time_start);
+
+      // TODO(ihab): Build an interrupt triggered paint loop rather than merely
+      // sleeping for a fixed delay.
       std::this_thread::sleep_for(kPaintDelay);
-      time_start = std::chrono::steady_clock::now();
+
       std::lock_guard<std::mutex> lock(input_mutex);
-      auto locked_input_mutex = since(time_start);
-      /*
-       * TODO: Come up with a better way to log metrics.
-      std::cout
-          << num_commands << ","
-          << num_data_sentences << ","
-          << commands_applied << ","
-          << data_sentences_applied << ","
-          << painted << ","
-          << locked_input_mutex << std::endl;
-      */
       if (!running) { break; }
     }
   });

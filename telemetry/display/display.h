@@ -30,13 +30,18 @@
 #include "airdata.h"
 #include "screen.h"
 #include "settings.h"
+#include "system_status.h"
 
 namespace airball {
 
 class Display {
 public:
-  Display(Screen* screen, const Airdata* airdata, const Settings* settings)
-      : screen_(screen), airdata_(airdata), settings_(settings) {}
+  Display(Screen* screen,
+          const Airdata* airdata,
+          const Settings* settings,
+          const SystemStatus* status)
+      : screen_(screen), airdata_(airdata), settings_(settings), status_(status)
+      {}
 
   void paint();
 
@@ -61,6 +66,7 @@ private:
   Screen* screen_;
   const Airdata* airdata_;
   const Settings* settings_;
+  const SystemStatus* status_;
 };
 
 } // namespace airball
