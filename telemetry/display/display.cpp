@@ -114,6 +114,10 @@ constexpr Point kAdjustingParamTopLeft(210, 745);
 constexpr Point kAdjustingValueTopRight(450, 745);
 constexpr int kAdjustingValueBufSize = 128;
 
+constexpr Stroke kNoFlightDataStroke(
+    Color(255, 0, 0),
+    3);
+
 ///////////////////////////////////////////////////////////////////////
 
 double Display::alpha_to_y(const double alpha) {
@@ -147,7 +151,11 @@ void Display::paint() {
   cairo_rotate(screen_->cr(), -M_PI / 2);
 
   paintBackground();
-  paintAirball();
+  if (status_->flight_data_up()) {
+    paintAirball();
+  } else {
+    paintNoFlightData();
+  }
   paintTotemPole();
   paintCowCatcher();
   if (settings_->adjusting()) {
@@ -388,6 +396,19 @@ void Display::paintAdjusting() {
       kAdjustingValueTopRight,
       kAdjustingTextFont,
       kAdjustingTextColor);
+}
+
+void Display::paintNoFlightData() {
+  line(
+      screen_->cr(),
+      Point(0, 0),
+      Point(kWidth, kDisplayRegionYMax),
+      kNoFlightDataStroke);
+  line(
+      screen_->cr(),
+      Point(kWidth, 0),
+      Point(0, kDisplayRegionYMax),
+      kNoFlightDataStroke);
 }
 
 } // namespace airball

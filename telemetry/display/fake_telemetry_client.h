@@ -19,6 +19,7 @@ public:
 
 private:
   TelemetryClient::DatumType  next_datum_;
+  unsigned int invalid_state_counter_;
 };
 
 }

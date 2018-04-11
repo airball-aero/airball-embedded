@@ -21,6 +21,11 @@ constexpr static std::chrono::duration<unsigned int, std::milli>
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kPeriodLinkStatus(10000);
 
+constexpr static unsigned int kInvalidStateNumCycles = 350;
+
+constexpr static std::chrono::duration<unsigned int, std::milli>
+    kInvalidStateDelay(3000);
+
 double gage_pressure_at_point(
     double dynamic_pressure,
     double angle_from_stagnation_point) {
@@ -155,7 +160,7 @@ TelemetryClient::LinkStatus make_link_status() {
 }
 
 FakeTelemetryClient::FakeTelemetryClient()
-    : next_datum_(AIRDATA) {}
+    : next_datum_(AIRDATA), invalid_state_counter_(0) {}
 
 FakeTelemetryClient::~FakeTelemetryClient() = default;
 
@@ -163,7 +168,13 @@ TelemetryClient::Datum FakeTelemetryClient::get() {
   Datum d;
   switch (next_datum_) {
     case AIRDATA:
-      std::this_thread::sleep_for(kSendDelay);
+      if (invalid_state_counter_ > kInvalidStateNumCycles) {
+        invalid_state_counter_ = 0;
+        std::this_thread::sleep_for(kInvalidStateDelay);
+      } else {
+        invalid_state_counter_++;
+        std::this_thread::sleep_for(kSendDelay);
+      }
       next_datum_ = PROBE_STATUS;
       d.type = AIRDATA;
       d.airdata = make_airdata();

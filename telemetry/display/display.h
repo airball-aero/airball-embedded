@@ -54,6 +54,7 @@ private:
   void paintTotemPoleAlphaY();
   void paintCowCatcher();
   void paintAdjusting();
+  void paintNoFlightData();
 
   double alpha_to_y(const double alpha);
   double beta_to_x(const double beta);
