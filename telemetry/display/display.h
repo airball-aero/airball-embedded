@@ -55,6 +55,8 @@ private:
   void paintCowCatcher();
   void paintAdjusting();
   void paintNoFlightData();
+  void paintBatteryStatus();
+  void paintLinkStatus();
 
   double alpha_to_y(const double alpha);
   double beta_to_x(const double beta);

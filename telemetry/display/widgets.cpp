@@ -26,6 +26,7 @@
 
 #include <math.h>
 #include <cairo/cairo.h>
+#include <iostream>
 
 namespace airball {
 
@@ -119,6 +120,46 @@ void box(
       size.h());
   stroke.apply(cr);
   cairo_stroke(cr);
+}
+
+void polygon(
+    cairo_t* cr,
+    const int numCorners,
+    const Point corners[],
+    const Stroke& stroke) {
+  cairo_move_to(
+      cr,
+      corners[0].x(),
+      corners[0].y());
+  for (int i = 1; i < numCorners; i++) {
+    cairo_line_to(
+        cr,
+        corners[i].x(),
+        corners[i].y());
+  }
+  cairo_close_path(cr);
+  stroke.apply(cr);
+  cairo_stroke(cr);
+}
+
+void shape(
+    cairo_t* cr,
+    const int numCorners,
+    const Point corners[],
+    const Color& fill) {
+  cairo_move_to(
+      cr,
+      corners[0].x(),
+      corners[0].y());
+  for (int i = 1; i < numCorners; i++) {
+    cairo_line_to(
+        cr,
+        corners[i].x(),
+        corners[i].y());
+  }
+  cairo_close_path(cr);
+  fill.apply(cr);
+  cairo_fill(cr);
 }
 
 void text_top_left(
