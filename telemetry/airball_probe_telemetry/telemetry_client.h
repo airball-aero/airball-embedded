@@ -12,6 +12,9 @@ namespace airball {
  */
 class TelemetryClient {
 public:
+  TelemetryClient() {}
+  virtual ~TelemetryClient() {}
+
   /**
    * Blocks until a sample is available, then returns it.
    */

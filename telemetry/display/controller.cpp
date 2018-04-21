@@ -119,9 +119,8 @@ std::ostream& operator<<(
 
 Controller::Controller(Screen* screen,
                        UserInputSource* input,
-                       TelemetryClient* telemetry,
-                       DataLogger* logger)
-    : screen_(screen), input_(input), telemetry_(telemetry), logger_(logger) {}
+                       TelemetryClient* telemetry)
+    : screen_(screen), input_(input), telemetry_(telemetry) {}
 
 void Controller::run() {
   InputQueue<std::unique_ptr<sample>> data;
@@ -203,6 +202,8 @@ void Controller::run() {
         apply_command(settings, c);
       });
 
+      // Cannot use foreach for a vector of std::unique_ptr since it invokes
+      // copy constructors of the element type which std::unique_ptr deletes.
       std::vector<std::unique_ptr<sample>> cycle_data = data.get();
       for (auto it = cycle_data.begin(); it < cycle_data.end(); ++it) {
         const sample* d = (*it).get();

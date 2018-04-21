@@ -23,13 +23,9 @@
  */
 
 #include <functional>
-#include <string>
 #include <memory>
 
 #include "controller.h"
-#include "screen.h"
-#include "user_input_source.h"
-#include "data_logger.h"
 #include "fake_telemetry_client.h"
 
 template <class T> struct Option {
@@ -86,23 +82,6 @@ static Options<airball::TelemetryClient, 1> TELEMETRY_CLIENT_OPTIONS = {
     },
 };
 
-static Options<airball::DataLogger, 2> DATA_LOGGER_OPTIONS = {
-    .values = {
-        {
-            .arg = std::string("--logger_fake"),
-            .make = [](){
-              return airball::DataLogger::NewFakeDataLogger();
-            },
-        },
-        {
-            .arg = std::string("--logger_file"),
-            .make = [](){
-              return airball::DataLogger::NewFileDataLogger("/tmp/airball.log");
-            },
-        },
-    },
-};
-
 template <class T, int N> std::unique_ptr<T> make(
     const Options<T, N> &options,
     int argc,
@@ -121,11 +100,9 @@ int main(int argc, char** argv) {
   auto screen = make(SCREEN_OPTIONS, argc, argv);
   auto user_input_source = make(USER_INPUT_SOURCE_OPTIONS, argc, argv);
   auto telemetry_client = make(TELEMETRY_CLIENT_OPTIONS, argc, argv);
-  auto data_logger = make(DATA_LOGGER_OPTIONS, argc, argv);
   airball::Controller c(
       screen.get(),
       user_input_source.get(),
-      telemetry_client.get(),
-      data_logger.get());
+      telemetry_client.get());
   c.run();
 }

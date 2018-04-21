@@ -38,7 +38,7 @@ be compiled from scratch on the Raspberry Pi as well.
 Install the Cairo library (which will pull in X11-related dependencies as well):
 
 ```
-sudo apt install libcairo2-dev
+sudo apt-get install libcairo2-dev libasio-dev
 ```
 
 ### Clone this repository ###
