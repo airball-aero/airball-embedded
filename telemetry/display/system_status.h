@@ -4,6 +4,8 @@
 #include <chrono>
 
 #include "../airball_probe_telemetry/telemetry_client.h"
+#include "../airball_probe_telemetry/airdata_sample.h"
+#include "../airball_probe_telemetry/battery_sample.h"
 
 namespace airball {
 
@@ -19,7 +21,7 @@ public:
    * Adds a datum to the system status. All data from the probe is expected to
    * be sent here.
    */
-  void update(TelemetryClient::Datum d);
+  void update(const sample* d);
 
   /**
    * Returns the overall health status of the system. If this returns false, the
@@ -40,9 +42,8 @@ public:
   double battery_health() const;
 
 private:
-  void update(TelemetryClient::Airdata d);
-  void update(TelemetryClient::LinkStatus d);
-  void update(TelemetryClient::ProbeStatus d);
+  void update(const airdata_sample* d);
+  void update(const battery_sample* d);
 
   double link_quality_;
   double battery_health_;

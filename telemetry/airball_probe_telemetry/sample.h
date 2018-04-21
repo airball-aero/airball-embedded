@@ -7,8 +7,6 @@
 #include <ctime>
 #include <chrono>
 
-class airdata_sample;
-
 class sample {
 private:
 
@@ -49,7 +47,8 @@ public:
         return std::string(time_buf);
     }
 
-    int get_rssi() { return -(int)rssi; }
+    std::chrono::time_point<std::chrono::system_clock> get_time() const { return time; }
+    uint8_t get_rssi() const { return rssi; }
 
     virtual int snprintf(const char *str, size_t len) {
         return std::snprintf((char *)str, len, "%s", format_time().c_str());

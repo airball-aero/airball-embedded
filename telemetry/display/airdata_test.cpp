@@ -28,16 +28,31 @@
 
 namespace airball {
 
+std::unique_ptr<airdata_sample> airdata(double baro,
+                       double temperature,
+                       double dp0,
+                       double dpA,
+                       double dpB) {
+  return std::unique_ptr<airdata_sample>(new airdata_sample(
+      std::chrono::system_clock::now(),
+      128,
+      999,
+      baro,
+      temperature,
+      dp0,
+      dpA,
+      dpB));
+}
+
 TEST(Airdata, simple_zero_condition) {
   Airdata ad;
   ad.update(
-      TelemetryClient::Airdata{
-          .baro = 101.3e+03,
-          .oat = 15.0,
-          .dp0 = 6000,
-          .dpA = 0.0,
-          .dpB = 0.0,
-      });
+      airdata(
+          101.3e+03,
+          15.0,
+          6000,
+          0.0,
+          0.0).get());
   EXPECT_NEAR(0.0, ad.alpha(), 0.001);
   EXPECT_NEAR(0.0, ad.beta(), 0.001);
 }
@@ -45,13 +60,12 @@ TEST(Airdata, simple_zero_condition) {
 TEST(Airdata, ias_test) {
   Airdata ad;
   ad.update(
-      TelemetryClient::Airdata{
-          .baro = 101.3e+03,
-          .oat = 15.0,
-          .dp0 = 6125,
-          .dpA = 0.0,
-          .dpB = 0.0,
-      });
+      airdata(
+          101.3e+03,
+          15.0,
+          6125,
+          0.0,
+          0.0).get());
   EXPECT_NEAR(100, ad.ias(), 0.02);
 }
 
@@ -61,13 +75,12 @@ TEST(Airdata, tas_test) {
   // At that density, Q=3530, true airspeed=100
   // TODO: Add a test for nonstandard pressure
   ad.update(
-      TelemetryClient::Airdata{
-          .baro = 101.3e+03,
-          .oat = 226.85,
-          .dp0 = 3530,
-          .dpA = 0.0,
-          .dpB = 0.0,
-      });
+      airdata(
+          101.3e+03,
+          226.85,
+          3530,
+          0.0,
+          0.0).get());
   EXPECT_NEAR(100, ad.tas(), 0.02);
 }
 
@@ -79,13 +92,12 @@ TEST(Airdata, tas_test) {
 TEST(Airdata, alpha_test) {
   Airdata ad;
   ad.update(
-      TelemetryClient::Airdata{
-          .baro = 101.3e+03,
-          .oat = 15.0,
-          .dp0 = 100,
-          .dpA = 10,
-          .dpB = 0,
-      });
+      airdata(
+          101.3e+03,
+          15.0,
+          100,
+          10,
+          0).get());
   EXPECT_NEAR(-0.02, ad.alpha(), 0.01);
   EXPECT_NEAR(0, ad.beta(), 0.01);
 }
@@ -93,13 +105,12 @@ TEST(Airdata, alpha_test) {
 TEST(Airdata, beta_test) {
   Airdata ad;
   ad.update(
-      TelemetryClient::Airdata{
-          .baro = 101.3e+03,
-          .oat = 15.0,
-          .dp0 = 100,
-          .dpA = 0,
-          .dpB = 10,
-      });
+      airdata(
+          101.3e+03,
+          15.0,
+          100,
+          0,
+          10).get());
   EXPECT_NEAR(0, ad.alpha(), 0.01);
   EXPECT_NEAR(0.02, ad.beta(), 0.01);
 }
@@ -107,13 +118,12 @@ TEST(Airdata, beta_test) {
 TEST(Airdata, alpha_beta_test) {
   Airdata ad;
   ad.update(
-      TelemetryClient::Airdata{
-          .baro = 101.3e+03,
-          .oat = 15.0,
-          .dp0 = 6125,
-          .dpA = 612.5,
-          .dpB = 612.5,
-      });
+      airdata(
+          101.3e+03,
+          15.0,
+          6125,
+          612.5,
+          612.5).get());
   EXPECT_NEAR(-0.0222, ad.alpha(), 0.01);
   EXPECT_NEAR(0.0222, ad.beta(), 0.01);
 }
@@ -121,13 +131,12 @@ TEST(Airdata, alpha_beta_test) {
 TEST(Airdata, ias_deflected_test) {
   Airdata ad;
   ad.update(
-      TelemetryClient::Airdata{
-          .baro = 101.3e+03,
-          .oat = 15.0,
-          .dp0 = 6125,
-          .dpA = 612.5,
-          .dpB = 612.5,
-      });
+      airdata(
+          101.3e+03,
+          15.0,
+          6125,
+          612.5,
+          612.5).get());
   EXPECT_NEAR(100.111, ad.ias(), 0.01);
 }
 

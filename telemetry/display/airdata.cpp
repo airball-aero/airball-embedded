@@ -80,14 +80,14 @@ Airdata::Airdata() {
   populate_table(dpr_to_angle);
 }
 
-void Airdata::update(TelemetryClient::Airdata d) {
-  alpha_ = - find_dpr_to_angle(dpr_to_angle, d.dpA / d.dp0);
-  beta_ = find_dpr_to_angle(dpr_to_angle, d.dpB / d.dp0);
+void Airdata::update(const airdata_sample* d) {
+  alpha_ = - find_dpr_to_angle(dpr_to_angle, d->get_dpA() / d->get_dp0());
+  beta_ = find_dpr_to_angle(dpr_to_angle, d->get_dpB() / d->get_dp0());
   const double total_angle = sqrt(alpha_ * alpha_ + beta_ * beta_);
-  free_stream_q_ = d.dp0 /
+  free_stream_q_ = d->get_dp0() /
       single_point_sphere_pressure_coefficient(total_angle);
   ias_ = q_to_ias(free_stream_q_);
-  tas_ = q_to_tas(free_stream_q_, d.baro, d.oat);
+  tas_ = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
   valid_ = !isnan(alpha_) && !isnan(beta_);
 }
 

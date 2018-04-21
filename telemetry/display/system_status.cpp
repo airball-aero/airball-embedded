@@ -26,30 +26,20 @@ double SystemStatus::battery_health() const {
   return battery_health_;
 }
 
-void SystemStatus::update(TelemetryClient::Datum d) {
-  switch (d.type) {
-    case TelemetryClient::AIRDATA:
-      update(d.airdata);
-      break;
-    case TelemetryClient::LINK_STATUS:
-      update(d.link_status);
-      break;
-    case TelemetryClient::PROBE_STATUS:
-      update(d.probe_status);
-      break;
-  }
+void SystemStatus::update(const sample* d) {
+  link_quality_ = ((double)d->get_rssi()) / ((double)UINT8_MAX);
+  update(dynamic_cast<const airdata_sample*>(d));
+  update(dynamic_cast<const battery_sample*>(d));
 }
 
-void SystemStatus::update(TelemetryClient::Airdata d) {
+void SystemStatus::update(const airdata_sample* d) {
+  if (d == nullptr) return;
   last_airdata_time_ = std::chrono::system_clock::now();
 }
 
-void SystemStatus::update(TelemetryClient::LinkStatus d) {
-  link_quality_ = d.rssi_ratio;
-}
-
-void SystemStatus::update(TelemetryClient::ProbeStatus d) {
-  battery_health_ = d.capacity_ratio;
+void SystemStatus::update(const battery_sample* d) {
+  if (d == nullptr) return;
+  battery_health_ = d->get_capacty_pct() / 100.0;
 }
 
 }  // namespace airball

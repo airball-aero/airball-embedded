@@ -24,6 +24,12 @@ private:
 
 public:
 
+    unsigned long get_seq() const { return seq; }
+    double get_voltage() const { return voltage; }
+    double get_current() const { return current; }
+    double get_capacity_mAh() const { return capacity_mAh; }
+    double get_capacty_pct() const { return capacity_pct; }
+
     static const char *PREFIX;
 
     static sample *create(std::chrono::time_point<std::chrono::system_clock> time, uint8_t rssi, std::vector<std::string> fields) {
