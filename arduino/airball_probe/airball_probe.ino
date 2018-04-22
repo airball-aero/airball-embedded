@@ -24,6 +24,7 @@
 
 // Define the appropriate probe sensor board version (3, 4):
 #define AIRBALL_PROBE_VERSION 4
+#define HAVE_30INH2O_SENSORS
 
 // Define AIRBALL_DEBUG to wait for USB serial connection and output (many) debug
 // messages to the console.
@@ -82,9 +83,15 @@
 TI_TCA9548A mux(&Wire);
 
 // All AllSensors DLHR pressure sensors.
+#ifdef HAVE_30INH2O_SENSORS
+AllSensors_DLHR_L30G_8 dp0(&Wire);
+AllSensors_DLHR_L30D_8 dpA(&Wire);
+AllSensors_DLHR_L30D_8 dpB(&Wire);
+#else
 AllSensors_DLHR_L10G_8 dp0(&Wire);
 AllSensors_DLHR_L10D_8 dpA(&Wire);
 AllSensors_DLHR_L10D_8 dpB(&Wire);
+#endif // HAVE_30INH2O_SENSORS
 
 AllSensors_DLV_015A baro(&Wire);
 
