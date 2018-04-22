@@ -42,6 +42,10 @@
 #include <AllSensors_DLHR.h>
 #include <AllSensors_DLV.h>
 #include <Temperature_LM75_Derived.h>
+
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
 #include "XBee.h"
 
 #ifdef HAVE_DS2782
@@ -74,6 +78,9 @@
 // a multiple of 60 so that it wraps around on the minute.
 #define MEASUREMENT_SLOT_WRAPAROUND 240
 
+// Report once a second with a 50ms measurement interval.
+#define OAT_REPORT_INTERVAL 20
+
 #ifdef HAVE_DS2782
 // How often (in MEASUREMENT_INTERVAL_US units) should the battery management reporting be sent?
 #define BM_REPORT_INTERVAL 40
@@ -96,11 +103,19 @@ AllSensors_DLHR_L10D_8 dpB(&Wire);
 AllSensors_DLV_015A baro(&Wire);
 
 // The OAT sensor.
+
+float oat_temperature;
+
 #ifdef HAVE_TMP275
 TI_TMP275 oat(&Wire);
 #else
 TI_TMP102 oat(&Wire);
 #endif
+
+OneWire onewire_bus(A5);
+DallasTemperature ext_oat_sensors(&onewire_bus);
+DeviceAddress ext_oat_address;
+bool ext_oat_present = false;
 
 #ifdef HAVE_DS2782
 Maxim_DS2782 bm(&Wire, Maxim_DS2782::DEFAULT_I2C_ADDRESS, 0.015);
@@ -191,7 +206,17 @@ void completeMeasurementAndReport() {
   dpB.startMeasurement();
 
   // Collect the OAT while pressure measurements are still in progress.
-  float oat_temperature = oat.readTemperatureC();
+  if (ext_oat_present) {
+    if (measurement_slot % OAT_REPORT_INTERVAL == 0) {
+      // Get the result of the measurement that was started earlier.
+      oat_temperature = ext_oat_sensors.getTempC(ext_oat_address);
+      // Kick off a new measurement.
+      ext_oat_sensors.requestTemperaturesByAddress(ext_oat_address);
+    }
+  } else {
+    // Use the on-board temperature sensor.
+    oat_temperature = oat.readTemperatureC();
+  }
 
   // Something is racy between TMP102 and the pressure sensor reading sequence; moving too quickly
   // results in occasional bad data from the first pressure sensor.
@@ -449,6 +474,16 @@ void handleCommand(char *command) {
   Serial.println("ERROR; Unknown command.");
 }
 
+void configureOneWire() {
+  ext_oat_sensors.begin();
+
+  if (ext_oat_sensors.getAddress(ext_oat_address, 0)) {
+    ext_oat_present = true;
+    ext_oat_sensors.setWaitForConversion(false);
+    ext_oat_sensors.requestTemperaturesByAddress(ext_oat_address);
+  }
+}
+
 #ifdef HAVE_DS2782
 void configureBatteryManagement() {
   uint16_t bmp_version = bm.readUserEEPROM_uint16(BMP_VERSION_USER_EEPROM_OFFSET);
@@ -528,6 +563,8 @@ void setup() {
 #ifdef HAVE_TMP275
   oat.setResolution(TI_TMP275::Resolution_12_bits);
 #endif
+
+  configureOneWire();
 
 #ifdef HAVE_DS2782
   configureBatteryManagement();
