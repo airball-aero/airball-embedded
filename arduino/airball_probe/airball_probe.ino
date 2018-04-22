@@ -542,6 +542,12 @@ void loop() {
 
   // Handle input on the USB-serial as configuration/query commands.
   if (Serial.available()) {
+    // Could do better...
+    if (command_buf_p >= (command_buf + sizeof(command_buf))) {
+      Serial.write("\n\nSerial command buffer overflow. Sorry!\n\n");
+      clearCommandBuffer();
+    }
+
     char c = Serial.read();
 
     Serial.write(c);
