@@ -26,6 +26,13 @@ private:
 
 public:
 
+    unsigned long get_seq() const { return seq; }
+    double get_baro() const { return baro; }
+    double get_temperature() const { return temperature; }
+    double get_dp0() const { return dp0; }
+    double get_dpA() const { return dpA; }
+    double get_dpB() const { return dpB; }
+
     static const char *PREFIX;
 
     static sample *create(std::chrono::time_point<std::chrono::system_clock> time, uint8_t rssi, std::vector<std::string> fields) {

@@ -48,15 +48,19 @@ constexpr static std::chrono::duration<unsigned int, std::milli>
 
 constexpr static const char* kSettingsPath = "./airball-settings.json";
 
-template <class T> class InputQueue {
+template <class T>
+class InputQueue {
 public:
-  void put(const T& t) {
+  void put(T t) {
     std::lock_guard<std::mutex> guard(mu_);
-    entries_.push_back(t);
+    entries_.push_back(std::move(t));
   }
   std::vector<T> get() {
     std::lock_guard<std::mutex> guard(mu_);
-    std::vector<T> result = entries_;
+    std::vector<T> result;
+    for (auto it = entries_.begin(); it < entries_.end(); ++it) {
+      result.push_back(std::move(*it));
+    }
     entries_.clear();
     return result;
   }
@@ -115,12 +119,11 @@ std::ostream& operator<<(
 
 Controller::Controller(Screen* screen,
                        UserInputSource* input,
-                       TelemetryClient* telemetry,
-                       DataLogger* logger)
-    : screen_(screen), input_(input), telemetry_(telemetry), logger_(logger) {}
+                       TelemetryClient* telemetry)
+    : screen_(screen), input_(input), telemetry_(telemetry) {}
 
 void Controller::run() {
-  InputQueue<TelemetryClient::Datum> data;
+  InputQueue<std::unique_ptr<sample>> data;
   InputQueue<std::string> log;
   InputQueue<Command> commands;
 
@@ -182,8 +185,7 @@ void Controller::run() {
 
   std::thread data_thread([&]() {
     while (true) {
-      // TODO(ihab): Handle other telemetry types
-      data.put(telemetry_->get());
+      data.put(std::move(telemetry_->get()));
       std::lock_guard<std::mutex> lock(input_mutex);
       if (!running) { break; }
     }
@@ -200,14 +202,17 @@ void Controller::run() {
         apply_command(settings, c);
       });
 
-      foreach<TelemetryClient::Datum>(
-          data.get(),
-          [&](const TelemetryClient::Datum& d) {
-            if (d.type == TelemetryClient::AIRDATA) {
-              airdata.update(d.airdata);
-            }
-            status.update(d);
-          });
+      // Cannot use foreach for a vector of std::unique_ptr since it invokes
+      // copy constructors of the element type which std::unique_ptr deletes.
+      std::vector<std::unique_ptr<sample>> cycle_data = data.get();
+      for (auto it = cycle_data.begin(); it < cycle_data.end(); ++it) {
+        const sample* d = (*it).get();
+        auto ad = dynamic_cast<const airdata_sample*>(d);
+        if (ad != nullptr) {
+          airdata.update(ad);
+        }
+        status.update(d);
+      }
 
       display.paint();
 

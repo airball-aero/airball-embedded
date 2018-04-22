@@ -3,9 +3,13 @@
 #include <ratio>
 #include <chrono>
 #include <thread>
+#include <memory>
 
 #include "units.h"
 #include "aerodynamics.h"
+#include "../airball_probe_telemetry/sample.h"
+#include "../airball_probe_telemetry/airdata_sample.h"
+#include "../airball_probe_telemetry/battery_sample.h"
 
 namespace airball {
 
@@ -20,6 +24,11 @@ constexpr static std::chrono::duration<unsigned int, std::milli>
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kPeriodLinkStatus(10000);
+
+constexpr static unsigned int kInvalidStateNumCycles = 350;
+
+constexpr static std::chrono::duration<unsigned int, std::milli>
+    kInvalidStateDelay(3000);
 
 double gage_pressure_at_point(
     double dynamic_pressure,
@@ -69,17 +78,17 @@ constexpr static Model kProbeStatusCurrent{
     .max = 0.125,
 };
 
-constexpr static Model kProbeStatusCapacity{
+constexpr static Model kProbeStatusCapacityMah{
     .min = 2,
     .max = 2,
 };
 
-constexpr static Model kProbeStatusCapacityRatio{
-    .min = 0,
-    .max = 1,
+constexpr static Model kProbeStatusCapacityPct{
+    .min =   0,
+    .max = 100,
 };
 
-constexpr static Model kLinkStatusRssiRatio{
+constexpr static Model kLinkStatusRssi{
     .min = 0,
     .max = 1,
 };
@@ -91,6 +100,10 @@ double interpolate_value(double phase_ratio, const Model &m) {
   return m.min + factor * (m.max - m.min);
 }
 
+uint8_t interpolate_rssi(double phase_ratio) {
+  return UINT8_MAX * interpolate_value(phase_ratio, kLinkStatusRssi);
+}
+
 double magnitude(double ax, double ay) {
   return sqrt(pow(ax, 2) + pow(ay, 2));
 }
@@ -100,7 +113,9 @@ double compute_phase_ratio(const std::chrono::steady_clock::duration &period) {
   return (double) (now % period.count()) / (double) period.count();
 }
 
-TelemetryClient::Airdata make_airdata() {
+std::unique_ptr<sample> make_airdata(
+    std::chrono::time_point<std::chrono::system_clock> time,
+    unsigned long seq) {
   const double phase_ratio = compute_phase_ratio(kPeriodAirdata);
   double baro_pressure = interpolate_value(phase_ratio, kAirdataBaro);
   double temperature = interpolate_value(phase_ratio, kAirdataOat);
@@ -128,56 +143,53 @@ TelemetryClient::Airdata make_airdata() {
   double delta_p_alpha = pressure_top - pressure_bottom;
   double delta_p_beta = pressure_right - pressure_left;
 
-  return TelemetryClient::Airdata{
-      .baro = baro_pressure,
-      .oat = temperature,
-      .dp0 = pressure_center,
-      .dpA = delta_p_alpha,
-      .dpB = delta_p_beta,
-  };
+  return std::unique_ptr<sample>(new airdata_sample(
+      time,
+      interpolate_rssi(phase_ratio),
+      seq,
+      baro_pressure,
+      temperature,
+      dynamic_pressure,
+      delta_p_alpha,
+      delta_p_beta));
 }
 
-TelemetryClient::ProbeStatus make_probe_status() {
+std::unique_ptr<sample> make_battery(
+    std::chrono::time_point<std::chrono::system_clock> time,
+    unsigned long seq) {
   const double phase_ratio = compute_phase_ratio(kPeriodProbeStatus);
-  return TelemetryClient::ProbeStatus{
-      .voltage = interpolate_value(phase_ratio, kProbeStatusVoltage),
-      .current = interpolate_value(phase_ratio, kProbeStatusCurrent),
-      .capacity = interpolate_value(phase_ratio, kProbeStatusCapacity),
-      .capacity_ratio = interpolate_value(phase_ratio, kProbeStatusCapacityRatio),
-  };
-}
-
-TelemetryClient::LinkStatus make_link_status() {
-  const double phase_ratio = compute_phase_ratio(kPeriodLinkStatus);
-  return TelemetryClient::LinkStatus{
-      .rssi_ratio = interpolate_value(phase_ratio, kLinkStatusRssiRatio)
-  };
+  return std::unique_ptr<sample>(new battery_sample(
+      time,
+      interpolate_rssi(phase_ratio),
+      seq,
+      interpolate_value(phase_ratio, kProbeStatusVoltage),
+      interpolate_value(phase_ratio, kProbeStatusCurrent),
+      interpolate_value(phase_ratio, kProbeStatusCapacityMah),
+      interpolate_value(phase_ratio, kProbeStatusCapacityPct)));
 }
 
 FakeTelemetryClient::FakeTelemetryClient()
-    : next_datum_(AIRDATA) {}
+    : next_sample_type_(AIRDATA), invalid_state_counter_(0), seq_counter_(0) {}
 
 FakeTelemetryClient::~FakeTelemetryClient() = default;
 
-TelemetryClient::Datum FakeTelemetryClient::get() {
-  Datum d;
-  switch (next_datum_) {
-    case AIRDATA:
-      std::this_thread::sleep_for(kSendDelay);
-      next_datum_ = PROBE_STATUS;
-      d.type = AIRDATA;
-      d.airdata = make_airdata();
-      return d;
-    case PROBE_STATUS:
-      next_datum_ = LINK_STATUS;
-      d.type = PROBE_STATUS;
-      d.probe_status = make_probe_status();
-      return d;
-    case LINK_STATUS:
-      next_datum_ = AIRDATA;
-      d.type = LINK_STATUS;
-      d.link_status = make_link_status();
-      return d;
+std::unique_ptr<sample> FakeTelemetryClient::get() {
+  const auto now = std::chrono::system_clock::now();
+  const auto seq = seq_counter_++;
+  switch (next_sample_type_) {
+    case SampleType::AIRDATA:
+      if (invalid_state_counter_ > kInvalidStateNumCycles) {
+        invalid_state_counter_ = 0;
+        std::this_thread::sleep_for(kInvalidStateDelay);
+      } else {
+        invalid_state_counter_++;
+        std::this_thread::sleep_for(kSendDelay);
+      }
+      next_sample_type_ = SampleType::BATTERY;
+      return make_airdata(now, seq);
+    case BATTERY:
+      next_sample_type_ = SampleType::AIRDATA;
+      return make_battery(now, seq);
   }
 }
 

@@ -35,10 +35,12 @@ be compiled from scratch on the Raspberry Pi as well.
 
 ### Install system dependencies ###
 
-Install the Cairo library (which will pull in X11-related dependencies as well):
+Install the Cairo and asio libraries. The Cairo package will pull in X11-related
+dependencies as well, which is okay because the desktop demo of the display
+software uses X11 for rendering:
 
 ```
-sudo apt install libcairo2-dev
+sudo apt-get install libcairo2-dev libasio-dev
 ```
 
 ### Clone this repository ###

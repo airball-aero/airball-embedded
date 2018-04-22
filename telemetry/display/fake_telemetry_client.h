@@ -15,10 +15,17 @@ public:
   FakeTelemetryClient();
   ~FakeTelemetryClient();
 
- Datum get() override;
+ std::unique_ptr<sample> get() override;
 
 private:
-  TelemetryClient::DatumType  next_datum_;
+  enum SampleType {
+    AIRDATA,
+    BATTERY,
+  };
+
+  SampleType next_sample_type_;
+  unsigned int invalid_state_counter_;
+  unsigned long seq_counter_;
 };
 
 }

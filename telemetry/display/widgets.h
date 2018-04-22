@@ -129,6 +129,18 @@ void box(
     const Size& size,
     const Stroke& stroke);
 
+void polygon(
+    cairo_t* cr,
+    const int numCorners,
+    const Point corners[],
+    const Stroke& stroke);
+
+void shape(
+    cairo_t* cr,
+    const int numCorners,
+    const Point corners[],
+    const Color& fill);
+
 void text_top_left(
     cairo_t* cr,
     const std::string& str,

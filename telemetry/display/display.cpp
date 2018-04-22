@@ -114,6 +114,28 @@ constexpr Point kAdjustingParamTopLeft(210, 745);
 constexpr Point kAdjustingValueTopRight(450, 745);
 constexpr int kAdjustingValueBufSize = 128;
 
+constexpr Stroke kNoFlightDataStroke(
+    Color(255, 0, 0),
+    3);
+
+constexpr double kStatusRegionMargin = 5;
+
+constexpr double kStatusDisplayUnit = 20;
+
+constexpr double kStatusDisplayStrokeWidth = 2;
+
+constexpr Stroke kStatusDisplayStroke(
+    Color(128, 128, 128),
+    kStatusDisplayStrokeWidth);
+
+constexpr Color kBatteryColorGood(0, 255, 0);
+
+constexpr Color kBatteryColorWarning(255, 255, 0);
+
+constexpr Color kBatteryColorBad(255, 0, 0);
+
+constexpr Color kLinkColor(0, 255, 255);
+
 ///////////////////////////////////////////////////////////////////////
 
 double Display::alpha_to_y(const double alpha) {
@@ -147,9 +169,15 @@ void Display::paint() {
   cairo_rotate(screen_->cr(), -M_PI / 2);
 
   paintBackground();
-  paintAirball();
+  if (status_->flight_data_up()) {
+    paintAirball();
+  } else {
+    paintNoFlightData();
+  }
   paintTotemPole();
   paintCowCatcher();
+  paintBatteryStatus();
+  paintLinkStatus();
   if (settings_->adjusting()) {
     paintAdjusting();
   }
@@ -388,6 +416,94 @@ void Display::paintAdjusting() {
       kAdjustingValueTopRight,
       kAdjustingTextFont,
       kAdjustingTextColor);
+}
+
+void Display::paintNoFlightData() {
+  line(
+      screen_->cr(),
+      Point(0, 0),
+      Point(kWidth, kDisplayRegionYMax),
+      kNoFlightDataStroke);
+  line(
+      screen_->cr(),
+      Point(kWidth, 0),
+      Point(0, kDisplayRegionYMax),
+      kNoFlightDataStroke);
+}
+
+void Display::paintBatteryStatus() {
+  Point top_left(
+      kWidth - kStatusRegionMargin - 2 * kStatusDisplayUnit,
+      kStatusRegionMargin);
+  Size size(
+      2 * kStatusDisplayUnit,
+      kStatusDisplayUnit);
+  rectangle(
+      screen_->cr(),
+      top_left,
+      size,
+      kBackground);
+  const double barWidth =
+      status_->battery_health() *
+      (2.0 * (kStatusDisplayUnit - kStatusDisplayStrokeWidth));
+  const Color barColor =
+      status_->battery_health() < 0.5
+      ? status_->battery_health() < 0.25
+        ? kBatteryColorBad
+        : kBatteryColorWarning
+      : kBatteryColorGood;
+  rectangle(
+      screen_->cr(),
+      top_left,
+      Size(
+          barWidth,
+          size.h()),
+      barColor);
+  box(
+      screen_->cr(),
+      top_left,
+      size,
+      kStatusDisplayStroke);
+}
+
+void Display::paintLinkStatus() {
+  Point bottom_left(
+      kWidth - 2 * kStatusRegionMargin - 4 * kStatusDisplayUnit,
+      kStatusRegionMargin + kStatusDisplayUnit);
+  Point top_right(
+      kWidth - 2 * kStatusRegionMargin - 2 * kStatusDisplayUnit,
+      kStatusRegionMargin);
+  Point bottom_right(
+      top_right.x(),
+      bottom_left.y());
+  Point corners[]{
+      bottom_left,
+      top_right,
+      bottom_right,
+  };
+  Point top_right_fill(
+      bottom_left.x() +
+          status_->link_quality() * (top_right.x() - bottom_left.x()),
+      bottom_left.y() +
+          status_->link_quality() * (top_right.y() - bottom_left.y()));
+  Point bottom_right_fill(
+      top_right_fill.x(),
+      bottom_right.y());
+  Point corners_fill[]{
+      bottom_left,
+      top_right_fill,
+      bottom_right_fill,
+  };
+  shape(
+      screen_->cr(),
+      3,
+      corners_fill,
+      kLinkColor);
+  polygon(
+      screen_->cr(),
+      3,
+      corners,
+      kStatusDisplayStroke);
 }
 
 } // namespace airball

@@ -20,29 +20,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-add_library(airball_core
+add_library(airball_display
         widgets.cpp airdata.cpp settings.cpp display.cpp one_shot_timer.cpp
         controller.cpp screen.cpp user_input_source.cpp delay_timer.cpp
         aerodynamics.cpp fake_telemetry_client.cpp interpolation_table.cpp
-        data_logger.cpp system_status.cpp)
+        system_status.cpp)
+target_link_libraries(airball_display
+        X11 cairo pthread)
 
-add_library(user_input_source
-        user_input_source.cpp)
+add_executable(ab
+        ab_main.cpp)
+target_link_libraries(ab
+        airball_display)
 
-target_link_libraries(airball_core X11 cairo pthread)
+add_executable(ab_device
+        ab_device_main.cpp)
+target_link_libraries(ab_device
+        airball_display airball_telemetry_client)
 
-add_executable(ab ab_main.cpp)
-target_link_libraries(ab airball_core)
-
-add_executable(ab_device ab_device_main.cpp)
-target_link_libraries(ab_device airball_core)
-
-add_executable(user_input_source_test user_input_source_test_main.cpp)
-target_link_libraries(user_input_source_test user_input_source)
+add_executable(user_input_source_test
+        user_input_source_test_main.cpp)
+target_link_libraries(user_input_source_test
+        user_input_source)
 
 enable_testing()
 add_executable(runUnitTests
         aerodynamics_test.cpp one_shot_timer_test.cpp delay_timer_test.cpp
         interpolation_table_test.cpp airdata_test.cpp
         fake_telemetry_client_test.cpp system_status_test.cpp)
-target_link_libraries(runUnitTests gtest gtest_main airball_core)
+target_link_libraries(runUnitTests
+        gtest gtest_main airball_display)

@@ -27,7 +27,7 @@
 
 #include <string>
 #include "interpolation_table.h"
-#include "../airball_probe_telemetry/telemetry_client.h"
+#include "../airball_probe_telemetry/airdata_sample.h"
 
 namespace airball {
 
@@ -54,7 +54,7 @@ public:
   bool valid() const {return valid_;}
 
   // Commands this model to update its contents based on the given sensor data.
-  void update(TelemetryClient::Airdata d);
+  void update(const airdata_sample* d);
 private:
   InterpolationTable dpr_to_angle;
   double ias_;
