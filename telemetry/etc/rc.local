@@ -1,0 +1,13 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This is to be installed at /etc of the Raspberry Pi running
+# the Airball display.
+
+echo -e '\033[?17;0;0c' > /dev/tty1
+echo -e '\033[9;0]'     > /dev/tty1
+
+/home/pi/airball-embedded/telemetry/build/display/ab_device > /dev/null &
+
+exit 0
