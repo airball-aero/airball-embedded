@@ -2,6 +2,9 @@
 
 namespace airball {
 
+constexpr static uint8_t kRssiMin = 0x30;
+constexpr static uint8_t kRssiMax = 0x4f;
+
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kAirdataExpiryPeriod(250);
 
@@ -27,7 +30,15 @@ double SystemStatus::battery_health() const {
 }
 
 void SystemStatus::update(const sample* d) {
-  link_quality_ = ((double)d->get_rssi()) / ((double)UINT8_MAX);
+  double min = (double)kRssiMin;
+  double max = (double)kRssiMax;
+  double value = (double)d->get_rssi();
+  // Lower RSSI values indicate better signal, hence the below formula:
+  //     value == min  ==>  quality = 1
+  //     value == max  ==>  quality = 0
+  link_quality_ = (value - max) / (min - max);
+  link_quality_ = std::min(1.0, link_quality_);
+  link_quality_ = std::max(0.0, link_quality_);
   update(dynamic_cast<const airdata_sample*>(d));
   update(dynamic_cast<const battery_sample*>(d));
 }
