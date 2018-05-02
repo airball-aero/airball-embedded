@@ -1,11 +1,26 @@
 #include <iostream>
 
 #include <fstream>
+#include <sstream>
+#include <backward/strstream>
 
 #include "sample.h"
 #include "sampler.h"
 #include "xbee.h"
 #include "format.h"
+
+void print_quantity(const long int value, const char symbol) {
+  std::ostrstream s;
+  for (int i = 0; i < value; i++) {
+    if (i % 10 == 0) {
+      s << "|";
+    } else {
+      s << symbol;
+    }
+  }
+  s << std::ends;
+  printf("%03ld %s\n", value, s.str());
+}
 
 int main(int argc, char **argv) {
     const std::string airball_serial_device_filename = std::string(argv[1]);
@@ -55,10 +70,21 @@ int main(int argc, char **argv) {
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
+
+    auto previous_loop_time = std::chrono::system_clock::now();
+
     for (int packet_number=0; ; packet_number++) {
         xbee_packet packet = radio.read_packet();
 
-        auto current_time = std::chrono::system_clock::now();
+      auto now = std::chrono::system_clock::now();
+      std::chrono::system_clock::duration since_last =
+          now.time_since_epoch() -
+          previous_loop_time.time_since_epoch();
+      auto since_last_mills =
+          std::chrono::duration_cast<std::chrono::duration<unsigned int, std::milli>>(since_last);
+      previous_loop_time = now;
+
+      auto current_time = std::chrono::system_clock::now();
 
         if (packet.frame_type == xbee_packet::PacketTypeReceive16Bit) {
             xbee_packet::PacketReceive16Bit data(packet.frame_data);
@@ -66,13 +92,14 @@ int main(int argc, char **argv) {
             if (sample *s = telemetry.parse(current_time, data.rssi(), data.data())) {
                 stats[s->type()]++;
                 *files[s->type()] << s->format().c_str() << std::endl;
+                print_quantity(static_cast<int>(s->get_rssi()), '+');
+                print_quantity(since_last_mills.count(), '.');
             } else {
                 stats["unusable"]++;
                 printf("%s [%10d] Unusable: %s\n",
                        airball::format_time(current_time).c_str(),
                        packet_number, data.data().c_str());
             }
-
             if (packet_number % 100 == 0) {
                 printf("%s [%10d] Stats:",
                        airball::format_time(current_time).c_str(),
