@@ -23,6 +23,7 @@ private:
     asio::streambuf input_data_buffer, output_data_buffer;
     std::istream input_buffer;
     std::ostream output_buffer;
+  uint16_t write_checksum_sum = 0;
 
     static const char START_DELIMITER = 0x7e;
 
@@ -133,6 +134,46 @@ public:
         sendCommand("ATCN");
     }
 
+  void write(char c) {
+    write_checksum_sum += c;
+    asio::write(serial_port, asio::buffer(&c, 1));
+  }
+
+  void write_checksum() {
+    write(0xff - (uint8_t)(write_checksum_sum & 0xff));
+  }
+
+  void write(const char *s, int len) {
+    for(size_t i=0; i < len; i++) {
+      write(s[i]);
+    }
+  }
+
+  void write_uint8(uint8_t value) {
+    write(value);
+  }
+
+  void write_uint16(uint16_t value) {
+    write((uint8_t) (value & 0xff00 >> 8));   // MSB
+    write((uint8_t) (value & 0x00ff));        // LSB
+  }
+
+  void reset_checksum() {
+    write_checksum_sum = 0;
+  }
+
+  void send_packet(uint16_t destination, const std::string& buf) {
+    write_uint8(0x7e); // Start
+    write_uint16(buf.length() + 1 + 1 + 2 + 1);
+
+    reset_checksum();
+    write_uint8(0x01); // API ID
+    write_uint8(0x00); // Frame ID
+    write_uint16(destination); // Destination Address
+    write_uint8(0x00); // Options
+    write(buf.c_str(), buf.length()); // Data
+    write_checksum(); // Checksum
+  }
 };
 
 #endif // XBEE_H
