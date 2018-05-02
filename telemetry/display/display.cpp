@@ -95,6 +95,10 @@ constexpr Stroke kCowCatcherStroke(
     Color(255, 0, 0),
     3);
 
+constexpr double kAdjustingTextFontSize = kWidth / 14;
+constexpr double kAdjustingRegionWidth = kAdjustingTextFontSize * 10;
+constexpr double kAdjustingRegionHeight = kAdjustingTextFontSize + 8;
+
 constexpr Stroke kAdjustingWindowStroke(
     Color(255, 255, 255),
     1);
@@ -104,14 +108,14 @@ constexpr char kAdjustingTextFontName[] =
 
 constexpr Font kAdjustingTextFont(
     kAdjustingTextFontName,
-    30);
+    kAdjustingTextFontSize);
 
 constexpr Color kAdjustingTextColor(0, 255, 0);
 
-constexpr Point kAdjustingTopLeft(200, 740);
-constexpr Size kAdjustingWindowSize(260, 50);
-constexpr Point kAdjustingParamTopLeft(210, 745);
-constexpr Point kAdjustingValueTopRight(450, 745);
+constexpr Point kAdjustingTopLeft(kWidth/2 - kAdjustingRegionWidth/2, kHeight-kAdjustingRegionHeight-5);
+constexpr Size kAdjustingWindowSize(kAdjustingRegionWidth, kAdjustingRegionHeight);
+constexpr Point kAdjustingParamTopLeft(kWidth/2 - kAdjustingRegionWidth/2 + 5, kHeight-kAdjustingRegionHeight-5);
+constexpr Point kAdjustingValueTopRight(kWidth/2 + kAdjustingRegionWidth/2 - 5, kHeight-kAdjustingRegionHeight-5);
 constexpr int kAdjustingValueBufSize = 128;
 
 constexpr Stroke kNoFlightDataStroke(
