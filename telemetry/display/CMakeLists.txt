@@ -41,7 +41,7 @@ target_link_libraries(ab_device
 add_executable(user_input_source_test
         user_input_source_test_main.cpp)
 target_link_libraries(user_input_source_test
-        user_input_source)
+        airball_display)
 
 enable_testing()
 add_executable(runUnitTests

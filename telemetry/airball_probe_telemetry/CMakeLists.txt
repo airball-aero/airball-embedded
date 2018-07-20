@@ -16,3 +16,8 @@ add_executable(airball_probe_telemetry
         airball_probe_telemetry.cpp)
 target_link_libraries(airball_probe_telemetry
         airball_telemetry_client)
+
+add_executable(send_dummy_data
+        send_dummy_data_main.cpp)
+target_link_libraries(send_dummy_data
+        airball_telemetry_client)
