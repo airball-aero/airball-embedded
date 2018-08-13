@@ -50,7 +50,7 @@ void SystemStatus::update(const airdata_sample* d) {
 
 void SystemStatus::update(const battery_sample* d) {
   if (d == nullptr) return;
-  battery_health_ = d->get_capacty_pct() / 100.0;
+  battery_health_ = std::max(1.0, (d->get_voltage() - 3.3) / 0.9);
 }
 
 }  // namespace airball
