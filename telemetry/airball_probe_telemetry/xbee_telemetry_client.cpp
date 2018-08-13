@@ -11,16 +11,9 @@ namespace airball {
 XbeeTelemetryClient::XbeeTelemetryClient(
     const std::string& serial_device_filename)
     : serial_device_filename_(serial_device_filename),
-      radio_(serial_device_filename_, 9600) {
+      radio_(serial_device_filename_, 9600, xbee::BASE_STATION) {
 
-  radio_.enterCommandMode();
-
-  radio_.sendCommand("ATNIAIRBALL_BASE");
-  radio_.sendCommand("ATID=5555");
-  radio_.sendCommand("ATMY=8888");
-  radio_.sendCommand("ATAP=1");
-
-  radio_.exitCommandMode();
+  radio_.initialize();
 
   telemetry_.add_sample_type(airdata_sample::PREFIX, airdata_sample::create);
   telemetry_.add_sample_type(battery_sample::PREFIX, battery_sample::create);
@@ -51,7 +44,7 @@ XbeeTelemetryClient::~XbeeTelemetryClient() {
 };
 
 std::unique_ptr<sample> XbeeTelemetryClient::get() {
-  xbee_packet packet = radio_.read_packet();
+  xbee_packet packet = radio_.receive();
   while (true) {
     auto current_time = std::chrono::system_clock::now();
 
@@ -69,4 +62,4 @@ std::unique_ptr<sample> XbeeTelemetryClient::get() {
   }
 }
 
-}
+} // namespace airball

@@ -1,5 +1,5 @@
-#ifndef AIRBALL_TELEMETRY_XBEE_TELEMETRY_CLIENT_H
-#define AIRBALL_TELEMETRY_XBEE_TELEMETRY_CLIENT_H
+#ifndef AIRBALL_XBEE_TELEMETRY_CLIENT_H
+#define AIRBALL_XBEE_TELEMETRY_CLIENT_H
 
 #include "telemetry_client.h"
 #include "sampler.h"
@@ -32,4 +32,4 @@ private:
 
 }  // namespace airball
 
-#endif //AIRBALL_TELEMETRY_XBEE_TELEMETRY_CLIENT_H
+#endif //AIRBALL_XBEE_TELEMETRY_CLIENT_H
