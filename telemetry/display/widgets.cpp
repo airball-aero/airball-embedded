@@ -92,6 +92,26 @@ void disc(
   cairo_fill(cr);
 }
 
+void rosette(
+    cairo_t* cr,
+    const Point& center,
+    const double radius,
+    const int num_petals,
+    const double petal_half_angle,
+    const double start_angle,
+    const Stroke& stroke) {
+  double angle_increment = 2 * M_PI / ((double) num_petals);
+  for (int i = 0; i < num_petals; i++) {
+    double angle = start_angle + i * angle_increment;
+    arc(cr,
+        center,
+        radius,
+        angle - petal_half_angle,
+        angle + petal_half_angle,
+        stroke);
+  }
+}
+
 void rectangle(
     cairo_t* cr,
     const Point& top_left,

@@ -117,6 +117,15 @@ void disc(
     const double radius,
     const Color& fill);
 
+void rosette(
+    cairo_t* cr,
+    const Point& center,
+    const double radius,
+    const int num_petals,
+    const double petal_angle,
+    const double start_angle,
+    const Stroke& stroke);
+
 void rectangle(
     cairo_t* cr,
     const Point& top_left,

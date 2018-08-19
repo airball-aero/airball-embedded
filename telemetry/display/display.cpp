@@ -34,8 +34,8 @@ namespace airball {
 
 ///////////////////////////////////////////////////////////////////////
 
-constexpr double kWidth = 480;
-constexpr double kHeight = 800;
+constexpr double kWidth = 272;
+constexpr double kHeight = 480;
 
 constexpr double kTopBottomRegionRatio = 0.10;
 
@@ -47,6 +47,9 @@ constexpr double kDisplayRegionHeight = kDisplayRegionYMax - kDisplayRegionYMin;
 
 constexpr double kDisplayRegionWidth = kWidth;
 constexpr double kDisplayRegionHalfWidth = kDisplayRegionWidth / 2;
+
+constexpr double kSpeedLimitsRosetteHalfAngle  = (15.0 / 2 / 180 * M_PI);
+constexpr double kTrueAirspeedRosetteHalfAngle = (70.0 / 2 / 180 * M_PI);
 
 constexpr double kAlphaRefRadius = 20;
 
@@ -92,6 +95,18 @@ constexpr Stroke kTotemPoleStroke(
     3);
 
 constexpr Stroke kCowCatcherStroke(
+    Color(255, 0, 0),
+    3);
+
+constexpr Stroke kVfeStroke(
+    Color(255, 255, 255),
+    3);
+
+constexpr Stroke kVnoStroke(
+    Color(255, 255, 0),
+    3);
+
+constexpr Stroke kVneStroke(
     Color(255, 0, 0),
     3);
 
@@ -162,8 +177,11 @@ double Display::beta_degrees_to_x(const double beta_degrees) {
 }
 
 double Display::airspeed_to_radius(const double airspeed) {
-  double airspeed_knots = meters_per_second_to_knots(airspeed);
-  double ratio = airspeed_knots / settings_->ias_full_scale();
+  return airspeed_knots_to_radius(meters_per_second_to_knots(airspeed));
+}
+
+double Display::airspeed_knots_to_radius(const double airspeed_knots) {
+  double ratio = airspeed_knots / settings_->v_full_scale();
   return ratio * kWidth / 2;
 }
 
@@ -202,49 +220,174 @@ void Display::paintAirball() {
   Point center(beta_to_x(airdata_->beta()), alpha_to_y((airdata_->alpha())));
   double radius = airspeed_to_radius(airdata_->ias());
   if (radius < kLowSpeedThresholdAirballRadius) {
-    arc(
-        screen_->cr(),
-        center,
-        kLowSpeedAirballArcRadius,
-        0,
-        2.0 * M_PI,
-        kLowSpeedAirballStroke);
+    paintAirballLowAirspeed(center);
   } else {
-    double tas_stroke_alpha;
-    if (airdata_->tas() < airdata_->ias() || airdata_->ias() == 0) {
-      tas_stroke_alpha = 0;
-    } else {
-      double ias_squared = airdata_->ias() * airdata_->ias();
-      double tas_squared = airdata_->tas() * airdata_->tas();
-      double ratio = (tas_squared - ias_squared) / ias_squared;
-      tas_stroke_alpha = (ratio > kTasThresholdRatio)
-          ? 1.0 : (ratio / kTasThresholdRatio);
-    }
-    arc(
-        screen_->cr(),
-        center,
-        airspeed_to_radius(airdata_->tas()),
-        0,
-        2.0 * M_PI,
-        Stroke(
-            kTasRingColor.with_alpha(tas_stroke_alpha),
-            kTasRingStrokeWidth));
-    disc(
-        screen_->cr(),
-        center,
-        radius,
-        kAirballFill);
-    line(
-        screen_->cr(),
-        Point(center.x(), center.y() - radius),
-        Point(center.x(), center.y() + radius),
-        kAirballCrosshairsStroke);
-    line(
-        screen_->cr(),
-        Point(center.x() - radius, center.y()),
-        Point(center.x() + radius, center.y()),
-        kAirballCrosshairsStroke);
+    paintAirballAirspeed(center, radius);
+    paintAirballTrueAirspeed(center);
+    paintAirballAirspeedLimits(center);
   }
+}
+
+void Display::paintAirballLowAirspeed(const Point& center) {
+  arc(
+      screen_->cr(),
+      center,
+      kLowSpeedAirballArcRadius,
+      0,
+      2.0 * M_PI,
+      kLowSpeedAirballStroke);
+}
+
+void Display::paintAirballAirspeed(const Point& center, const double radius) {
+  disc(
+      screen_->cr(),
+      center,
+      radius,
+      kAirballFill);
+  line(
+      screen_->cr(),
+      Point(center.x(), center.y() - radius),
+      Point(center.x(), center.y() + radius),
+      kAirballCrosshairsStroke);
+  line(
+      screen_->cr(),
+      Point(center.x() - radius, center.y()),
+      Point(center.x() + radius, center.y()),
+      kAirballCrosshairsStroke);
+}
+
+void Display::paintAirballAirspeedLimits(const Point& center) {
+  if (meters_per_second_to_knots(airdata_->ias()) < settings_->v_r()) {
+    paintAirballAirspeedLimitsRotate(center);
+  } else {
+    paintAirballAirspeedLimitsNormal(center);
+  }
+}
+
+void Display::paintAirballAirspeedLimitsRotate(const Point& center) {
+  double r = airspeed_knots_to_radius(settings_->v_r());
+  line(
+      screen_->cr(),
+      Point(
+          center.x() - r,
+          center.y()),
+      Point(
+          center.x() - r - kTotemPoleAlphaUnit,
+          center.y() + kTotemPoleAlphaUnit),
+      kAirballCrosshairsStroke);
+  line(
+      screen_->cr(),
+      Point(
+          center.x() - r,
+          center.y()),
+      Point(
+          center.x() - r - kTotemPoleAlphaUnit,
+          center.y() - kTotemPoleAlphaUnit),
+      kAirballCrosshairsStroke);
+  line(
+      screen_->cr(),
+      Point(
+          center.x() + r,
+          center.y()),
+      Point(
+          center.x() + r + kTotemPoleAlphaUnit,
+          center.y() + kTotemPoleAlphaUnit),
+      kAirballCrosshairsStroke);
+  line(
+      screen_->cr(),
+      Point(
+          center.x() + r,
+          center.y()),
+      Point(
+          center.x() + r + kTotemPoleAlphaUnit,
+          center.y() - kTotemPoleAlphaUnit),
+      kAirballCrosshairsStroke);
+  line(
+      screen_->cr(),
+      Point(
+          center.x(),
+          center.y() + r),
+      Point(
+          center.x() + kTotemPoleAlphaUnit,
+          center.y() + r + kTotemPoleAlphaUnit),
+      kAirballCrosshairsStroke);
+  line(
+      screen_->cr(),
+      Point(
+          center.x(),
+          center.y() + r),
+      Point(
+          center.x() - kTotemPoleAlphaUnit,
+          center.y() + r + kTotemPoleAlphaUnit),
+      kAirballCrosshairsStroke);
+  line(
+      screen_->cr(),
+      Point(
+          center.x(),
+          center.y() - r),
+      Point(
+          center.x() + kTotemPoleAlphaUnit,
+          center.y() - r - kTotemPoleAlphaUnit),
+      kAirballCrosshairsStroke);
+  line(
+      screen_->cr(),
+      Point(
+          center.x(),
+          center.y() - r),
+      Point(
+          center.x() - kTotemPoleAlphaUnit,
+          center.y() - r - kTotemPoleAlphaUnit),
+      kAirballCrosshairsStroke);
+}
+
+void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
+  rosette(
+      screen_->cr(),
+      center,
+      airspeed_knots_to_radius(settings_->v_fe()),
+      4,
+      kSpeedLimitsRosetteHalfAngle,
+      0,
+      kVfeStroke);
+  rosette(
+      screen_->cr(),
+      center,
+      airspeed_knots_to_radius(settings_->v_no()),
+      4,
+      kSpeedLimitsRosetteHalfAngle,
+      0,
+      kVnoStroke);
+  rosette(
+      screen_->cr(),
+      center,
+      airspeed_knots_to_radius(settings_->v_ne()),
+      4,
+      kSpeedLimitsRosetteHalfAngle,
+      0,
+      kVneStroke);
+}
+
+void Display::paintAirballTrueAirspeed(const Point& center) {
+  double tas_stroke_alpha;
+  if (airdata_->tas() < airdata_->ias() || airdata_->ias() == 0) {
+    tas_stroke_alpha = 0;
+  } else {
+    double ias_squared = airdata_->ias() * airdata_->ias();
+    double tas_squared = airdata_->tas() * airdata_->tas();
+    double ratio = (tas_squared - ias_squared) / ias_squared;
+    tas_stroke_alpha = (ratio > kTasThresholdRatio)
+                       ? 1.0 : (ratio / kTasThresholdRatio);
+  }
+  rosette(
+      screen_->cr(),
+      center,
+      airspeed_to_radius(airdata_->tas()),
+      4,
+      kTrueAirspeedRosetteHalfAngle,
+      0.25 * M_PI,
+      Stroke(
+          kTasRingColor.with_alpha(tas_stroke_alpha),
+          kTasRingStrokeWidth));
 }
 
 void Display::paintTotemPole() {

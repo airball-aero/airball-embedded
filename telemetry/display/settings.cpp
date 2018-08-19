@@ -50,15 +50,65 @@ constexpr double ANGULAR_PARAMETER_SCALE = 0.05;
 constexpr long int ANGULAR_PARAMETER_ABSMAX =
     (long int)(45.0 / ANGULAR_PARAMETER_SCALE);
 
-constexpr Parameter IAS_FULL_SCALE = {
+constexpr const char* V_PARAMETER_DISPLAY_UNITS = "kt";
+constexpr double V_PARAMETER_SCALE = 1;
+constexpr long int V_PARAMETER_MIN = 0;
+constexpr long int V_PARAMETER_MAX = 500;
+constexpr long int V_PARAMETER_DEFAULT = 100;
+
+constexpr Parameter V_FULL_SCALE = {
     .name="ias_full_scale",
     .display_name = "IAS FS",
     .display_units = "kt",
     .offset=0,
-    .scale=1,
-    .count_min=10,
-    .count_max=500,
-    .count_default=100,
+    .scale=V_PARAMETER_SCALE,
+    .count_min=V_PARAMETER_MIN,
+    .count_max=V_PARAMETER_MAX,
+    .count_default=V_PARAMETER_DEFAULT,
+};
+
+constexpr Parameter V_R = {
+    .name="v_r",
+    .display_name = "Vr",
+    .display_units = "kt",
+    .offset=0,
+    .scale=V_PARAMETER_SCALE,
+    .count_min=V_PARAMETER_MIN,
+    .count_max=V_PARAMETER_MAX,
+    .count_default=V_PARAMETER_DEFAULT,
+};
+
+constexpr Parameter V_FE = {
+    .name="v_fe",
+    .display_name = "Vfe",
+    .display_units = "kt",
+    .offset=0,
+    .scale=V_PARAMETER_SCALE,
+    .count_min=V_PARAMETER_MIN,
+    .count_max=V_PARAMETER_MAX,
+    .count_default=V_PARAMETER_DEFAULT,
+};
+
+constexpr Parameter V_NO = {
+    .name="v_no",
+    .display_name = "Vno",
+    .display_units = "kt",
+    .offset=0,
+    .scale=V_PARAMETER_SCALE,
+    .count_min=V_PARAMETER_MIN,
+    .count_max=V_PARAMETER_MAX,
+    .count_default=V_PARAMETER_DEFAULT,
+};
+
+constexpr Parameter V_NE = {
+    .name="v_ne",
+    .display_name = "Vne",
+    .display_units = "kt",
+    .offset=0,
+    .scale=V_PARAMETER_SCALE,
+    .count_min=V_PARAMETER_MIN,
+    .count_max=V_PARAMETER_MAX,
+    .count_default=V_PARAMETER_DEFAULT,
 };
 
 constexpr Parameter ALPHA_STALL = {
@@ -139,7 +189,11 @@ constexpr Parameter BETA_BIAS = {
 };
 
 constexpr const Parameter* ALL_SETTINGS[]{
-    &IAS_FULL_SCALE,
+    &V_FULL_SCALE,
+    &V_R,
+    &V_FE,
+    &V_NO,
+    &V_NE,
     &ALPHA_STALL,
     &ALPHA_MIN,
     &ALPHA_X,
@@ -211,8 +265,24 @@ double Settings::get_value(const Parameter* parameter) const {
   return parameter->offset + parameter->scale * values_.at(parameter->name);
 }
 
-double Settings::ias_full_scale() const {
-  return get_value(&IAS_FULL_SCALE);
+double Settings::v_full_scale() const {
+  return get_value(&V_FULL_SCALE);
+}
+
+double Settings::v_r() const {
+  return get_value(&V_R);
+}
+
+double Settings::v_fe() const {
+  return get_value(&V_FE);
+}
+
+double Settings::v_no() const {
+  return get_value(&V_NO);
+}
+
+double Settings::v_ne() const {
+  return get_value(&V_NE);
 }
 
 double Settings::alpha_stall() const {

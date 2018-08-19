@@ -42,7 +42,7 @@ static Options<airball::Screen, 2> SCREEN_OPTIONS = {
         {
             .arg = std::string("--screen_x11"),
             .make = [](){
-              return airball::Screen::NewX11Screen(800, 480);
+              return airball::Screen::NewX11Screen(480, 272);
             },
         },
         {

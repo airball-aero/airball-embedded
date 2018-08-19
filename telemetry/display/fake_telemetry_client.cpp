@@ -17,7 +17,7 @@ constexpr static std::chrono::duration<unsigned int, std::milli>
     kSendDelay(20);
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
-    kPeriodAirdata(5000);
+    kPeriodAirdata(20000);
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kPeriodProbeStatus(10000);

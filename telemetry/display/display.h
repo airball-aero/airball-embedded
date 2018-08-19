@@ -31,6 +31,7 @@
 #include "screen.h"
 #include "settings.h"
 #include "system_status.h"
+#include "widgets.h"
 
 namespace airball {
 
@@ -48,6 +49,12 @@ public:
 private:
   void paintBackground();
   void paintAirball();
+  void paintAirballLowAirspeed(const Point& center);
+  void paintAirballAirspeed(const Point& center, const double radius);
+  void paintAirballAirspeedLimits(const Point& center);
+  void paintAirballAirspeedLimitsNormal(const Point& center);
+  void paintAirballAirspeedLimitsRotate(const Point& center);
+  void paintAirballTrueAirspeed(const Point& center);
   void paintTotemPole();
   void paintTotemPoleLine();
   void paintTotemPoleAlphaX();
@@ -65,6 +72,7 @@ private:
   double beta_degrees_to_x(const double beta_degrees);
 
   double airspeed_to_radius(const double ias);
+  double airspeed_knots_to_radius(const double airspeed_knots);
 
   Screen* screen_;
   const Airdata* airdata_;

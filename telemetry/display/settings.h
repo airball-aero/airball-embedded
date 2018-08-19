@@ -40,7 +40,27 @@ public:
   /**
    * @return the display setting, full scale indicated air speed.
    */
-  double ias_full_scale() const;
+  double v_full_scale() const;
+
+  /**
+   * @return the rotation indicated air speed (Vr).
+   */
+  double v_r() const;
+
+  /**
+   * @return the maximum flap extension indicated air speed (Vfe).
+   */
+  double v_fe() const;
+
+  /**
+   * @return the maximum normal operating indicated air speed (Vno).
+   */
+  double v_no() const;
+
+  /**
+   * @return the never-exceed indicated air speed (Vne).
+   */
+  double v_ne() const;
 
   /**
    * @return the stall angle of attack.
