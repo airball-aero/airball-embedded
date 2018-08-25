@@ -9,11 +9,9 @@
 namespace airball {
 
 xbee::xbee(std::string serial_device_filename,
-           unsigned int baud_rate,
-           xbee_node_type node_type) :
+           unsigned int baud_rate) :
     device_filename(serial_device_filename),
     baud_rate(baud_rate),
-    node_type(node_type),
     serial_port(io_service),
     input_buffer(&input_data_buffer),
     output_buffer(&output_data_buffer) {
@@ -25,49 +23,20 @@ xbee::xbee(std::string serial_device_filename,
   serial_port.set_option(asio::serial_port_base::flow_control(asio::serial_port_base::flow_control::none));
 }
 
-void xbee::initialize() {
-  enterCommandMode();
-  switch (node_type) {
-    case BASE_STATION:
-      sendCommand("ATNIAIRBALL_BASE");
-      sendCommand("ATID=5555");
-      sendCommand("ATMY=8888");
-      sendCommand("ATAP=1");
-      break;
-    case DATA_SOURCE:
-      sendCommand("ATNIAIRBALL_PROBE");
-      sendCommand("ATID=5555");
-      sendCommand("ATMY=7777");
-      sendCommand("ATSM=0");
-      sendCommand("ATSP=64");
-      sendCommand("ATDL=8888");
-      sendCommand("ATAP=1");
-      break;
-  }
-  exitCommandMode();
-}
-
-void xbee::send(const std::string &buf) {
+void xbee::send_packet(const uint16_t destination, const std::string &buf) {
   write_uint8(0x7e); // Start
   write_uint16(buf.length() + 1 + 1 + 2 + 1);
 
   reset_checksum();
   write_uint8(0x01); // API ID
   write_uint8(0x00); // Frame ID
-  switch (node_type) {
-    case BASE_STATION:
-      write_uint16(0x7777); // Destination Address
-      break;
-    case DATA_SOURCE:
-      write_uint16(0x8888); // Destination Address
-      break;
-  }
+  write_uint16(destination); // Destination Address
   write_uint8(0x00); // Options
   write(buf.c_str(), buf.length()); // Data
   write_checksum(); // Checksum
 }
 
-xbee_packet xbee::receive() {
+xbee_packet xbee::read_packet() {
   // Synchronize with the beginning of an API packet.
   discard_until(START_DELIMITER);
 
@@ -76,22 +45,19 @@ xbee_packet xbee::receive() {
   uint8_t x[2];
   asio::read(serial_port, asio::buffer(x, 2), asio::transfer_all());
 
-  packet.length = ((uint16_t) x[0] << 8) | (uint16_t) x[1];
+  packet.length = ((uint16_t)x[0] << 8) | (uint16_t)x[1];
 
-  packet.frame_data.resize(packet.length - 1);
-  asio::read(serial_port, asio::buffer(&packet.frame_type, 1),
-             asio::transfer_all());
-  asio::read(serial_port, asio::buffer(packet.frame_data.data(),
-                                       (size_t) packet.length - 1),
-             asio::transfer_all());
-  asio::read(serial_port, asio::buffer(&packet.checksum, 1),
-             asio::transfer_all());
+  packet.frame_data.resize(packet.length-1);
+  asio::read(serial_port, asio::buffer(&packet.frame_type, 1), asio::transfer_all());
+  asio::read(serial_port, asio::buffer(packet.frame_data.data(), (size_t) packet.length-1), asio::transfer_all());
+  asio::read(serial_port, asio::buffer(&packet.checksum, 1), asio::transfer_all());
 
   return packet;
 }
 
 void xbee::write_unchecked(std::string str) {
   output_buffer << str;
+  std::cout << "write_unchecked " << str << std::endl;
   asio::write(serial_port, output_data_buffer);
 }
 
@@ -119,8 +85,8 @@ void xbee::write_uint8(uint8_t value) {
 }
 
 void xbee::write_uint16(uint16_t value) {
-  write((uint8_t) (value & 0xff00 >> 8));   // MSB
-  write((uint8_t) (value & 0x00ff));        // LSB
+  write((uint8_t) (value >> 8) & 0xff);   // MSB
+  write((uint8_t) (value     ) & 0xff);   // LSB
 }
 
 void xbee::discard_until(char c) {

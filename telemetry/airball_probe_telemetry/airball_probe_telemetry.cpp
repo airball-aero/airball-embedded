@@ -29,8 +29,16 @@ int main(int argc, char **argv) {
            airball::format_time(std::chrono::system_clock::now()).c_str(),
            airball_serial_device_filename.c_str());
 
-    airball::xbee radio(airball_serial_device_filename, 9600, airball::xbee::BASE_STATION);
-    radio.initialize();
+    airball::xbee radio(airball_serial_device_filename, 9600);
+
+    radio.enterCommandMode();
+
+    radio.sendCommand("ATNIAIRBALL_BASE");
+    radio.sendCommand("ATID=5555");
+    radio.sendCommand("ATMY=8888");
+    radio.sendCommand("ATAP=1");
+
+    radio.exitCommandMode();
 
     sampler telemetry;
 
@@ -66,7 +74,7 @@ int main(int argc, char **argv) {
     auto previous_loop_time = std::chrono::system_clock::now();
 
     for (int packet_number=0; ; packet_number++) {
-        xbee_packet packet = radio.receive();
+        xbee_packet packet = radio.read_packet();
 
       auto now = std::chrono::system_clock::now();
       std::chrono::system_clock::duration since_last =
