@@ -1,6 +1,7 @@
 #include <thread>
 #include "xbee.h"
 #include "format.h"
+#include "xbee_api_payload.h"
 
 int main(int argc, char** argv) {
   const std::string airball_serial_device_filename = std::string(argv[1]);
@@ -24,7 +25,12 @@ int main(int argc, char** argv) {
   radio.exitCommandMode();
 
   while (true) {
-    radio.send_packet(0x8888, "$A,894,116344.30,19.56,2.06,-3.40,1.71");
+    airball::x01_send_16_bit d(
+        0x01,
+        0xFFFF,
+        0x00,
+        "$A,894,116344.30,19.56,2.06,-3.40,1.71");
+    radio.write_api_frame(d.frame());
     std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(20));
   }
 }

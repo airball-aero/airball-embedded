@@ -6,7 +6,7 @@
 #include <asio/streambuf.hpp>
 #include <istream>
 #include <iostream>
-#include "xbee_packet.h"
+#include "xbee_api_frame.h"
 
 namespace airball {
 
@@ -28,25 +28,16 @@ public:
   xbee(std::string serial_device_filename,
       unsigned int baud_rate);
 
-  // DATA WRITE HELPERS
+  // RAW DATA WRITE HELPERS
 
-  // Write a string without checksumming
-  void write_unchecked(std::string str);
-
-  // Methods to manage the running write checksum
-  void write_checksum();
-  void reset_checksum();
-
-  // Write a number of different data types, all with checksumming
+  // Write a number of different data types
   void write(char c);
   void write(const char *s, int len);
+  void write(std::string str);
   void write_uint8(uint8_t value);
   void write_uint16(uint16_t value);
 
-  // Send a packet to a given address.
-  void send_packet(const uint16_t destination, const std::string &buf);
-
-  // DATA READ HELPERS
+  // RAW DATA READ HELPERS
 
   // Discard inputs until a given input is seen
   void discard_until(char c);
@@ -58,8 +49,12 @@ public:
   // Reads inputs until a given input is seen
   std::string read_until(const char end = 0x7e);
 
-  // Reads the next available packet.
-  xbee_packet read_packet();
+  // API MODE HELPERS
+  // These functions assume the XBee has been put into API mode
+  // already via AT commands.
+
+  void write_api_frame(const xbee_api_frame& frame);
+  xbee_api_frame read_api_frame();
 
   // XBEE CONFIGURATION HELPERS
 
@@ -76,12 +71,8 @@ private:
 
   asio::io_service io_service;
   asio::serial_port serial_port;
-  asio::streambuf input_data_buffer, output_data_buffer;
-  std::istream input_buffer;
-  std::ostream output_buffer;
-  uint16_t write_checksum_sum = 0;
 
-  static const char START_DELIMITER = 0x7e;
+  static const char API_FRAME_START_DELIMITER = 0x7e;
 };
 
 } // namespace airball

@@ -44,9 +44,9 @@ target_link_libraries(user_input_source_test
         airball_display)
 
 enable_testing()
-add_executable(runUnitTests
+add_executable(display_tests
         aerodynamics_test.cpp one_shot_timer_test.cpp delay_timer_test.cpp
         interpolation_table_test.cpp airdata_test.cpp
         fake_telemetry_client_test.cpp system_status_test.cpp)
-target_link_libraries(runUnitTests
+target_link_libraries(display_tests
         gtest gtest_main airball_display)

@@ -12,66 +12,22 @@ xbee::xbee(std::string serial_device_filename,
            unsigned int baud_rate) :
     device_filename(serial_device_filename),
     baud_rate(baud_rate),
-    serial_port(io_service),
-    input_buffer(&input_data_buffer),
-    output_buffer(&output_data_buffer) {
+    serial_port(io_service) {
   serial_port.open(serial_device_filename);
-  serial_port.set_option(asio::serial_port_base::baud_rate(baud_rate));
-  serial_port.set_option(asio::serial_port_base::character_size(8));
-  serial_port.set_option(asio::serial_port_base::parity(asio::serial_port_base::parity::none));
-  serial_port.set_option(asio::serial_port_base::stop_bits(asio::serial_port_base::stop_bits::one));
-  serial_port.set_option(asio::serial_port_base::flow_control(asio::serial_port_base::flow_control::none));
-}
-
-void xbee::send_packet(const uint16_t destination, const std::string &buf) {
-  write_uint8(0x7e); // Start
-  write_uint16(buf.length() + 1 + 1 + 2 + 1);
-
-  reset_checksum();
-  write_uint8(0x01); // API ID
-  write_uint8(0x00); // Frame ID
-  write_uint16(destination); // Destination Address
-  write_uint8(0x00); // Options
-  write(buf.c_str(), buf.length()); // Data
-  write_checksum(); // Checksum
-}
-
-xbee_packet xbee::read_packet() {
-  // Synchronize with the beginning of an API packet.
-  discard_until(START_DELIMITER);
-
-  xbee_packet packet;
-
-  uint8_t x[2];
-  asio::read(serial_port, asio::buffer(x, 2), asio::transfer_all());
-
-  packet.length = ((uint16_t)x[0] << 8) | (uint16_t)x[1];
-
-  packet.frame_data.resize(packet.length-1);
-  asio::read(serial_port, asio::buffer(&packet.frame_type, 1), asio::transfer_all());
-  asio::read(serial_port, asio::buffer(packet.frame_data.data(), (size_t) packet.length-1), asio::transfer_all());
-  asio::read(serial_port, asio::buffer(&packet.checksum, 1), asio::transfer_all());
-
-  return packet;
-}
-
-void xbee::write_unchecked(std::string str) {
-  output_buffer << str;
-  std::cout << "write_unchecked " << str << std::endl;
-  asio::write(serial_port, output_data_buffer);
+  serial_port.set_option(asio::serial_port_base::baud_rate(
+      baud_rate));
+  serial_port.set_option(asio::serial_port_base::character_size(
+      8));
+  serial_port.set_option(asio::serial_port_base::parity(
+      asio::serial_port_base::parity::none));
+  serial_port.set_option(asio::serial_port_base::stop_bits(
+      asio::serial_port_base::stop_bits::one));
+  serial_port.set_option(asio::serial_port_base::flow_control(
+      asio::serial_port_base::flow_control::none));
 }
 
 void xbee::write(char c) {
-  write_checksum_sum += c;
   asio::write(serial_port, asio::buffer(&c, 1));
-}
-
-void xbee::write_checksum() {
-  write(0xff - (uint8_t) (write_checksum_sum & 0xff));
-}
-
-void xbee::reset_checksum() {
-  write_checksum_sum = 0;
 }
 
 void xbee::write(const char *s, int len) {
@@ -80,13 +36,17 @@ void xbee::write(const char *s, int len) {
   }
 }
 
+void xbee::write(std::string str) {
+  write(str.data(), str.length());
+}
+
 void xbee::write_uint8(uint8_t value) {
   write(value);
 }
 
 void xbee::write_uint16(uint16_t value) {
-  write((uint8_t) (value >> 8) & 0xff);   // MSB
-  write((uint8_t) (value     ) & 0xff);   // LSB
+  write((uint8_t) ((value >> 8) & 0xff));   // MSB
+  write((uint8_t) ((value     ) & 0xff));   // LSB
 }
 
 void xbee::discard_until(char c) {
@@ -127,29 +87,77 @@ void xbee::discard_until(char *str) {
 }
 
 std::string xbee::get_line(const char end) {
+  asio::streambuf input_data_buffer;
+  std::istream input_buffer(&input_data_buffer);
   char line[512] = {0};
   asio::read_until(serial_port, input_data_buffer, end);
   input_buffer.getline(line, sizeof(line));
-  std::cout << "Got line: " << line << std::endl;
   return std::string(line);
 }
 
 std::string xbee::read_until(const char end) {
+  asio::streambuf input_data_buffer;
+  std::istream input_buffer(&input_data_buffer);
   char line[512] = {0};
   asio::read_until(serial_port, input_data_buffer, end);
   input_buffer.getline(line, sizeof(line));
-  std::cout << "Got line: " << line << std::endl;
   return std::string(line);
+}
+
+void xbee::write_api_frame(const xbee_api_frame& frame) {
+  write_uint8(0x7e); // Start
+  write_uint16((uint16_t)(frame.payload().length() + 1));
+  write_uint8(frame.api());
+  write(frame.payload());
+  write_uint8(frame.checksum());
+}
+
+xbee_api_frame xbee::read_api_frame() {
+  while (true) {
+    // Synchronize with the beginning of an API packet.
+    discard_until(API_FRAME_START_DELIMITER);
+
+    uint8_t x[2];
+    asio::read(
+        serial_port,
+        asio::buffer(x, 2),
+        asio::transfer_all());
+    uint16_t length = ((uint16_t) x[0] << 8) | (uint16_t) x[1];
+
+    uint8_t api;
+    asio::read(
+        serial_port,
+        asio::buffer(&api, 1),
+        asio::transfer_all());
+
+    char payload_buffer[length - 1];
+    asio::read(
+        serial_port,
+        asio::buffer(payload_buffer, (size_t) length - 1),
+        asio::transfer_all());
+
+    xbee_api_frame frame(api, std::string(payload_buffer, (size_t) length - 1));
+
+    uint8_t checksum;
+    asio::read(
+        serial_port,
+        asio::buffer(&checksum, 1),
+        asio::transfer_all());
+
+    if (checksum == frame.checksum()) {
+      return frame;
+    }
+  }
 }
 
 void xbee::enterCommandMode(unsigned int guard_time) {
   usleep(guard_time * 1000);
-  write_unchecked("+++");
+  write("+++");
   usleep(guard_time * 1000);
 }
 
 void xbee::sendCommand(std::string command) {
-  write_unchecked(command + "\r");
+  write(command + "\r");
 }
 
 void xbee::exitCommandMode() {

@@ -1,13 +1,13 @@
 #include <iostream>
-
 #include <fstream>
-#include <sstream>
 #include <backward/strstream>
 
 #include "sample.h"
 #include "sampler.h"
 #include "xbee.h"
 #include "format.h"
+#include "xbee_api_frame.h"
+#include "xbee_api_payload.h"
 
 void print_quantity(const long int value, const char symbol) {
   std::ostrstream s;
@@ -74,7 +74,8 @@ int main(int argc, char **argv) {
     auto previous_loop_time = std::chrono::system_clock::now();
 
     for (int packet_number=0; ; packet_number++) {
-        xbee_packet packet = radio.read_packet();
+      auto payload = airball::xbee_api_receive::interpret_frame(
+          radio.read_api_frame());
 
       auto now = std::chrono::system_clock::now();
       std::chrono::system_clock::duration since_last =
@@ -84,32 +85,31 @@ int main(int argc, char **argv) {
           std::chrono::duration_cast<std::chrono::duration<unsigned int, std::milli>>(since_last);
       previous_loop_time = now;
 
-      auto current_time = std::chrono::system_clock::now();
+      auto p = dynamic_cast<airball::x81_receive_16_bit*>(payload.get());
 
-        if (packet.frame_type == xbee_packet::PacketTypeReceive16Bit) {
-            xbee_packet::PacketReceive16Bit data(packet.frame_data);
-
-            if (sample *s = telemetry.parse(current_time, data.rssi(), data.data())) {
-                stats[s->type()]++;
-                *files[s->type()] << s->format().c_str() << std::endl;
-                print_quantity(static_cast<int>(s->get_rssi()), '+');
-                print_quantity(since_last_mills.count(), '.');
-            } else {
-                stats["unusable"]++;
-                printf("%s [%10d] Unusable: %s\n",
-                       airball::format_time(current_time).c_str(),
-                       packet_number, data.data().c_str());
-            }
-            if (packet_number % 100 == 0) {
-                printf("%s [%10d] Stats:",
-                       airball::format_time(current_time).c_str(),
-                       packet_number);
-                for (auto stat : stats) {
-                    printf(" %s=%d", stat.first.c_str(), stat.second);
-                }
-                printf("\n");
-            }
+      if (p != nullptr) {
+        if (sample *s = telemetry.parse(now, p->rssi(), p->data())) {
+          stats[s->type()]++;
+          *files[s->type()] << s->format().c_str() << std::endl;
+          print_quantity(static_cast<int>(s->get_rssi()), '+');
+          print_quantity(since_last_mills.count(), '.');
+        } else {
+          stats["unusable"]++;
+          printf("%s [%10d] Unusable: %s\n",
+                 airball::format_time(now).c_str(),
+                 packet_number,
+                 p->data().c_str());
         }
+        if (packet_number % 100 == 0) {
+          printf("%s [%10d] Stats:",
+                 airball::format_time(now).c_str(),
+                 packet_number);
+          for (auto stat : stats) {
+            printf(" %s=%d", stat.first.c_str(), stat.second);
+          }
+          printf("\n");
+        }
+      }
     }
 #pragma clang diagnostic pop
     return 0;

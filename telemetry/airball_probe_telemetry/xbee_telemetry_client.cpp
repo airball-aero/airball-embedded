@@ -5,6 +5,7 @@
 #include "airdata_sample.h"
 #include "battery_sample.h"
 #include "format.h"
+#include "xbee_api_payload.h"
 
 namespace airball {
 
@@ -41,7 +42,6 @@ XbeeTelemetryClient::XbeeTelemetryClient(
     files_[type] = file;
     stats_[type] = 0;
   }
-
 }
 
 XbeeTelemetryClient::~XbeeTelemetryClient() {
@@ -51,20 +51,16 @@ XbeeTelemetryClient::~XbeeTelemetryClient() {
 };
 
 std::unique_ptr<sample> XbeeTelemetryClient::get() {
-  xbee_packet packet = radio_.read_packet();
-  while (true) {
+  auto payload = xbee_api_receive::interpret_frame(radio_.read_api_frame());
+  auto p = dynamic_cast<x81_receive_16_bit*>(payload.get());
+  if (p != nullptr) {
     auto current_time = std::chrono::system_clock::now();
-
-    if (packet.frame_type == xbee_packet::PacketTypeReceive16Bit) {
-      xbee_packet::PacketReceive16Bit data(packet.frame_data);
-
-      if (sample *s = telemetry_.parse(current_time, data.rssi(), data.data())) {
-        stats_[s->type()]++;
-        *files_[s->type()] << s->format().c_str() << std::endl;
-        return std::unique_ptr<sample>(s);
-      } else {
-        stats_["unusable"]++;
-      }
+    if (sample *s = telemetry_.parse(current_time, p->rssi(), p->data())) {
+      stats_[s->type()]++;
+      *files_[s->type()] << s->format().c_str() << std::endl;
+      return std::unique_ptr<sample>(s);
+    } else {
+      stats_["unusable"]++;
     }
   }
 }
