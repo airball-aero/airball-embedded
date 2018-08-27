@@ -12,17 +12,17 @@ int main(int argc, char** argv) {
 
   airball::xbee radio(airball_serial_device_filename, 9600);
 
-  radio.enterCommandMode();
+  radio.enter_command_mode();
 
-  radio.sendCommand("ATNIAIRBALL_PROBE");
-  radio.sendCommand("ATID=5555");
-  radio.sendCommand("ATMY=7777");
-  radio.sendCommand("ATSM=0");
-  radio.sendCommand("ATSP=64");
-  radio.sendCommand("ATDL=8888");
-  radio.sendCommand("ATAP=1");
+  radio.send_command("ATNIAIRBALL_PROBE");
+  radio.send_command("ATID=5555");
+  radio.send_command("ATMY=7777");
+  radio.send_command("ATSM=0");
+  radio.send_command("ATSP=64");
+  radio.send_command("ATDL=8888");
+  radio.send_command("ATAP=1");
 
-  radio.exitCommandMode();
+  radio.exit_command_mode();
 
   while (true) {
     airball::x01_send_16_bit d(

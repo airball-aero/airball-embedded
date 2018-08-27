@@ -7,8 +7,7 @@
 namespace airball {
 
 /**
- * A client to a standard Airball telemetry server. A telemetry server
- * runs on a Linux machine and receives telemetry from some source.
+ * A client that receives telemetry from an Airball probe.
  */
 class TelemetryClient {
 public:
@@ -23,4 +22,4 @@ public:
 
 }  // namespace airball
 
-#endif //AIRBALL_TELEMETRY_CLIENT_H
+#endif // AIRBALL_TELEMETRY_CLIENT_H

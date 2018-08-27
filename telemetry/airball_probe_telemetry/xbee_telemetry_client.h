@@ -17,7 +17,7 @@ public:
    * @param serial_device_filename the filename of the serial device to which
    *     the XBee radio is connected, e.g., "/dev/ttyUSB0".
    */
-  XbeeTelemetryClient(const std::string& serial_device_filename);
+  explicit XbeeTelemetryClient(const std::string& serial_device_filename);
   ~XbeeTelemetryClient();
 
   std::unique_ptr<sample> get() override;

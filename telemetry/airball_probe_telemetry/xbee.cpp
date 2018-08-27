@@ -49,6 +49,16 @@ void xbee::write_uint16(uint16_t value) {
   write((uint8_t) ((value     ) & 0xff));   // LSB
 }
 
+std::string xbee::read(uint16_t size) {
+  char buf[size];
+  memset(buf, 0, size);
+  asio::read(
+      serial_port,
+      asio::buffer(buf, size),
+      asio::transfer_all());
+  return std::string(buf, size);
+}
+
 void xbee::discard_until(char c) {
   char cr;
   do {
@@ -58,7 +68,7 @@ void xbee::discard_until(char c) {
 
 void xbee::discard_until(char *str) {
   int p = 0;
-  int l = strlen(str) - 1;
+  size_t l = strlen(str) - 1;
   std::cout << "Trying to discard data" << std::endl;
   asio::error_code ec;
   do {
@@ -150,18 +160,39 @@ xbee_api_frame xbee::read_api_frame() {
   }
 }
 
-void xbee::enterCommandMode(unsigned int guard_time) {
+void xbee::enter_command_mode(unsigned int guard_time) {
+  if (in_command_mode_) { return; }
   usleep(guard_time * 1000);
   write("+++");
   usleep(guard_time * 1000);
+  read(3); // "OK\n"
+  in_command_mode_ = true;
 }
 
-void xbee::sendCommand(std::string command) {
+void xbee::send_command(std::string command) {
   write(command + "\r");
 }
 
-void xbee::exitCommandMode() {
-  sendCommand("ATCN");
+void xbee::exit_command_mode() {
+  if (!in_command_mode_) { return; }
+  send_command("ATCN");
+  in_command_mode_ = false;
+}
+
+std::string xbee::get_hardware_version() {
+  std::string result;
+  ensure_command_mode([&]() {
+    send_command("ATHV");
+    result = read(5).substr(0, 4);
+  });
+  return result;
+}
+
+void xbee::ensure_command_mode(const std::function<void()> &f) {
+  bool was_in_command_mode = in_command_mode_;
+  if (!was_in_command_mode) { enter_command_mode(); }
+  f();
+  if (!was_in_command_mode) { exit_command_mode(); }
 }
 
 } // namespace airball

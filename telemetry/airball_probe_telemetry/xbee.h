@@ -39,6 +39,9 @@ public:
 
   // RAW DATA READ HELPERS
 
+  // Read a specified number of bytes.
+  std::string read(uint16_t size);
+
   // Discard inputs until a given input is seen
   void discard_until(char c);
   void discard_until(char *str);
@@ -61,18 +64,24 @@ public:
   // Perform work in command mode, where serial messages are sent directly over
   // the serial link to the XBee to configure it rather than broadcast over the
   // XBee network to other XBees.
-  void enterCommandMode(unsigned int guard_time = 1200);
-  void sendCommand(std::string command);
-  void exitCommandMode();
+  void enter_command_mode(unsigned int guard_time = 1200);
+  void send_command(std::string command);
+  void exit_command_mode();
+  std::string get_hardware_version();
 
 private:
+  void ensure_command_mode(const std::function<void()> &f);
+
   const std::string device_filename;
   const unsigned int baud_rate;
 
   asio::io_service io_service;
   asio::serial_port serial_port;
 
+  bool in_command_mode_ = false;
+
   static const char API_FRAME_START_DELIMITER = 0x7e;
+  static const char XBEE_NEWLINE = 0x0d;
 };
 
 } // namespace airball
