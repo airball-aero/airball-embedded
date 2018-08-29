@@ -6,6 +6,7 @@
 #include "battery_sample.h"
 #include "format.h"
 #include "xbee_api_payload.h"
+#include "xbee_known_types.h"
 
 namespace airball {
 
@@ -14,11 +15,23 @@ XbeeTelemetryClient::XbeeTelemetryClient(
     : serial_device_filename_(serial_device_filename),
       radio_(serial_device_filename_, 9600) {
 
-  radio_.enter_command_mode();
-  radio_.send_command("ATNIAIRBALL_BASE");
-  radio_.send_command("ATID=5555");
-  radio_.send_command("ATMY=8888");
-  radio_.send_command("ATAP=1");
+  auto xbee_type = airball::xbee_known_types::get_xbee_type(
+      radio_.get_hardware_version());
+
+  switch (xbee_type) {
+    case airball::xbee_known_types::xbee_802_14:
+      radio_.send_command("ATNIAIRBALL_BASE");
+      radio_.send_command("ATID=5555");
+      radio_.send_command("ATMY=8888");
+      radio_.send_command("ATAP=1");
+      break;
+    case airball::xbee_known_types::xbee_900mhz:
+      radio_.send_command("ATAP 1");
+      break;
+    default:
+      std::cout << "Unknown XBee type " << xbee_type << std::endl;
+      exit(-1);
+  }
 
   radio_.exit_command_mode();
 
@@ -60,6 +73,16 @@ std::unique_ptr<sample> XbeeTelemetryClient::get() {
     rssi = p->rssi();
     data = p->data();
     found = true;
+  }
+  if (auto p = dynamic_cast<x90_receive_64_bit*>(payload.get())) {
+    // TODO: Get RSSI with a new request
+    rssi = 0;
+    data = p->data();
+    found = true;
+  }
+
+  if (!found) {
+    std::cout << "Not found" << std::endl;
   }
 
   if (found) {

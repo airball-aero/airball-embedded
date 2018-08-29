@@ -8,7 +8,8 @@ find_package(Threads REQUIRED)
 
 add_library(airball_telemetry_client
         xbee_telemetry_client.cpp xbee.cpp xbee_api_payload.cpp sample.cpp format.cpp
-        battery_sample.cpp airdata_sample.cpp xbee_api_frame.cpp xbee_known_types.cpp)
+        battery_sample.cpp airdata_sample.cpp xbee_api_frame.cpp xbee_known_types.cpp
+        xbee_utils.cpp)
 target_link_libraries(airball_telemetry_client
         Threads::Threads)
 
@@ -24,6 +25,6 @@ target_link_libraries(send_dummy_data
 
 enable_testing()
 add_executable(airball_probe_telemetry_tests
-        xbee_api_frame_test.cpp xbee_api_frame.cpp)
+        xbee_api_frame_test.cpp xbee_api_payload_test.cpp)
 target_link_libraries(airball_probe_telemetry_tests
-        gtest gtest_main)
+        gtest gtest_main airball_telemetry_client)

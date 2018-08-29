@@ -115,49 +115,16 @@ std::string xbee::read_until(const char end) {
 }
 
 void xbee::write_api_frame(const xbee_api_frame& frame) {
-  write_uint8(0x7e); // Start
-  write_uint16((uint16_t)(frame.payload().length() + 1));
-  write_uint8(frame.api());
-  write(frame.payload());
-  write_uint8(frame.checksum());
+  write(frame.to_bytes());
 }
 
 xbee_api_frame xbee::read_api_frame() {
-  while (true) {
-    // Synchronize with the beginning of an API packet.
-    discard_until(API_FRAME_START_DELIMITER);
-
-    uint8_t x[2];
+  return xbee_api_frame::from_bytes([&](char* buf, size_t size) {
     asio::read(
         serial_port,
-        asio::buffer(x, 2),
+        asio::buffer(buf, size),
         asio::transfer_all());
-    uint16_t length = ((uint16_t) x[0] << 8) | (uint16_t) x[1];
-
-    uint8_t api;
-    asio::read(
-        serial_port,
-        asio::buffer(&api, 1),
-        asio::transfer_all());
-
-    char payload_buffer[length - 1];
-    asio::read(
-        serial_port,
-        asio::buffer(payload_buffer, (size_t) length - 1),
-        asio::transfer_all());
-
-    xbee_api_frame frame(api, std::string(payload_buffer, (size_t) length - 1));
-
-    uint8_t checksum;
-    asio::read(
-        serial_port,
-        asio::buffer(&checksum, 1),
-        asio::transfer_all());
-
-    if (checksum == frame.checksum()) {
-      return frame;
-    }
-  }
+  });
 }
 
 void xbee::enter_command_mode(unsigned int guard_time) {
@@ -170,7 +137,9 @@ void xbee::enter_command_mode(unsigned int guard_time) {
 }
 
 void xbee::send_command(std::string command) {
-  write(command + "\r");
+  ensure_command_mode([&]() {
+    write(command + "\r");
+  });
 }
 
 void xbee::exit_command_mode() {

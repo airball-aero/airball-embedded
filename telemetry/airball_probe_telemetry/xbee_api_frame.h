@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <functional>
+#include <iostream>
 
 namespace airball {
 
@@ -37,6 +39,10 @@ public:
   const std::string& payload() const { return payload_; }
 
   uint8_t checksum() const { return checksum_; };
+
+  std::string to_bytes() const;
+
+  static xbee_api_frame from_bytes(std::function<void(char*, size_t)> read);
 
 private:
   const uint8_t api_;

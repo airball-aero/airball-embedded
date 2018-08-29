@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include "xbee_api_frame.h"
+#include "xbee_utils.h"
 
 namespace airball {
 
@@ -56,9 +57,7 @@ public:
       : xbee_api_receive(frame) {}
 
   uint16_t source_address() const {
-    return
-        ((uint16_t) frame().payload()[0] << 8) |
-        ((uint16_t) frame().payload()[1]);
+    return (uint16_t) xbee_utils::interpret_uint(&frame().payload()[0], 2);
   }
 
   uint8_t rssi() const {
@@ -77,6 +76,34 @@ public:
 };
 
 /**
+ * Received network message with 64-bit addressing.
+ */
+class x90_receive_64_bit : public xbee_api_receive {
+public:
+  explicit x90_receive_64_bit(const xbee_api_frame& frame)
+      : xbee_api_receive(frame) {}
+
+  uint64_t source_address_64_bit() const {
+    return xbee_utils::interpret_uint(&frame().payload()[0], 8);
+  }
+
+  uint64_t source_address_16_bit() const {
+    return xbee_utils::interpret_uint(&frame().payload()[8], 2);
+  }
+
+  uint8_t options() const {
+    return (uint8_t) frame().payload()[10];
+  }
+
+  std::string data() {
+    return std::string(
+        frame().payload().data() + 11,
+        frame().payload().length() - 11);
+  };
+};
+
+
+/**
  * A payload that is to be sent to the XBee. The constructor is expected to take
  * individual meaningful pieces of data and construct the enclosed frame.
  */
@@ -86,8 +113,6 @@ public:
 
 protected:
   std::unique_ptr<xbee_api_frame> frame_;
-  // TODO(ihab): "write()" functions duplicated here and xbee.cpp; code smell
-  void write_uint16(std::ostream& os, uint16_t value);
 };
 
 /**
@@ -99,7 +124,21 @@ public:
       uint8_t frame_id,
       uint16_t destination_address,
       uint8_t options,
-      std::string data);
+      const std::string& data);
+};
+
+/**
+ * A request to send data with 64-bit addressing.
+ */
+class x10_send_64_bit : public xbee_api_send {
+public:
+  x10_send_64_bit(
+      uint8_t frame_id,
+      uint64_t destination_address_64_bit,
+      uint16_t destination_address_16_bit,
+      uint8_t broadcast_radius,
+      uint8_t options,
+      const std::string& data);
 };
 
 } // namespace airball
