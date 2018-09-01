@@ -76,6 +76,50 @@ public:
 };
 
 /**
+ * Response from an AT command.
+ */
+class x88_at_response : public xbee_api_receive {
+public:
+  explicit x88_at_response(const xbee_api_frame& frame)
+      : xbee_api_receive(frame) {}
+
+  uint8_t frame_id() const {
+    return (uint8_t) frame().payload()[0];
+  }
+
+  std::string command() const {
+    return std::string(frame().payload().data() + 1, 2);
+  }
+
+  uint8_t status() const {
+    return (uint8_t) frame().payload()[3];
+  }
+
+  std::string data() {
+    return std::string(data_start(), data_length());
+  };
+
+  uint8_t data_as_uint8_t() {
+    if (data_length() < 1) { return 0; }
+    return (uint8_t) xbee_utils::interpret_uint(data_start(), 1);
+  }
+
+  uint16_t data_as_uint16_t() {
+    if (data_length() < 2) { return 0; }
+    return (uint16_t) xbee_utils::interpret_uint(data_start(), 2);
+  }
+
+  uint64_t data_as_uint64_t() {
+    if (data_length() < 8) { return 0; }
+    return xbee_utils::interpret_uint(data_start(), 8);
+  }
+
+private:
+  const char* data_start() const { return frame().payload().data() + 4; }
+  size_t data_length() const { return frame().payload().length() - 4; }
+};
+
+/**
  * Received network message with 64-bit addressing.
  */
 class x90_receive_64_bit : public xbee_api_receive {
@@ -102,7 +146,6 @@ public:
   };
 };
 
-
 /**
  * A payload that is to be sent to the XBee. The constructor is expected to take
  * individual meaningful pieces of data and construct the enclosed frame.
@@ -125,6 +168,32 @@ public:
       uint16_t destination_address,
       uint8_t options,
       const std::string& data);
+};
+
+/**
+ * An AT command represented as an API frame.
+ */
+class x08_at_command : public xbee_api_send {
+public:
+  x08_at_command(
+      uint8_t frame_id,
+      const std::string& command,
+      const std::string& value);
+
+  x08_at_command(
+      uint8_t frame_id,
+      const std::string& command,
+      uint8_t value);
+
+  x08_at_command(
+      uint8_t frame_id,
+      const std::string& command,
+      uint16_t value);
+
+  x08_at_command(
+      uint8_t frame_id,
+      const std::string& command,
+      uint64_t value);
 };
 
 /**

@@ -8,7 +8,12 @@ static const char* const DUMMY_DATA =
     "$A,894,116344.30,19.56,2.06,-3.40,1.71";
 
 int main(int argc, char** argv) {
-  const std::string airball_serial_device_filename = std::string(argv[1]);
+  // TODO: Not a good idea to directly pass enum values as an integer.
+  const airball::xbee_known_types::xbee_type type =
+      (airball::xbee_known_types::xbee_type)
+          std::stoi(argv[1], nullptr, 10);
+
+  const std::string airball_serial_device_filename = std::string(argv[2]);
 
   printf("%s Opening serial port at %s...\n",
          airball::format_time(std::chrono::system_clock::now()).c_str(),
@@ -16,34 +21,33 @@ int main(int argc, char** argv) {
 
   airball::xbee radio(airball_serial_device_filename, 9600);
 
-  radio.enter_command_mode();
+  radio.enter_api_mode();
 
-  auto xbee_type = airball::xbee_known_types::get_xbee_type(
-      radio.get_hardware_version());
-
-  switch (xbee_type) {
+  switch (type) {
     case airball::xbee_known_types::xbee_802_14:
-      radio.send_command("ATNIAIRBALL_PROBE");
-      radio.send_command("ATID=5555");
-      radio.send_command("ATMY=7777");
-      radio.send_command("ATSM=0");
-      radio.send_command("ATSP=64");
-      radio.send_command("ATDL=8888");
-      radio.send_command("ATAP=1");
+      radio.write_api_frame(
+          airball::x08_at_command(0x02, "NI", "AIRBALL_PROBE").frame());
+      radio.write_api_frame(
+          airball::x08_at_command(0x03, "ID", (uint16_t) 0x5555).frame());
+      radio.write_api_frame(
+          airball::x08_at_command(0x04, "MY", (uint16_t) 0x7777).frame());
+      radio.write_api_frame(
+          airball::x08_at_command(0x05, "SM", (uint8_t) 0x00).frame());
+      radio.write_api_frame(
+          airball::x08_at_command(0x06, "SM", (uint8_t) 0x00).frame());
+      radio.write_api_frame(
+          airball::x08_at_command(0x07, "DL", (uint16_t) 0x8888).frame());
       break;
     case airball::xbee_known_types::xbee_900mhz:
       // For the 900 MHz radios, we just broadcast
-      radio.send_command("ATAP 1");
       break;
     default:
-      std::cout << "Unknown XBee type " << xbee_type << std::endl;
+      std::cout << "Unknown XBee type " << type << std::endl;
       exit(-1);
   }
 
-  radio.exit_command_mode();
-
   while (true) {
-    switch (xbee_type) {
+    switch (type) {
       case airball::xbee_known_types::xbee_802_14:
         radio.write_api_frame(
             airball::x01_send_16_bit(

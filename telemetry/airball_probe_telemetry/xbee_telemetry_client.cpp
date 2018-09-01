@@ -11,14 +11,13 @@
 namespace airball {
 
 XbeeTelemetryClient::XbeeTelemetryClient(
+    const airball::xbee_known_types::xbee_type type,
     const std::string& serial_device_filename)
     : serial_device_filename_(serial_device_filename),
       radio_(serial_device_filename_, 9600) {
+  radio_.enter_command_mode();
 
-  auto xbee_type = airball::xbee_known_types::get_xbee_type(
-      radio_.get_hardware_version());
-
-  switch (xbee_type) {
+  switch (type) {
     case airball::xbee_known_types::xbee_802_14:
       radio_.send_command("ATNIAIRBALL_BASE");
       radio_.send_command("ATID=5555");
@@ -29,7 +28,7 @@ XbeeTelemetryClient::XbeeTelemetryClient(
       radio_.send_command("ATAP 1");
       break;
     default:
-      std::cout << "Unknown XBee type " << xbee_type << std::endl;
+      std::cout << "Unknown XBee type " << type << std::endl;
       exit(-1);
   }
 

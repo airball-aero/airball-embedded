@@ -67,7 +67,10 @@ public:
   void enter_command_mode(unsigned int guard_time = 1200);
   void send_command(std::string command);
   void exit_command_mode();
-  std::string get_hardware_version();
+
+  void enter_api_mode();
+
+  std::string get_hardware_version(); // TODO(ihab): Deprecated
 
 private:
   void ensure_command_mode(const std::function<void()> &f);

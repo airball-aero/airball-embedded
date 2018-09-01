@@ -8,12 +8,13 @@ namespace airball {
 class xbee_known_types {
 public:
   enum xbee_type {
-    xbee_unknown,
-    xbee_802_11,
-    xbee_802_14,
-    xbee_900mhz,
+    xbee_unknown = -1,
+    xbee_802_14 = 0,
+    xbee_900mhz = 1,
+    xbee_802_11 = 2,
   };
 
+  static xbee_type get_xbee_type(uint16_t athv);
   static xbee_type get_xbee_type(const std::string &athv);
 };
 

@@ -132,7 +132,6 @@ void xbee::enter_command_mode(unsigned int guard_time) {
   usleep(guard_time * 1000);
   write("+++");
   usleep(guard_time * 1000);
-  read(3); // "OK\n"
   in_command_mode_ = true;
 }
 
@@ -146,6 +145,18 @@ void xbee::exit_command_mode() {
   if (!in_command_mode_) { return; }
   send_command("ATCN");
   in_command_mode_ = false;
+}
+
+void xbee::enter_api_mode() {
+  // At this point, we don't know whether we are or are not already in API mode.
+  // Our best hope is to send the AT commands to enter API mode. If we are not
+  // in API mode, we'll enter it. If we are, then the XBee will interpret the
+  // commands as garbage data and absorb them. Any error messages resulting
+  // should be drained and ignored by subsequent application reads of API mode
+  // packets.
+  ensure_command_mode([&]() {
+    send_command("ATAP=1");
+  });
 }
 
 std::string xbee::get_hardware_version() {

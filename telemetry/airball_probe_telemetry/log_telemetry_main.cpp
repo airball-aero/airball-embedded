@@ -4,6 +4,7 @@
 
 #include "format.h"
 #include "xbee_telemetry_client.h"
+#include "xbee_known_types.h"
 
 void print_quantity(const long int value, const char symbol) {
   std::ostrstream s;
@@ -19,8 +20,13 @@ void print_quantity(const long int value, const char symbol) {
 }
 
 int main(int argc, char **argv) {
-  auto device = std::string(argv[1]);
-  airball::XbeeTelemetryClient telemetry_client(device);
+  // TODO: Not a good idea to directly pass enum values as an integer.
+  const airball::xbee_known_types::xbee_type type =
+      (airball::xbee_known_types::xbee_type)
+          std::stoi(argv[1], nullptr, 10);
+  auto device = std::string(argv[2]);
+
+  airball::XbeeTelemetryClient telemetry_client(type, device);
 
   std::map<std::string, std::ofstream *> files;
 

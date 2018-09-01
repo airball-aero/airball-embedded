@@ -4,6 +4,7 @@
 #include "telemetry_client.h"
 #include "sampler.h"
 #include "xbee.h"
+#include "xbee_known_types.h"
 
 namespace airball {
 
@@ -14,10 +15,13 @@ public:
    * XBee radio. Setup work will be done in the constructor, so the various
    * devices need to be ready at the time of instantiation.
    *
+   * @param type the type of XBee device that is currently installed.
    * @param serial_device_filename the filename of the serial device to which
    *     the XBee radio is connected, e.g., "/dev/ttyUSB0".
    */
-  explicit XbeeTelemetryClient(const std::string& serial_device_filename);
+  explicit XbeeTelemetryClient(
+      airball::xbee_known_types::xbee_type  type,
+      const std::string& serial_device_filename);
   ~XbeeTelemetryClient();
 
   std::unique_ptr<sample> get() override;

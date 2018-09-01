@@ -24,6 +24,32 @@ std::string write_and_compare(
   EXPECT_EQ(got, want);
 }
 
+TEST(xbee_api_payload, x81_receive_16_bit) {
+  uint8_t data[] {
+      0x7E, 0x00, 0x0A, 0x81, 0xFA, 0xFE, 0xED, 0x3B, 0x66, 0x6C, 0x6F, 0x6F,
+      0x70, 0x3E,
+  };
+  airball::x81_receive_16_bit p(read(data, sizeof(data)));
+  EXPECT_EQ(p.frame().api(), 0x81);
+  EXPECT_EQ(p.source_address(), 0xfafe);
+  EXPECT_EQ(p.rssi(), 0xed);
+  EXPECT_EQ(p.options(), 0x3b);
+  EXPECT_EQ(p.data(), "floop");
+}
+
+TEST(xbee_api_payload, x88_at_response) {
+  uint8_t data[]{
+      0x7E, 0x00, 0x0A, 0x88, 0xDF, 0x41, 0x42, 0x00, 0x66, 0x6C, 0x6F, 0x6F,
+      0x70, 0xF5,
+  };
+  airball::x88_at_response p(read(data, sizeof(data)));
+  EXPECT_EQ(p.frame().api(), 0x88);
+  EXPECT_EQ(p.frame_id(), 0xdf);
+  EXPECT_EQ(p.command(), "AB");
+  EXPECT_EQ(p.status(), 0x00);
+  EXPECT_EQ(p.data(), "floop");
+}
+
 TEST(xbee_api_payload, x90_receive_64_bit) {
   uint8_t data[] {
       0x7E, 0x00, 0x11, 0x90, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
@@ -37,19 +63,6 @@ TEST(xbee_api_payload, x90_receive_64_bit) {
   EXPECT_EQ(p.data(), "floop");
 }
 
-TEST(xbee_api_payload, x81_receive_16_bit) {
-  uint8_t data[]{
-      0x7E, 0x00, 0x0A, 0x81, 0xFA, 0xFE, 0xED, 0x3B, 0x66, 0x6C, 0x6F, 0x6F,
-      0x70, 0x3E,
-  };
-  airball::x81_receive_16_bit p(read(data, sizeof(data)));
-  EXPECT_EQ(p.frame().api(), 0x81);
-  EXPECT_EQ(p.source_address(), 0xfafe);
-  EXPECT_EQ(p.rssi(), 0xed);
-  EXPECT_EQ(p.options(), 0x3b);
-  EXPECT_EQ(p.data(), "floop");
-}
-
 TEST(xbee_api_payload, x01_send_16_bit) {
   uint8_t data[]{
       0x7E, 0x00, 0x0A, 0x01, 0x0A, 0xFA, 0xFE, 0x08, 0x66, 0x6C, 0x6F, 0x6F,
@@ -60,6 +73,51 @@ TEST(xbee_api_payload, x01_send_16_bit) {
       0xfafe,
       0x08,
       "floop");
+  write_and_compare(p.frame(), data, sizeof(data));
+}
+
+TEST(xbee_api_payload, x08_at_command_string) {
+  uint8_t data[] {
+      0x7E, 0x00, 0x08, 0x08, 0xE9, 0x41, 0x42, 0x61, 0x62, 0x63, 0x64, 0x01,
+  };
+  airball::x08_at_command p(
+      0xe9,
+      "AB",
+      "abcd");
+  write_and_compare(p.frame(), data, sizeof(data));
+}
+
+TEST(xbee_api_payload, x08_at_command_uint8_t) {
+  uint8_t data[] {
+      0x7E, 0x00, 0x05, 0x08, 0xE9, 0x41, 0x42, 0x43, 0x48,
+  };
+  airball::x08_at_command p(
+      0xe9,
+      "AB",
+      (uint8_t) 0x43);
+  write_and_compare(p.frame(), data, sizeof(data));
+}
+
+TEST(xbee_api_payload, x08_at_command_uint16_t) {
+  uint8_t data[] {
+      0x7E, 0x00, 0x06, 0x08, 0xE9, 0x41, 0x42, 0x12, 0x34, 0x45,
+  };
+  airball::x08_at_command p(
+      0xe9,
+      "AB",
+      (uint16_t) 0x1234);
+  write_and_compare(p.frame(), data, sizeof(data));
+}
+
+TEST(xbee_api_payload, x08_at_command_uint64_t) {
+  uint8_t data[] {
+      0x7E, 0x00, 0x0C, 0x08, 0xE9, 0x41, 0x42, 0x12, 0x34, 0x56, 0x78, 0xAB,
+      0xCD, 0xEF, 0xAB, 0x65,
+  };
+  airball::x08_at_command p(
+      0xe9,
+      "AB",
+      (uint64_t) 0x12345678abcdefab);
   write_and_compare(p.frame(), data, sizeof(data));
 }
 
