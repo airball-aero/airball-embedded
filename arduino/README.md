@@ -28,7 +28,10 @@ Additionally, the following Arduino libraries must also be installed:
 
 * [TI\_TCA9548A](https://github.com/jeremycole/TI_TCA9548A) – Used for the TI TCA9548A I²C multiplexer.
 * [AllSensors\_DLHR](https://github.com/jeremycole/AllSensors_DLHR) – Used for the AllSensors DLHR pressure sensors.
-* [Temperature\_LM75\_Derived](https://github.com/jeremycole/Temperature_LM75_Derived) – Used for the TI TMP102 temperature sensor.
+* [Temperature\_LM75\_Derived](https://github.com/jeremycole/Temperature_LM75_Derived) – Used for the on-board TI TMP275 temperature sensor.
+* [OneWire](https://github.com/PaulStoffregen/OneWire) – Used by the DallasTemperature library.
+* [DallasTemperature](https://github.com/milesburton/Arduino-Temperature-Control-Library) – Used for the external Maxim DS18B20 1-Wire temperature sensor for measuring outside air temperature.
+* [Maxim_DS2782](https://github.com/jeremycole/Maxim_DS2782) – Used for the on-board battery management IC.
 
 The above libraries may be installed using one of the following methods:
 
