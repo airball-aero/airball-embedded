@@ -27,7 +27,8 @@ Support for the SparkFun Fio v3 must be added to the Arduino IDE, by following t
 Additionally, the following Arduino libraries must also be installed:
 
 * [TI\_TCA9548A](https://github.com/jeremycole/TI_TCA9548A) – Used for the TI TCA9548A I²C multiplexer.
-* [AllSensors\_DLHR](https://github.com/jeremycole/AllSensors_DLHR) – Used for the AllSensors DLHR pressure sensors.
+* [AllSensors\_DLHR](https://github.com/jeremycole/AllSensors_DLHR) – Used for the AllSensors DLHR differential pressure sensors.
+* [AllSensors\_DLV](https://github.com/jeremycole/AllSensors_DLV) – Used for the AllSensors DLV absolute pressure sensor.
 * [Temperature\_LM75\_Derived](https://github.com/jeremycole/Temperature_LM75_Derived) – Used for the on-board TI TMP275 temperature sensor.
 * [OneWire](https://github.com/PaulStoffregen/OneWire) – Used by the DallasTemperature library.
 * [DallasTemperature](https://github.com/milesburton/Arduino-Temperature-Control-Library) – Used for the external Maxim DS18B20 1-Wire temperature sensor for measuring outside air temperature.
