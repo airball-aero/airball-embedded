@@ -33,6 +33,7 @@ Additionally, the following Arduino libraries must also be installed:
 * [OneWire](https://github.com/PaulStoffregen/OneWire) – Used by the DallasTemperature library.
 * [DallasTemperature](https://github.com/milesburton/Arduino-Temperature-Control-Library) – Used for the external Maxim DS18B20 1-Wire temperature sensor for measuring outside air temperature.
 * [Maxim_DS2782](https://github.com/jeremycole/Maxim_DS2782) – Used for the on-board battery management IC.
+* [TimerOne](http://playground.arduino.cc/Code/Timer1) – Used to set up an interrupt to trigger measurement at a specific interval.
 
 The above libraries may be installed using one of the following methods:
 
