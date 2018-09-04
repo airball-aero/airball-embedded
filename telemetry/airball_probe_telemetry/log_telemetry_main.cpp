@@ -28,15 +28,6 @@ int main(int argc, char **argv) {
 
   airball::XbeeTelemetryClient telemetry_client(type, device);
 
-  std::map<std::string, std::ofstream *> files;
-
-  auto log_time = std::chrono::system_clock::now();
-
-  std::ofstream *file = new std::ofstream;
-  std::string filename = airball::format_log_filename(log_time, "all");
-  file->open(filename, std::ios::out);
-  std::cout << "Logging data to " << filename << std::endl;
-
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wmissing-noreturn"
 
@@ -51,7 +42,6 @@ int main(int argc, char **argv) {
     auto since_last_mills =
         std::chrono::duration_cast<std::chrono::duration<unsigned int, std::milli>>(since_last);
     previous_loop_time = now;
-    *file << sample->format().c_str() << std::endl;
     print_quantity(static_cast<int>(sample->get_rssi()), '+');
     print_quantity(since_last_mills.count(), '.');
   }

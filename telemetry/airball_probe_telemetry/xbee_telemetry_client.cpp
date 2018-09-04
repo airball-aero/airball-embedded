@@ -89,6 +89,7 @@ std::unique_ptr<sample> XbeeTelemetryClient::get() {
     if (sample *s = telemetry_.parse(current_time, rssi, data)) {
       stats_[s->type()]++;
       *files_[s->type()] << s->format().c_str() << std::endl;
+      files_[s->type()]->flush();
       return std::unique_ptr<sample>(s);
     } else {
       stats_["unusable"]++;

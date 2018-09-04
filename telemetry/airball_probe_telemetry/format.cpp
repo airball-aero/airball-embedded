@@ -9,7 +9,7 @@ std::string format_log_filename(
   std::time_t t = std::chrono::system_clock::to_time_t(time_point);
   strftime(time_buf, sizeof(time_buf), "%Y%m%d_%H%M%S", std::gmtime(&t));
 
-  return "log/" + prefix + "_" + std::string(time_buf) + ".log";
+  return "log/" + prefix + "_" + std::string(time_buf) + ".csv";
 }
 
 std::string format_time(

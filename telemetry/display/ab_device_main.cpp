@@ -28,6 +28,8 @@
 int main(int argc, char **argv) {
   airball::Controller c(airball::Screen::NewFramebufferScreen(),
                         airball::UserInputSource::NewGpioInputSource(2, 3, 4),
-                        new airball::XbeeTelemetryClient("/dev/ttyAMA0"));
+                        new airball::XbeeTelemetryClient(
+                            airball::xbee_known_types::xbee_802_14,
+                            "/dev/ttyAMA0"));
   c.run();
 }
