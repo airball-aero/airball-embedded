@@ -35,6 +35,7 @@
 #define HAVE_DS2782
 #endif
 
+#include <EEPROM.h>
 #include <Wire.h>
 
 #include <TimerOne.h>
@@ -126,6 +127,31 @@ Maxim_DS2782 bm(&Wire, Maxim_DS2782::DEFAULT_I2C_ADDRESS, 0.015);
 
 // The XBee radio to send telemetry back.
 XBee radio(&Serial1);
+
+struct MeasurementOffsets {
+  float dp0;
+  float dpA;
+  float dpB;
+};
+
+struct MeasurementOffsets measurement_offsets;
+
+#define EEPROM_MEASUREMENT_OFFSETS 0
+
+void readConfigurationMeasurementOffsets() {
+  EEPROM.get(EEPROM_MEASUREMENT_OFFSETS, measurement_offsets);
+
+  // Failed to read valid data from EEPROM. Reset to zeroes.
+  if (isnan(measurement_offsets.dp0) || isnan(measurement_offsets.dpA) || isnan(measurement_offsets.dpB)) {
+    measurement_offsets.dp0 = 0.0;
+    measurement_offsets.dpA = 0.0;
+    measurement_offsets.dpB = 0.0;
+  }
+}
+
+void saveConfigurationMeasurementOffsets() {
+  EEPROM.put(EEPROM_MEASUREMENT_OFFSETS, measurement_offsets);
+}
 
 // A global variable and callback function to track whether the timer has fired and it's time
 // to collect a new measurement.
@@ -240,7 +266,10 @@ void completeMeasurementAndReport() {
   baro.readData();
 
   // Send the data sentence to the display.
-  sendAirDataSentence(airdata_seq++, baro.pressure, oat_temperature, dp0.pressure, dpA.pressure, dpB.pressure);
+  sendAirDataSentence(airdata_seq++, baro.pressure, oat_temperature,
+    dp0.pressure - measurement_offsets.dp0,
+    dpA.pressure - measurement_offsets.dpA,
+    dpB.pressure - measurement_offsets.dpB);
 
 #ifdef HAVE_DS2782
   if(measurement_slot % BM_REPORT_INTERVAL == 0) {
@@ -268,6 +297,59 @@ void handleCommand(char *command) {
   if (strncmp(command, "?", 1) == 0) {
     Serial.print("OK; Airball Sensor Board v");
     Serial.println(AIRBALL_PROBE_VERSION);
+    return;
+  }
+
+  if (strncmp(command, "MO!", 3) == 0) {
+      saveConfigurationMeasurementOffsets();
+      Serial.print("OK; Measurement offset configuration stored.");
+      return;
+  }
+
+  if (strncmp(command, "MO?", 3) == 0) {
+    Serial.print("OK; dp0=");
+    Serial.print(measurement_offsets.dp0);
+    Serial.print(", dpA=");
+    Serial.print(measurement_offsets.dpA);
+    Serial.print(", dpB=");
+    Serial.print(measurement_offsets.dpB);
+    Serial.println();
+    return;
+  }
+
+  if (strncmp(command, "MO.dp0=", 7) == 0) {
+    float value = atof(command+7);
+    if (value > -1000 && value < 1000) {
+      measurement_offsets.dp0 = value;
+      Serial.print("OK; MO.dp0=");
+      Serial.println(value);
+    } else {
+      Serial.println("ERROR; Value out of range.");
+    }
+    return;
+  }
+
+  if (strncmp(command, "MO.dpA=", 7) == 0) {
+    float value = atof(command+7);
+    if (value > -1000 && value < 1000) {
+      measurement_offsets.dpA = value;
+      Serial.print("OK; MO.dpA=");
+      Serial.println(value);
+    } else {
+      Serial.println("ERROR; Value out of range.");
+    }
+    return;
+  }
+
+  if (strncmp(command, "MO.dpB=", 7) == 0) {
+    float value = atof(command+7);
+    if (value > -1000 && value < 1000) {
+      measurement_offsets.dpB = value;
+      Serial.print("OK; MO.dpB=");
+      Serial.println(value);
+    } else {
+      Serial.println("ERROR; Value out of range.");
+    }
     return;
   }
 
@@ -544,6 +626,8 @@ void setup() {
   // Initialize the XBee serial (for data telemetry).
   Serial1.begin(9600);
   while(!Serial1) {} // Wait for XBee serial to come up.
+
+  readConfigurationMeasurementOffsets();
 
   // Enable the TCA9548A multiplexer; RST is active-low.
   pinMode(MUX_RESET, OUTPUT);
