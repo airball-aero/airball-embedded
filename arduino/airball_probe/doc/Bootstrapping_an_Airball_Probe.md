@@ -80,6 +80,6 @@ avrdude -c dragon_isp -p m32u4 \
 
 ## Verify that the bootloader works
 
-Follow the instructions to [Program an Airball Probe](doc/Program_an_Airball_Probe.md) to write the Airball firmware to it.
+Follow the instructions to [Program an Airball Probe](Program_an_Airball_Probe.md) to write the Airball firmware to it.
 
 # Done!
