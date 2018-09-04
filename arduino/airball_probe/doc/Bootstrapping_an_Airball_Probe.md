@@ -4,8 +4,6 @@ Once a probe has been built (or if it has been damaged or "bricked" with bad fir
 
  An AVR in-circuit serial programmer (ICSP or ISP) device must be connected to the 6-pin "ICSP" connector on the probe to do so. There are many compatible programmers available, including the [Microchip Atmel-ICE](https://www.microchip.com/developmenttools/ProductDetails/atatmel-ice) ([$133.90 from DigiKey](https://www.digikey.com/product-detail/en/microchip-technology/ATATMEL-ICE/ATATMEL-ICE-ND/4753379)), [Sparkfun's Pocket AVR](https://www.sparkfun.com/products/9825) ($14.95), and many more. These are useful to have in any case when working with Arduino, as they allow the Atmel ATmega devices to be re-programmed as necessary.
 
-# Bootstrapping
-
 ## Install `avrdude`
 
 The `avrdude` program will be used to program the microcontroller. Installing it is outside the scope of this document, but it is available from various free software respositories such as Ubuntu's and the `brew` repository available for Mac OS X.
@@ -82,6 +80,6 @@ avrdude -c dragon_isp -p m32u4 \
 
 ## Verify that the bootloader works
 
-Follow the instructions to [Program an Airball Probe](Program_an_Airball_Probe.md) to write the Airball firmware to it.
+Follow the instructions to [Program an Airball Probe](doc/Program_an_Airball_Probe.md) to write the Airball firmware to it.
 
 # Done!
