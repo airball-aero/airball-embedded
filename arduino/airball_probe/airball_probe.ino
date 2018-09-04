@@ -74,6 +74,9 @@
 // How frequently (in uS) should measurements be taken?
 #define MEASUREMENT_INTERVAL_US 50000
 
+// What type of pressure measurement to take? Single or averaged.
+#define PRESSURE_MEASUREMENT_TYPE AllSensors_DLHR::MeasurementType::SINGLE
+
 // At what point should the measurement slot counter be wrapped around? Ideally should be
 // a multiple of 60 so that it wraps around on the minute.
 #define MEASUREMENT_SLOT_WRAPAROUND 240
@@ -197,13 +200,13 @@ unsigned long battery_seq = 0;
 void completeMeasurementAndReport() {
   // Request start of measurements from all sensors, to allow them all to run concurrently.
   mux.selectChannel(MUX_CHANNEL_dp0);
-  dp0.startMeasurement();
+  dp0.startMeasurement(PRESSURE_MEASUREMENT_TYPE);
 
   mux.selectChannel(MUX_CHANNEL_dpA);
-  dpA.startMeasurement();
+  dpA.startMeasurement(PRESSURE_MEASUREMENT_TYPE);
 
   mux.selectChannel(MUX_CHANNEL_dpB);
-  dpB.startMeasurement();
+  dpB.startMeasurement(PRESSURE_MEASUREMENT_TYPE);
 
   // Collect the OAT while pressure measurements are still in progress.
   if (ext_oat_present) {
