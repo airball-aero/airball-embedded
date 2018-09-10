@@ -158,7 +158,7 @@ constexpr Font kStatusTextFont(
 
 constexpr Color kStatusTextColor(200, 200, 200);
 
-constexpr Color kBatteryColorGood(0, 255, 0);
+constexpr Color kBatteryColorGood(0, 180, 0);
 
 constexpr Color kBatteryColorWarning(255, 255, 0);
 
@@ -166,7 +166,7 @@ constexpr Color kBatteryColorBad(255, 0, 0);
 
 const bool kStatusDisplayNumericalData = false;
 
-constexpr Color kLinkColor(0, 255, 255);
+constexpr Color kLinkColor(0, 180, 180);
 
 ///////////////////////////////////////////////////////////////////////
 
