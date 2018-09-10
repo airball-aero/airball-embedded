@@ -17,6 +17,8 @@ private:
 
 public:
 
+    sample() {};
+
     sample(std::chrono::time_point<std::chrono::system_clock> time, uint8_t rssi)
             : time(time), rssi(rssi) {
     };

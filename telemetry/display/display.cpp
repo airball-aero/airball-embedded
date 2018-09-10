@@ -147,11 +147,24 @@ constexpr Stroke kStatusDisplayStroke(
     Color(128, 128, 128),
     kStatusDisplayStrokeWidth);
 
+constexpr double kStatusTextFontSize = 12;
+
+constexpr char kStatusTextFontName[] =
+    "Noto Sans";
+
+constexpr Font kStatusTextFont(
+    kStatusTextFontName,
+    kStatusTextFontSize);
+
+constexpr Color kStatusTextColor(200, 200, 200);
+
 constexpr Color kBatteryColorGood(0, 255, 0);
 
 constexpr Color kBatteryColorWarning(255, 255, 0);
 
 constexpr Color kBatteryColorBad(255, 0, 0);
+
+const bool kStatusDisplayNumericalData = false;
 
 constexpr Color kLinkColor(0, 255, 255);
 
@@ -617,6 +630,45 @@ void Display::paintBatteryStatus() {
       top_left,
       size,
       kStatusDisplayStroke);
+
+  if (status_->battery_charging()) {
+    text_top_left(
+        screen_->cr(),
+	"⚡️⚡️⚡️",
+	Point(top_left_inside.x()+2, top_left_inside.y()),
+	Font("Noto Sans", 15),
+	Color(255, 255, 0));
+  }
+
+  if (kStatusDisplayNumericalData || status_->battery_charging()) {
+    Point top_left_below(
+        top_left.x(),
+        top_left.y() + kStatusDisplayUnit + kStatusDisplayStrokeWidth);
+    const int buf_size = 20;
+    char buf[buf_size];
+    snprintf(
+        buf,
+        buf_size,
+        "%.2fV",
+        status_->battery_voltage());
+    text_top_left(
+        screen_->cr(),
+        buf,
+	top_left_below,
+        kStatusTextFont,
+        kStatusTextColor);
+    snprintf(
+        buf,
+        buf_size,
+        "%.0fmA",
+        status_->battery_current());
+    text_top_left(
+        screen_->cr(),
+        buf,
+	Point(top_left_below.x(), top_left_below.y()+15),
+        kStatusTextFont,
+        kStatusTextColor);
+  }
 }
 
 void Display::paintLinkStatus() {

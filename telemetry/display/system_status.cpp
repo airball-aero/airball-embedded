@@ -11,6 +11,7 @@ constexpr static std::chrono::duration<unsigned int, std::milli>
 SystemStatus::SystemStatus()
     : link_quality_(0),
       battery_health_(0),
+      battery_charging_(false),
       last_airdata_time_(std::chrono::system_clock::from_time_t(0))
 {}
 
@@ -27,6 +28,18 @@ double SystemStatus::link_quality() const {
 
 double SystemStatus::battery_health() const {
   return battery_health_;
+}
+
+bool SystemStatus::battery_charging() const {
+  return battery_charging_;
+}
+
+double SystemStatus::battery_voltage() const {
+  return battery_sample_.get_voltage();
+}
+
+double SystemStatus::battery_current() const {
+  return battery_sample_.get_current();
 }
 
 void SystemStatus::update(const sample* d) {
@@ -50,7 +63,9 @@ void SystemStatus::update(const airdata_sample* d) {
 
 void SystemStatus::update(const battery_sample* d) {
   if (d == nullptr) return;
+  battery_sample_ = *d;
   battery_health_ = std::min(1.0, (d->get_voltage() - 3.3) / 0.9);
+  battery_charging_ = d->get_current() > 0.0;
 }
 
 }  // namespace airball

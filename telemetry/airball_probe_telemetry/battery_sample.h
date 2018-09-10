@@ -44,6 +44,8 @@ public:
         return nullptr;
     }
 
+    battery_sample() {};
+
     battery_sample(std::chrono::time_point<std::chrono::system_clock> time, uint8_t rssi, unsigned long seq, double voltage, double current, double capacity_mAh, double capacity_pct)
     :sample(time, rssi), seq(seq), voltage(voltage), current(current), capacity_mAh(capacity_mAh), capacity_pct(capacity_pct) {
 

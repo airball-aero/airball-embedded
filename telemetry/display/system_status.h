@@ -41,12 +41,31 @@ public:
    */
   double battery_health() const;
 
+  /**
+   * Indicates whether the battery is currently charging.
+   */
+  bool battery_charging() const;
+
+  /**
+   * The voltage measured in the most recent battery sampling.
+   */
+  double battery_voltage() const;
+
+  /**
+   * The current measured in the most recent battery sampling in mA.
+   * Negative values indicate discharging; positive indicate charging.
+   */
+  double battery_current() const;
+
 private:
   void update(const airdata_sample* d);
   void update(const battery_sample* d);
 
   double link_quality_;
   double battery_health_;
+  bool battery_charging_;
+  battery_sample battery_sample_;
+
   std::chrono::system_clock::time_point last_airdata_time_;
 };
 
