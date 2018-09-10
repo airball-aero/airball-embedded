@@ -579,6 +579,9 @@ void Display::paintNoFlightData() {
 }
 
 void Display::paintBatteryStatus() {
+  if (!status_->flight_data_up())
+    return;
+
   Point top_left(
       kWidth - kStatusRegionMargin - 2 * kStatusDisplayUnit,
       kStatusRegionMargin);
@@ -617,6 +620,9 @@ void Display::paintBatteryStatus() {
 }
 
 void Display::paintLinkStatus() {
+  if (!status_->flight_data_up())
+    return;
+
   Point bottom_left(
       kWidth - 2 * kStatusRegionMargin - 4 * kStatusDisplayUnit,
       kStatusRegionMargin + kStatusDisplayUnit);
