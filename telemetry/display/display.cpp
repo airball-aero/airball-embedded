@@ -582,6 +582,9 @@ void Display::paintBatteryStatus() {
   Point top_left(
       kWidth - kStatusRegionMargin - 2 * kStatusDisplayUnit,
       kStatusRegionMargin);
+  Point top_left_inside(
+      top_left.x() + kStatusDisplayStrokeWidth/2,
+      top_left.y() + kStatusDisplayStrokeWidth/2);
   Size size(
       2 * kStatusDisplayUnit,
       kStatusDisplayUnit);
@@ -590,9 +593,11 @@ void Display::paintBatteryStatus() {
       top_left,
       size,
       kBackground);
+  const double barHeight =
+      kStatusDisplayUnit - kStatusDisplayStrokeWidth/2;
   const double barWidth =
       status_->battery_health() *
-      (2.0 * (kStatusDisplayUnit - kStatusDisplayStrokeWidth));
+      (2.0 * (kStatusDisplayUnit - kStatusDisplayStrokeWidth/2));
   const Color barColor =
       status_->battery_health() < 0.5
       ? status_->battery_health() < 0.25
@@ -601,10 +606,8 @@ void Display::paintBatteryStatus() {
       : kBatteryColorGood;
   rectangle(
       screen_->cr(),
-      top_left,
-      Size(
-          barWidth,
-          size.h()),
+      top_left_inside,
+      Size(barWidth, barHeight),
       barColor);
   box(
       screen_->cr(),
