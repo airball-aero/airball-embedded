@@ -58,8 +58,8 @@ public:
         std::string result;
         int len = snprintf(nullptr, (size_t) 0);
         if (len > 0) {
-            result.reserve((unsigned long) len);
-            snprintf(result.c_str(), (size_t) len);
+            result.reserve((unsigned long) len+1);
+            snprintf(result.c_str(), (size_t) len+1);
             return result;
         }
         return "";
