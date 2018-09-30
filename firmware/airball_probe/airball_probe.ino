@@ -30,6 +30,9 @@
 // messages to the console.
 //#define AIRBALL_DEBUG
 
+// Whether the XBee wireless module is 802.11. If not then it is a 900 MHz module
+#define WIRELESS_80211 false
+
 #if AIRBALL_PROBE_VERSION == 4
 #define HAVE_TMP275
 #define HAVE_DS2782
@@ -182,6 +185,21 @@ void appendInteger(char *buf, unsigned long seq, char const *delim) {
 // Construct a telemetry sentence and send it to the provided stream (typically a Serial object).
 char sentence[128];
 
+void send_packet() {
+  if (WIRELESS_80211) {
+    radio.send_packet_x01_send_16_bit(
+        0x8888, 
+        sentence, 
+        strlen(sentence));
+  } else {
+    radio.send_packet_x10_send_64_bit(
+      0x000000000000ffff,
+      0xffff,
+      sentence,
+      strlen(sentence));
+  }
+}
+
 void sendAirDataSentence(unsigned long seq, float baro, float oat, float dp0, float dpA, float dpB) {
   // Start with an empty string.
   sentence[0] = 0;
@@ -196,7 +214,7 @@ void sendAirDataSentence(unsigned long seq, float baro, float oat, float dp0, fl
   appendFloat(sentence, dpB, "\r\n");
 
   // Write the sentence to the stream.
-  radio.send_packet(0x8888, sentence, strlen(sentence));
+  send_packet();
 }
 
 #ifdef HAVE_DS2782
@@ -213,7 +231,7 @@ void sendBatterySentence(unsigned long seq, float bm_V, float bm_mA, float bm_ca
   appendFloat(sentence, bm_capacity_pct, "\r\n");
 
   // Write the sentence to the stream.
-  radio.send_packet(0x8888, sentence, strlen(sentence));
+  send_packet();
 }
 #endif
 
@@ -596,12 +614,15 @@ void configureBatteryManagement() {
 void configureRadio() {
   radio.enterCommandMode();
 
-  radio.sendCommand("ATNIAIRBALL_PROBE");
+  if (WIRELESS_80211) {
+    radio.sendCommand("ATNIAIRBALL_PROBE");
+    radio.sendCommand("ATSM=0");
+    radio.sendCommand("ATSP=64");
+    radio.sendCommand("ATDL=8888");
+  }
+
   radio.sendCommand("ATID=5555");
   radio.sendCommand("ATMY=7777");
-  radio.sendCommand("ATSM=0");
-  radio.sendCommand("ATSP=64");
-  radio.sendCommand("ATDL=8888");
   radio.sendCommand("ATAP=1");
 
   radio.exitCommandMode();

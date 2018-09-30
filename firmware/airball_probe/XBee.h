@@ -34,6 +34,7 @@ private:
   Stream *debug = nullptr;
 
   uint16_t write_checksum_sum = 0;
+  uint8_t frame_id_counter = 0;
 
 public:
 
@@ -58,7 +59,8 @@ public:
   }
 
   void write_checksum() {
-    serial->write(0xff - (uint8_t)(write_checksum_sum & 0xff));
+    uint8_t value = 0xff - (uint8_t)(write_checksum_sum & 0xff);
+    write_uint8(value);
   }
 
   void write(char *s) {
@@ -150,22 +152,53 @@ public:
   }
 
   void write_uint8(uint8_t value) {
-    write(value);
+    write_uint_bytes(value, 1);
   }
 
   void write_uint16(uint16_t value) {
-    write((uint8_t) (value & 0xff00 >> 8));   // MSB
-    write((uint8_t) (value & 0x00ff));        // LSB
+    write_uint_bytes(value, 2);
   }
 
-  void send_packet(uint16_t destination, char *buf, uint8_t buf_len) {
+  void write_uint64(uint64_t value) {
+    write_uint_bytes(value, 8);
+  }
+
+  void write_uint_bytes(uint64_t value, uint8_t bytes) {
+    while (bytes-- > 0) {
+      write((uint8_t) ((value >> (8 * bytes)) & 0xff));
+    }
+  }
+
+  void send_packet_x01_send_16_bit(
+        uint16_t destination, 
+        char *buf, 
+        uint8_t buf_len) {
     write_uint8(0x7e); // Start
     write_uint16(buf_len + 1 + 1 + 2 + 1);
 
     reset_checksum();
     write_uint8(0x01); // API ID
-    write_uint8(0x00); // Frame ID
+    write_uint8(frame_id_counter++); // Frame ID
     write_uint16(destination); // Destination Address
+    write_uint8(0x00); // Options
+    write(buf, buf_len); // Data
+    write_checksum(); // Checksum
+  }
+
+  void send_packet_x10_send_64_bit(
+        uint64_t destination_64_bit, 
+        uint16_t destination_16_bit,
+        char *buf,
+        uint8_t buf_len) {
+    write_uint8(0x7e); // Start
+    write_uint16(buf_len + 1 + 1 + 8 + 2 + 1 + 1);
+
+    reset_checksum();
+    write_uint8(0x10); // API ID
+    write_uint8(frame_id_counter++); // Frame ID
+    write_uint64(destination_64_bit); // Destination Address
+    write_uint16(destination_16_bit); // Destination Address
+    write_uint8(0x00); // Broadcast radius
     write_uint8(0x00); // Options
     write(buf, buf_len); // Data
     write_checksum(); // Checksum
