@@ -619,6 +619,8 @@ void configureRadio() {
     radio.sendCommand("ATSM=0");
     radio.sendCommand("ATSP=64");
     radio.sendCommand("ATDL=8888");
+  } else {
+    radio.sendCommand("ATPL=4");
   }
 
   radio.sendCommand("ATID=5555");
