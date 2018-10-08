@@ -10,4 +10,4 @@ include_directories(external/rapidjson/include)
 add_subdirectory(external/googletest/googletest)
 
 add_subdirectory(display)
-add_subdirectory(airball_probe_telemetry)
+add_subdirectory(telemetry)

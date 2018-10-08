@@ -3,9 +3,9 @@
 
 #include <chrono>
 
-#include "../airball_probe_telemetry/telemetry_client.h"
-#include "../airball_probe_telemetry/airdata_sample.h"
-#include "../airball_probe_telemetry/battery_sample.h"
+#include "../telemetry/telemetry_client.h"
+#include "../telemetry/airdata_sample.h"
+#include "../telemetry/battery_sample.h"
 
 namespace airball {
 

@@ -7,9 +7,9 @@
 
 #include "units.h"
 #include "aerodynamics.h"
-#include "../airball_probe_telemetry/sample.h"
-#include "../airball_probe_telemetry/airdata_sample.h"
-#include "../airball_probe_telemetry/battery_sample.h"
+#include "../telemetry/sample.h"
+#include "../telemetry/airdata_sample.h"
+#include "../telemetry/battery_sample.h"
 
 namespace airball {
 

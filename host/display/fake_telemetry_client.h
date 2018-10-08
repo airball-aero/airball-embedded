@@ -2,7 +2,7 @@
 #define AIRBALL_TELEMETRY_FAKE_TELEMETRY_CLIENT_H
 
 #include <memory>
-#include "../airball_probe_telemetry/telemetry_client.h"
+#include "../telemetry/telemetry_client.h"
 
 namespace airball {
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(airball_probe_telemetry)
+project(telemetry)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -24,7 +24,7 @@ target_link_libraries(send_dummy_data
         airball_telemetry_client)
 
 enable_testing()
-add_executable(airball_probe_telemetry_tests
+add_executable(telemetry_tests
         xbee_api_frame_test.cpp xbee_api_payload_test.cpp)
-target_link_libraries(airball_probe_telemetry_tests
+target_link_libraries(telemetry_tests
         gtest gtest_main airball_telemetry_client)

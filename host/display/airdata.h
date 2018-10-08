@@ -27,7 +27,7 @@
 
 #include <string>
 #include "interpolation_table.h"
-#include "../airball_probe_telemetry/airdata_sample.h"
+#include "../telemetry/airdata_sample.h"
 
 namespace airball {
 

@@ -22,25 +22,47 @@
  * THE SOFTWARE.
  */
 
-#include "controller.h"
-#include "../airball_probe_telemetry/xbee_telemetry_client.h"
+#ifndef AIRBALL_CONTROLLER_H
+#define AIRBALL_CONTROLLER_H
+
+#include <string>
+
+#include "screen.h"
+#include "user_input_source.h"
+#include "../telemetry/telemetry_client.h"
+
+namespace airball {
 
 /**
- * For a description of arguments, see ./raspi-setup.md.
+ * A Controller manages the coordination between the various portions of the
+ * Airball application, and contains all the platform independent parts of the
+ * logic.
  */
-int main(int argc, char **argv) {
-  const airball::xbee_known_types::xbee_type type =
-      (airball::xbee_known_types::xbee_type)
-          std::stoi(argv[1], nullptr, 10);
-  auto device = std::string(argv[2]);
-  auto gpio_push = std::stoi(argv[3], nullptr, 10);
-  auto gpio_encoder_a = std::stoi(argv[4], nullptr, 10);
-  auto gpio_encoder_b = std::stoi(argv[5], nullptr, 10);
-  airball::Controller c(airball::Screen::NewFramebufferScreen(),
-                        airball::UserInputSource::NewGpioInputSource(
-                            gpio_push,
-                            gpio_encoder_a,
-                            gpio_encoder_b),
-                        new airball::XbeeTelemetryClient(type, device));
-  c.run();
-}
+class Controller {
+public:
+  /**
+   * Create a new Controller.
+   *
+   * @param screen a target onto which to display the output.
+   * @param input a source of user interaction events.
+   * @param data a source of sensor data.
+   * @param logger a place to log sensor (and other) data.
+   */
+  Controller(Screen* screen,
+             UserInputSource* input,
+             TelemetryClient* telemetry);
+
+  /**
+   * Run the Controller. Generally, this function never returns.
+   */
+   void run();
+
+private:
+  Screen* screen_;
+  UserInputSource* input_;
+  TelemetryClient* telemetry_;
+};
+
+}  // namespace airball
+
+#endif //AIRBALL_CONTROLLER_H
