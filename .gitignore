@@ -1,7 +1,7 @@
 firmware/libraries/**
 firmware/RemoteSystemsTempFiles
 firmware/.metadata
-telemetry/display/external/**
+host/external/**
 **/*~
 **/cmake-build-debug/**
 **/build/**
