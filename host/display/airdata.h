@@ -50,19 +50,32 @@ public:
   // Free stream dynamic pressure
   double free_stream_q() const {return free_stream_q_;}
 
+  // Current altitude (TODO: No barometer setting yet)
+  double altitude() const { return altitude_; }
+
+  // Current climb rate
+  double climb_rate() const { return climb_rate_; }
+
   // Returns true if the data is valid. If not, display a red X indicating system failure.
   bool valid() const {return valid_;}
 
   // Commands this model to update its contents based on the given sensor data.
   void update(const airdata_sample* d);
+
 private:
+  static constexpr int kClimbRatePoints = 5;
+  static constexpr int kSamplesPerMinute = 20 * 60;
+
   InterpolationTable dpr_to_angle;
   double ias_;
   double tas_;
   double alpha_;
   double beta_;
   double free_stream_q_;
+  double altitude_;
+  double climb_rate_;
   bool valid_;
+  double climb_rate_buffer_[kClimbRatePoints];
 };
 
 } // namespace airball

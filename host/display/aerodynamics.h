@@ -62,6 +62,15 @@ double dry_air_density(double p, double t);
  */
 double q_to_tas(double q, double p, double t);
 
+/**
+ * Compute the altitude given the barometric pressure.
+ *
+ * @param p barometric pressure at this point.
+ * @param qnh barometer setting at this point (pressure at sea level).
+ * @return altitude.
+ */
+double pressure_to_altitude(double p, double qnh);
+
 } // namespace airball
 
 #endif // AIRBALL_AERODYNAMICS_H

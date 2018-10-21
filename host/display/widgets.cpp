@@ -182,35 +182,50 @@ void shape(
   cairo_fill(cr);
 }
 
-void text_top_left(
-    cairo_t* cr,
-    const std::string& str,
-    const Point& top_left,
-    const Font& font,
-    const Color& color) {
-  font.apply(cr);
-  color.apply(cr);
-  cairo_move_to(
-      cr,
-      top_left.x(),
-      top_left.y() + font.size());
-  cairo_show_text(cr, str.c_str());
-}
+static constexpr double kUppercaseVerticalOffsetRatio = 0.375;
 
-void text_top_right(
+void text(
     cairo_t* cr,
     const std::string& str,
-    const Point& top_right,
+    const Point& point,
+    const TextReferencePoint ref,
     const Font& font,
     const Color& color) {
   font.apply(cr);
   color.apply(cr);
-  cairo_text_extents_t extents;
-  cairo_text_extents (cr, str.c_str(), &extents);
-  cairo_move_to(
-      cr,
-      top_right.x() - extents.width,
-      top_right.y() + font.size());
+  switch (ref) {
+    case TOP_LEFT:
+      cairo_move_to(
+          cr,
+          point.x(),
+          point.y() + font.size());
+      break;
+    case CENTER_LEFT_UPPERCASE:
+      cairo_move_to(
+          cr,
+          point.x(),
+          point.y() + kUppercaseVerticalOffsetRatio * font.size());
+      break;
+    case TOP_RIGHT:
+    case CENTER_RIGHT_UPPERCASE:
+      cairo_text_extents_t extents;
+      cairo_text_extents (cr, str.c_str(), &extents);
+      switch (ref) {
+        case TOP_RIGHT:
+          cairo_move_to(
+              cr,
+              point.x() - extents.width,
+              point.y() + font.size());
+          break;
+        case CENTER_RIGHT_UPPERCASE:
+          cairo_move_to(
+              cr,
+              point.x() - extents.width,
+              point.y() + kUppercaseVerticalOffsetRatio * font.size());
+          break;
+      }
+      break;
+  }
   cairo_show_text(cr, str.c_str());
 }
 

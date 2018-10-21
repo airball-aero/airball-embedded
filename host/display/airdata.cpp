@@ -25,6 +25,7 @@
 #include "airdata.h"
 
 #include <iostream>
+#include <cstring>
 
 #include "aerodynamics.h"
 #include "units.h"
@@ -78,6 +79,7 @@ double find_dpr_to_angle(InterpolationTable& table, double dpr) {
 
 Airdata::Airdata() {
   populate_table(dpr_to_angle);
+  memset(climb_rate_buffer_, 0, sizeof(climb_rate_buffer_));
 }
 
 void Airdata::update(const airdata_sample* d) {
@@ -88,6 +90,18 @@ void Airdata::update(const airdata_sample* d) {
       single_point_sphere_pressure_coefficient(total_angle);
   ias_ = q_to_ias(free_stream_q_);
   tas_ = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
+  double new_altitude = pressure_to_altitude(d->get_baro(), 101300 /* Pascals */);
+  for (int i = 1; i < kClimbRatePoints; i++) {
+    climb_rate_buffer_[i - 1] = climb_rate_buffer_[i];
+  }
+  climb_rate_buffer_[kClimbRatePoints - 1] = new_altitude - altitude_;
+  altitude_ = new_altitude;
+  climb_rate_ = 0;
+  for (int i = 0; i < kClimbRatePoints; i++) {
+    climb_rate_ += climb_rate_buffer_[i];
+  }
+  climb_rate_ /= (double) kClimbRatePoints;
+  climb_rate_ *= kSamplesPerMinute;
   valid_ = !isnan(alpha_) && !isnan(beta_);
 }
 

@@ -47,4 +47,8 @@ constexpr double celsius_to_kelvin(double v) {
   return v + 273.15;
 }
 
+constexpr double kPascalsPerInHg = 3386.39;
+
+constexpr double kMetersPerFoot = 0.3048;
+
 #endif  // AIRBALL_UNITS_H

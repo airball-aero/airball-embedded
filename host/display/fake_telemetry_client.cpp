@@ -28,7 +28,7 @@ constexpr static std::chrono::duration<unsigned int, std::milli>
 constexpr static unsigned int kInvalidStateNumCycles = 350;
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
-    kInvalidStateDelay(3000);
+    kInvalidStateDelay(500);
 
 double gage_pressure_at_point(
     double dynamic_pressure,
@@ -44,8 +44,8 @@ struct Model {
 };
 
 constexpr static Model kAirdataBaro{
-    .min =  20000,
-    .max = 101325,
+    .min = 65000,
+    .max = 70000,
 };
 
 constexpr static Model kAirdataOat{

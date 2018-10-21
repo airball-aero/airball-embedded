@@ -49,4 +49,25 @@ double q_to_tas(double q, double p, double t) {
   return sqrt(2.0 * q / dry_air_density(p, t));
 }
 
+static constexpr double kAltK = 1.313e-05;
+static constexpr double kAltN = 0.1903;
+static constexpr double kAltPb = 29.92126;
+
+// https://www.av8n.com/physics/altimetry.htm
+// The formulae are given in English units. To maintain a consistent API
+// throughout our system, the function inputs and outputs are in SI units. The
+// tradeoff is we do a few more unit conversions than needed, in return for a
+// hopefully less error-prone set of APIs.
+double pressure_to_altitude(double p, double qnh) {
+  double p_inHg = p / kPascalsPerInHg;
+  double pS_inHg = qnh / kPascalsPerInHg;
+  double h_feet =
+      (pow(pS_inHg, kAltN) / kAltK) *
+      (
+          pow(pS_inHg / kAltPb, kAltN) -
+          pow(p_inHg / kAltPb, kAltN)
+      );
+  return kMetersPerFoot * h_feet;
+}
+
 } // namespace airball

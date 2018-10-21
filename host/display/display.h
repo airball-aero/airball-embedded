@@ -60,6 +60,30 @@ private:
   void paintTotemPoleAlphaX();
   void paintTotemPoleAlphaY();
   void paintCowCatcher();
+  void paintVsi();
+  void paintVsiTicMarks(
+      Point top_left,
+      Point top_right,
+      Point center_left,
+      Point center_right,
+      Point bottom_left,
+      Point bottom_right,
+      double radians_per_fpm);
+  void paintVsiPointer(
+      Point top_left,
+      Point top_right,
+      Point center_left,
+      Point center_right,
+      Point bottom_left,
+      Point bottom_right,
+      double radians_per_fpm);
+  void paintAltitude(
+      Point top_left,
+      Point top_right,
+      Point center_left,
+      Point center_right,
+      Point bottom_left,
+      Point bottom_right);
   void paintAdjusting();
   void paintNoFlightData();
   void paintBatteryStatus();

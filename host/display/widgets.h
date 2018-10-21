@@ -150,17 +150,18 @@ void shape(
     const Point corners[],
     const Color& fill);
 
-void text_top_left(
-    cairo_t* cr,
-    const std::string& str,
-    const Point& top_left,
-    const Font& font,
-    const Color& color);
+enum TextReferencePoint {
+  TOP_LEFT,
+  TOP_RIGHT,
+  CENTER_LEFT_UPPERCASE,
+  CENTER_RIGHT_UPPERCASE,
+};
 
-void text_top_right(
+void text(
     cairo_t* cr,
     const std::string& str,
-    const Point& top_right,
+    const Point& point,
+    const TextReferencePoint ref,
     const Font& font,
     const Color& color);
 

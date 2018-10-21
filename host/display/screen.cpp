@@ -36,6 +36,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <iostream>
+#include <math.h>
 
 namespace airball {
 
@@ -68,16 +69,19 @@ X11Screen::X11Screen(const int x, const int y) {
   screen = DefaultScreen(dsp);
   da = XCreateSimpleWindow(
       dsp, DefaultRootWindow(dsp),
-      0, 0, x, y, 0, 0, 0);
+      0, 0, y, x, 0, 0, 0);
   XSelectInput(dsp, da, ButtonPressMask | KeyPressMask);
   XMapWindow(dsp, da);
 
   cs_ = cairo_xlib_surface_create(
       dsp, da,
-      DefaultVisual(dsp, screen), x, y);
-  cairo_xlib_surface_set_size(cs_, x, y);
+      DefaultVisual(dsp, screen), y, x);
+  cairo_xlib_surface_set_size(cs_, y, x);
 
   cr_ = cairo_create(cs_);
+
+  cairo_rotate(cr_, M_PI / 2);
+  cairo_translate(cr_, 0, -y);
 }
 
 X11Screen::~X11Screen() {
