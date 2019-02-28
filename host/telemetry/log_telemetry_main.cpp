@@ -5,6 +5,7 @@
 #include "format.h"
 #include "xbee_telemetry_client.h"
 #include "xbee_known_types.h"
+#include "airdata_sample.h"
 
 void print_quantity(const long int value, const char symbol) {
   std::ostrstream s;
@@ -18,6 +19,9 @@ void print_quantity(const long int value, const char symbol) {
   s << std::ends;
   printf("%03ld %s\n", value, s.str());
 }
+
+constexpr unsigned int AIRDATA_BUF_LEN = 1024;
+char airdata_buf[AIRDATA_BUF_LEN];
 
 int main(int argc, char **argv) {
   // TODO: Not a good idea to directly pass enum values as an integer.
@@ -44,6 +48,11 @@ int main(int argc, char **argv) {
     previous_loop_time = now;
     print_quantity(static_cast<int>(sample->get_rssi()), '+');
     print_quantity(since_last_mills.count(), '.');
+    auto ads = dynamic_cast<airdata_sample*>(sample.get());
+    if (ads != nullptr) {
+      ads->snprintf(airdata_buf, AIRDATA_BUF_LEN);
+      std::cout << airdata_buf << std::endl;
+    }
   }
 
   #pragma clang diagnostic pop
