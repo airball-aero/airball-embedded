@@ -52,7 +52,8 @@ TEST(Airdata, simple_zero_condition) {
           15.0,
           6000,
           0.0,
-          0.0).get());
+          0.0).get(),
+       101300);
   EXPECT_NEAR(0.0, ad.alpha(), 0.001);
   EXPECT_NEAR(0.0, ad.beta(), 0.001);
 }
@@ -65,7 +66,8 @@ TEST(Airdata, ias_test) {
           15.0,
           6125,
           0.0,
-          0.0).get());
+          0.0).get(),
+       101300);
   EXPECT_NEAR(100, ad.ias(), 0.02);
 }
 
@@ -80,7 +82,8 @@ TEST(Airdata, tas_test) {
           226.85,
           3530,
           0.0,
-          0.0).get());
+          0.0).get(),
+       101300);
   EXPECT_NEAR(100, ad.tas(), 0.02);
 }
 
@@ -97,7 +100,8 @@ TEST(Airdata, alpha_test) {
           15.0,
           100,
           10,
-          0).get());
+          0).get(),
+       101300);
   EXPECT_NEAR(-0.02, ad.alpha(), 0.01);
   EXPECT_NEAR(0, ad.beta(), 0.01);
 }
@@ -110,7 +114,8 @@ TEST(Airdata, beta_test) {
           15.0,
           100,
           0,
-          10).get());
+          10).get(),
+       101300);
   EXPECT_NEAR(0, ad.alpha(), 0.01);
   EXPECT_NEAR(0.02, ad.beta(), 0.01);
 }
@@ -123,7 +128,8 @@ TEST(Airdata, alpha_beta_test) {
           15.0,
           6125,
           612.5,
-          612.5).get());
+          612.5).get(),
+       101300);
   EXPECT_NEAR(-0.0222, ad.alpha(), 0.01);
   EXPECT_NEAR(0.0222, ad.beta(), 0.01);
 }
@@ -136,7 +142,8 @@ TEST(Airdata, ias_deflected_test) {
           15.0,
           6125,
           612.5,
-          612.5).get());
+          612.5).get(),
+       101300);
   EXPECT_NEAR(100.111, ad.ias(), 0.01);
 }
 

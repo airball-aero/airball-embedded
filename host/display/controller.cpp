@@ -28,6 +28,7 @@
 #include "display.h"
 #include "delay_timer.h"
 #include "system_status.h"
+#include "units.h"
 
 #include <iostream>
 #include <thread>
@@ -75,6 +76,8 @@ enum Command {
   ADJUST_UP,
   ADJUST_DOWN,
   ADJUST_NEXT,
+  ADJUST_BARO_SETTING_UP,
+  ADJUST_BARO_SETTING_DOWN,
 };
 
 void apply_command(Settings &s, Command c) {
@@ -93,6 +96,12 @@ void apply_command(Settings &s, Command c) {
       break;
     case ADJUST_NEXT:
       s.adjust_next();
+      break;
+    case ADJUST_BARO_SETTING_UP:
+      s.adjust_baro_setting_up();
+      break;
+    case ADJUST_BARO_SETTING_DOWN:
+      s.adjust_baro_setting_down();
       break;
     default:
       break;
@@ -165,11 +174,15 @@ void Controller::run() {
         case UserInputSource::Input::ADJUST_UP:
           if (adjusting) {
             commands.put(Command::ADJUST_UP);
+          } else {
+            commands.put(Command::ADJUST_BARO_SETTING_UP);
           }
           break;
         case UserInputSource::Input::ADJUST_DOWN:
           if (adjusting) {
             commands.put(Command::ADJUST_DOWN);
+          } else {
+            commands.put(Command::ADJUST_BARO_SETTING_DOWN);
           }
           break;
         case UserInputSource::Input::EXIT:
@@ -209,7 +222,7 @@ void Controller::run() {
         const sample* d = (*it).get();
         auto ad = dynamic_cast<const airdata_sample*>(d);
         if (ad != nullptr) {
-          airdata.update(ad);
+          airdata.update(ad, kPascalsPerInHg * settings.baro_setting());
         }
         status.update(d);
       }

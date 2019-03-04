@@ -38,64 +38,69 @@ public:
   ~Settings() {}
 
   /**
-   * @return the display setting, full scale indicated air speed.
+   * @return the display setting, full scale indicated air speed. (Knots)
    */
   double v_full_scale() const;
 
   /**
-   * @return the rotation indicated air speed (Vr).
+   * @return the rotation indicated air speed (Vr). (Knots)
    */
   double v_r() const;
 
   /**
-   * @return the maximum flap extension indicated air speed (Vfe).
+   * @return the maximum flap extension indicated air speed (Vfe). (Knots)
    */
   double v_fe() const;
 
   /**
-   * @return the maximum normal operating indicated air speed (Vno).
+   * @return the maximum normal operating indicated air speed (Vno). (Knots)
    */
   double v_no() const;
 
   /**
-   * @return the never-exceed indicated air speed (Vne).
+   * @return the never-exceed indicated air speed (Vne). (Knots)
    */
   double v_ne() const;
 
   /**
-   * @return the stall angle of attack.
+   * @return the stall angle of attack. (Degrees)
    */
   double alpha_stall() const;
 
   /**
-   * @return the display setting, minimum angle of attack shown.
+   * @return the display setting, minimum angle of attack shown. (Degrees)
    */
   double alpha_min() const;
 
   /**
-   * @return the maximum climb rate angle of attack.
+   * @return the maximum climb rate angle of attack. (Degrees)
    */
   double alpha_x() const;
 
   /**
-   * @return the maximum climb angle angle of attack.
+   * @return the maximum climb angle angle of attack. (Degrees)
    */
   double alpha_y() const;
 
   /**
-   * @return the reference stabilized approach angle of attack.
+   * @return the reference stabilized approach angle of attack. (Degrees)
    */
   double alpha_ref() const;
 
   /**
-   * @return the display setting, full scale angle of yaw.
+   * @return the display setting, full scale angle of yaw. (Degrees)
    */
   double beta_full_scale() const;
 
   /**
-   * @return the display setting, constant bias to angle of yaw.
+   * @return the display setting, constant bias to angle of yaw. (Degrees)
    */
   double beta_bias() const;
+
+  /**
+   * @return the current barometer setting. (Inches of mercury)
+   */
+  double baro_setting() const;
 
   /**
    * @return whether the settings are currently being adjusted.
@@ -136,6 +141,18 @@ public:
    */
   void adjust_down();
 
+  /**
+   * Commands this Settings to adjust the 'baro_setting' parameter (which is
+   * not part of the usual parameter sequence) one step up.
+   */
+  void adjust_baro_setting_up();
+
+  /**
+   * Commands this Settings to adjust the 'baro_setting' parameter (which is
+   * not part of the usual parameter sequence) one step down.
+   */
+  void adjust_baro_setting_down();
+
 private:
 
   void load();
@@ -144,9 +161,11 @@ private:
   void load_str(std::string);
   std::string save_str();
 
-  double get_value(const Parameter* parameter) const;
+  double get_value(const Parameter* p) const;
+  void adjust_param_up(const Parameter* p);
+  void adjust_param_down(const Parameter* p);
 
-  std::string path_;
+    std::string path_;
   std::map<const std::string, long int> values_;
   int adjusting_param_index_;
 };

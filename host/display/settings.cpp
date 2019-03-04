@@ -59,7 +59,7 @@ constexpr long int V_PARAMETER_DEFAULT = 100;
 constexpr Parameter V_FULL_SCALE = {
     .name="ias_full_scale",
     .display_name = "IAS FS",
-    .display_units = "kt",
+    .display_units = V_PARAMETER_DISPLAY_UNITS,
     .offset=0,
     .scale=V_PARAMETER_SCALE,
     .count_min=V_PARAMETER_MIN,
@@ -70,7 +70,7 @@ constexpr Parameter V_FULL_SCALE = {
 constexpr Parameter V_R = {
     .name="v_r",
     .display_name = "Vr",
-    .display_units = "kt",
+    .display_units = V_PARAMETER_DISPLAY_UNITS,
     .offset=0,
     .scale=V_PARAMETER_SCALE,
     .count_min=V_PARAMETER_MIN,
@@ -81,7 +81,7 @@ constexpr Parameter V_R = {
 constexpr Parameter V_FE = {
     .name="v_fe",
     .display_name = "Vfe",
-    .display_units = "kt",
+    .display_units = V_PARAMETER_DISPLAY_UNITS,
     .offset=0,
     .scale=V_PARAMETER_SCALE,
     .count_min=V_PARAMETER_MIN,
@@ -92,7 +92,7 @@ constexpr Parameter V_FE = {
 constexpr Parameter V_NO = {
     .name="v_no",
     .display_name = "Vno",
-    .display_units = "kt",
+    .display_units = V_PARAMETER_DISPLAY_UNITS,
     .offset=0,
     .scale=V_PARAMETER_SCALE,
     .count_min=V_PARAMETER_MIN,
@@ -103,7 +103,7 @@ constexpr Parameter V_NO = {
 constexpr Parameter V_NE = {
     .name="v_ne",
     .display_name = "Vne",
-    .display_units = "kt",
+    .display_units = V_PARAMETER_DISPLAY_UNITS,
     .offset=0,
     .scale=V_PARAMETER_SCALE,
     .count_min=V_PARAMETER_MIN,
@@ -188,7 +188,34 @@ constexpr Parameter BETA_BIAS = {
     .count_default=0,
 };
 
+constexpr Parameter BARO_SETTING = {
+    .name="baro_setting",
+    .display_name = "baro",
+    "in Hg",
+    .offset=0,
+    .scale=0.01,
+    .count_min=2792,
+    .count_max=3192,
+    .count_default=2992,
+};
+
 constexpr const Parameter* ALL_SETTINGS[]{
+    &V_FULL_SCALE,
+    &V_R,
+    &V_FE,
+    &V_NO,
+    &V_NE,
+    &ALPHA_STALL,
+    &ALPHA_MIN,
+    &ALPHA_X,
+    &ALPHA_Y,
+    &ALPHA_REF,
+    &BETA_FULL_SCALE,
+    &BETA_BIAS,
+    &BARO_SETTING,
+};
+
+constexpr const Parameter* SEQUENCED_SETTINGS[]{
     &V_FULL_SCALE,
     &V_R,
     &V_FE,
@@ -203,15 +230,18 @@ constexpr const Parameter* ALL_SETTINGS[]{
     &BETA_BIAS,
 };
 
-constexpr const int NUM_SETTINGS =
+constexpr const int NUM_ALL_SETTINGS =
     sizeof(ALL_SETTINGS) / sizeof(Parameter*);
+
+constexpr const int NUM_SEQUENCED_SETTINGS =
+    sizeof(SEQUENCED_SETTINGS) / sizeof(Parameter*);
 
 constexpr int NOT_ADJUSTING = -1;
 
 Settings::Settings(std::string path)
     : path_(path), adjusting_param_index_(NOT_ADJUSTING)
 {
-  for (int i = 0; i < NUM_SETTINGS; i++) {
+  for (int i = 0; i < NUM_ALL_SETTINGS; i++) {
     values_[ALL_SETTINGS[i]->name] = ALL_SETTINGS[i]->count_default;
   }
   load();
@@ -221,7 +251,7 @@ void Settings::load_str(std::string str) {
   rapidjson::Document document;
   document.Parse("{}");
   document.Parse(str.c_str());
-  for (int i = 0; i < NUM_SETTINGS; i++) {
+  for (int i = 0; i < NUM_ALL_SETTINGS; i++) {
     auto name = ALL_SETTINGS[i]->name;
     if (document.HasMember(name)) {
       values_[name] = document[name].GetInt();
@@ -232,7 +262,7 @@ void Settings::load_str(std::string str) {
 std::string Settings::save_str() {
   rapidjson::Document document;
   document.Parse("{}");
-  for (int i = 0; i < NUM_SETTINGS; i++) {
+  for (int i = 0; i < NUM_ALL_SETTINGS; i++) {
     rapidjson::Value name;
     name.SetString(rapidjson::StringRef(ALL_SETTINGS[i]->name));
     rapidjson::Value value;
@@ -261,8 +291,18 @@ void Settings::save() {
   f.close();
 }
 
-double Settings::get_value(const Parameter* parameter) const {
-  return parameter->offset + parameter->scale * values_.at(parameter->name);
+double Settings::get_value(const Parameter* p) const {
+  return p->offset + p->scale * values_.at(p->name);
+}
+
+void Settings::adjust_param_up(const Parameter* p) {
+  values_[p->name] = std::min(p->count_max, values_[p->name] + 1);
+  save();
+}
+
+void Settings::adjust_param_down(const Parameter* p) {
+  values_[p->name] = std::max(p->count_min, values_[p->name] - 1);
+  save();
 }
 
 double Settings::v_full_scale() const {
@@ -313,19 +353,31 @@ double Settings::beta_bias() const {
   return get_value(&BETA_BIAS);
 }
 
+double Settings::baro_setting() const {
+  return get_value(&BARO_SETTING);
+}
+
+void Settings::adjust_baro_setting_up() {
+  adjust_param_up(&BARO_SETTING);
+}
+
+void Settings::adjust_baro_setting_down() {
+  adjust_param_down(&BARO_SETTING);
+}
+
 bool Settings::adjusting() const {
   return adjusting_param_index_ != NOT_ADJUSTING;
 }
 
 std::string Settings::adjusting_param_name() const {
   return adjusting()
-         ? ALL_SETTINGS[adjusting_param_index_]->display_name
+         ? SEQUENCED_SETTINGS[adjusting_param_index_]->display_name
          : "";
 }
 
 double Settings::adjusting_param_value() const {
   return adjusting()
-         ? get_value(ALL_SETTINGS[adjusting_param_index_])
+         ? get_value(SEQUENCED_SETTINGS[adjusting_param_index_])
          : 0;
 }
 
@@ -340,24 +392,20 @@ void Settings::set_adjusting(bool adjusting) {
 
 void Settings::adjust_next() {
   if (adjusting()) {
-    adjusting_param_index_ = (adjusting_param_index_ + 1) % NUM_SETTINGS;
+    adjusting_param_index_ = (adjusting_param_index_ + 1) % NUM_SEQUENCED_SETTINGS;
   }
 }
 
 void Settings::adjust_up() {
   if (adjusting()) {
-    const Parameter* s = ALL_SETTINGS[adjusting_param_index_];
-    values_[s->name] = std::min(s->count_max, values_[s->name] + 1);
+    adjust_param_up(SEQUENCED_SETTINGS[adjusting_param_index_]);
   }
-  save();
 }
 
 void Settings::adjust_down() {
   if (adjusting()) {
-    const Parameter* s = ALL_SETTINGS[adjusting_param_index_];
-    values_[s->name] = std::max(s->count_min, values_[s->name] - 1);
+    adjust_param_down(SEQUENCED_SETTINGS[adjusting_param_index_]);
   }
-  save();
 }
 
 } // namespace airball

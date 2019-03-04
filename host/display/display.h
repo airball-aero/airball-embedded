@@ -84,6 +84,13 @@ private:
       Point center_right,
       Point bottom_left,
       Point bottom_right);
+  void paintBaroSetting(
+      Point top_left,
+      Point top_right,
+      Point center_left,
+      Point center_right,
+      Point bottom_left,
+      Point bottom_right);
   void paintAdjusting();
   void paintNoFlightData();
   void paintBatteryStatus();

@@ -82,7 +82,7 @@ Airdata::Airdata() {
   memset(climb_rate_buffer_, 0, sizeof(climb_rate_buffer_));
 }
 
-void Airdata::update(const airdata_sample* d) {
+void Airdata::update(const airdata_sample* d, const double qnh) {
   alpha_ = - find_dpr_to_angle(dpr_to_angle, d->get_dpA() / d->get_dp0());
   beta_ = find_dpr_to_angle(dpr_to_angle, d->get_dpB() / d->get_dp0());
   const double total_angle = sqrt(alpha_ * alpha_ + beta_ * beta_);
@@ -90,7 +90,7 @@ void Airdata::update(const airdata_sample* d) {
       single_point_sphere_pressure_coefficient(total_angle);
   ias_ = q_to_ias(free_stream_q_);
   tas_ = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
-  double new_altitude = pressure_to_altitude(d->get_baro(), 101300 /* Pascals */);
+  double new_altitude = pressure_to_altitude(d->get_baro(), qnh);
   for (int i = 1; i < kClimbRatePoints; i++) {
     climb_rate_buffer_[i - 1] = climb_rate_buffer_[i];
   }

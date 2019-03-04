@@ -50,7 +50,7 @@ public:
   // Free stream dynamic pressure
   double free_stream_q() const {return free_stream_q_;}
 
-  // Current altitude (TODO: No barometer setting yet)
+  // Current altitude
   double altitude() const { return altitude_; }
 
   // Current climb rate
@@ -59,8 +59,10 @@ public:
   // Returns true if the data is valid. If not, display a red X indicating system failure.
   bool valid() const {return valid_;}
 
-  // Commands this model to update its contents based on the given sensor data.
-  void update(const airdata_sample* d);
+  // Commands this model to update its contents based on the given data.
+  //   d -- airdata sample
+  //   qnh -- Current sea level barometric pressure in pascals
+  void update(const airdata_sample* d, const double qnh);
 
 private:
   static constexpr int kClimbRatePoints = 5;

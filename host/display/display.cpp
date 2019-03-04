@@ -34,6 +34,10 @@ namespace airball {
 
 ///////////////////////////////////////////////////////////////////////
 
+constexpr double ce_floor(double x) {
+  return static_cast<double>(static_cast<int64_t>(x));
+}
+
 constexpr double kWidth = 272;
 constexpr double kHeight = 480;
 
@@ -44,10 +48,10 @@ constexpr double kDisplayMargin = 3;
 
 constexpr double kTopBottomRegionRatio = 0.075;
 
-constexpr double kDisplayXMid = floor(kWidth / 2.0);
+constexpr double kDisplayXMid = ce_floor(kWidth / 2.0);
 
-constexpr double kDisplayRegionYMin = floor(kAirballHeight * kTopBottomRegionRatio);
-constexpr double kDisplayRegionYMax = floor(kAirballHeight * (1.0 - kTopBottomRegionRatio));
+constexpr double kDisplayRegionYMin = ce_floor(kAirballHeight * kTopBottomRegionRatio);
+constexpr double kDisplayRegionYMax = ce_floor(kAirballHeight * (1.0 - kTopBottomRegionRatio));
 constexpr double kDisplayRegionHeight = kDisplayRegionYMax - kDisplayRegionYMin;
 
 constexpr double kDisplayRegionWidth = kWidth;
@@ -221,6 +225,13 @@ constexpr Color kAltimeterTextColor(255, 255, 255);
 constexpr Color kAltimeterBackgroundColor(64, 64, 64);
 constexpr double kAltimeterBaselineRatio = 0.75;
 constexpr double kAltimeterNumberGap = 7;
+
+constexpr double kBaroLeftOffset =
+    kWidth / 12;
+constexpr Font kBaroFontSmall(
+    kFontName,
+    kWidth / 20);
+constexpr Color kBaroTextColor(255, 255, 255);
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -663,6 +674,13 @@ void Display::paintVsi() {
       center_right,
       bottom_left,
       bottom_right);
+  paintBaroSetting(
+      top_left,
+      top_right,
+      center_left,
+      center_right,
+      bottom_left,
+      bottom_right);
 }
 
 void Display::paintVsiTicMarks(
@@ -793,7 +811,7 @@ void Display::paintAltitude(
   int last_three_digits = ((int) round(airdata_->altitude() / 10) * 10) % 1000;
   Point baseline(
       center_left.x() + (center_right.x() - center_left.x())
-          * kAltimeterBaselineRatio,
+                        * kAltimeterBaselineRatio,
       center_left.y());
   char buf[kPrintBufSize];
   snprintf(
@@ -822,6 +840,31 @@ void Display::paintAltitude(
       TextReferencePoint::CENTER_LEFT_UPPERCASE,
       kAltimeterFontSmall,
       kAltimeterTextColor);
+}
+
+void Display::paintBaroSetting(
+    Point top_left,
+    Point top_right,
+    Point center_left,
+    Point center_right,
+    Point bottom_left,
+    Point bottom_right) {
+  Point baseline(
+      center_left.x() + kBaroLeftOffset,
+      center_left.y());
+  char buf[kPrintBufSize];
+  snprintf(
+      buf,
+      kPrintBufSize,
+      "%04.2f",
+      settings_->baro_setting());
+  text(
+      screen_->cr(),
+      buf,
+      baseline,
+      TextReferencePoint::CENTER_LEFT_UPPERCASE,
+      kBaroFontSmall,
+      kBaroTextColor);
 }
 
 void Display::paintAdjusting() {
