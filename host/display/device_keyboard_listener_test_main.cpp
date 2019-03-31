@@ -22,32 +22,17 @@
  * THE SOFTWARE.
  */
 
-#include "controller.h"
-#include "../telemetry/xbee_telemetry_client.h"
 #include "device_keyboard_listener.h"
 
 #include <thread>
+#include <iostream>
 
-/**
- * For a description of arguments, see ./raspi-setup.md.
- */
-int main(int argc, char **argv) {
-  const airball::xbee_known_types::xbee_type type =
-      (airball::xbee_known_types::xbee_type)
-          std::stoi(argv[1], nullptr, 10);
-  auto device = std::string(argv[2]);
-  auto gpio_push = std::stoi(argv[3], nullptr, 10);
-  auto gpio_encoder_a = std::stoi(argv[4], nullptr, 10);
-  auto gpio_encoder_b = std::stoi(argv[5], nullptr, 10);
-  airball::Controller c(airball::Screen::NewFramebufferScreen(),
-                        airball::UserInputSource::NewGpioInputSource(
-                            gpio_push,
-                            gpio_encoder_a,
-                            gpio_encoder_b),
-                        new airball::XbeeTelemetryClient(type, device));
+constexpr static std::chrono::duration<unsigned int, std::milli>
+    kWaitDelay(5000);
+
+int main(int argc, char** argv) {
   airball::DeviceKeyboardListener dkl;
-  new std::thread([&]() {
+  std::thread([&]() {
     dkl.run();
-  });
-  c.run();
+  }).join();
 }

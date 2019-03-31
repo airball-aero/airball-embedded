@@ -22,32 +22,25 @@
  * THE SOFTWARE.
  */
 
-#include "controller.h"
-#include "../telemetry/xbee_telemetry_client.h"
 #include "device_keyboard_listener.h"
 
+#include <iostream>
 #include <thread>
 
-/**
- * For a description of arguments, see ./raspi-setup.md.
- */
-int main(int argc, char **argv) {
-  const airball::xbee_known_types::xbee_type type =
-      (airball::xbee_known_types::xbee_type)
-          std::stoi(argv[1], nullptr, 10);
-  auto device = std::string(argv[2]);
-  auto gpio_push = std::stoi(argv[3], nullptr, 10);
-  auto gpio_encoder_a = std::stoi(argv[4], nullptr, 10);
-  auto gpio_encoder_b = std::stoi(argv[5], nullptr, 10);
-  airball::Controller c(airball::Screen::NewFramebufferScreen(),
-                        airball::UserInputSource::NewGpioInputSource(
-                            gpio_push,
-                            gpio_encoder_a,
-                            gpio_encoder_b),
-                        new airball::XbeeTelemetryClient(type, device));
-  airball::DeviceKeyboardListener dkl;
-  new std::thread([&]() {
-    dkl.run();
-  });
-  c.run();
+namespace airball {
+
+DeviceKeyboardListener::DeviceKeyboardListener() {}
+
+void DeviceKeyboardListener::run() {
+  std::string input;
+    while (true) {
+      std::getline(std::cin, input);
+      if (input == "exit") {
+        std::exit(0);
+      }
+    }
 }
+
+DeviceKeyboardListener::~DeviceKeyboardListener() {}
+
+}  // namespace airball

@@ -24,7 +24,7 @@ add_library(airball_display
         widgets.cpp airdata.cpp settings.cpp display.cpp one_shot_timer.cpp
         controller.cpp screen.cpp user_input_source.cpp delay_timer.cpp
         aerodynamics.cpp fake_telemetry_client.cpp interpolation_table.cpp
-        system_status.cpp)
+        system_status.cpp device_keyboard_listener.cpp)
 target_link_libraries(airball_display
         X11 cairo pthread)
 
@@ -41,6 +41,11 @@ target_link_libraries(ab_device
 add_executable(user_input_source_test
         user_input_source_test_main.cpp)
 target_link_libraries(user_input_source_test
+        airball_display)
+
+add_executable(device_keyboard_listener_test
+        device_keyboard_listener_test_main.cpp)
+target_link_libraries(device_keyboard_listener_test
         airball_display)
 
 enable_testing()
