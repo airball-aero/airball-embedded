@@ -33,12 +33,12 @@ DeviceKeyboardListener::DeviceKeyboardListener() {}
 
 void DeviceKeyboardListener::run() {
   std::string input;
-    while (true) {
-      std::getline(std::cin, input);
-      if (input == "exit") {
-        std::exit(0);
-      }
+  while (true) {
+    std::getline(std::cin, input);
+    if (input == "exit") {
+      std::exit(0);
     }
+  }
 }
 
 DeviceKeyboardListener::~DeviceKeyboardListener() {}
