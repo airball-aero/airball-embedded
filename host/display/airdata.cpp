@@ -111,7 +111,7 @@ void Airdata::update(const airdata_sample *d, const double qnh) {
   ias_ = q_to_ias(free_stream_q_);
   tas_ = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
   double new_altitude = pressure_to_altitude(d->get_baro(), qnh);
-  double instantaneous_climb_rate = (new_altitude - altitude_) / kSamplesPerSecond;
+  double instantaneous_climb_rate = (new_altitude - altitude_) * kSamplesPerSecond;
   altitude_ = new_altitude;
   climb_rate_ = kClimbRateSmoothingFactor * instantaneous_climb_rate + (1.0 - kClimbRateSmoothingFactor) * climb_rate_;
   valid_ = !isnan(alpha_) && !isnan(beta_);
