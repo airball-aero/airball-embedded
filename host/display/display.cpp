@@ -762,7 +762,8 @@ void Display::paintVsiPointer(
     Point bottom_left,
     Point bottom_right,
     double radians_per_fpm) {
-  double climb_rate = airdata_->climb_rate();
+  double climb_rate =
+      airdata_->climb_rate() / kMetersPerFoot / kSecondsPerMinute;
   climb_rate = fmin(climb_rate, kVsiMaxFpm);
   climb_rate = fmax(climb_rate, -kVsiMaxFpm);
   double angle = climb_rate * radians_per_fpm;

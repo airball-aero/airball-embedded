@@ -65,8 +65,15 @@ public:
   void update(const airdata_sample* d, const double qnh);
 
 private:
-  static constexpr int kClimbRatePoints = 5;
-  static constexpr int kSamplesPerMinute = 20 * 60;
+  static constexpr int kSamplesPerSecond = 20;
+  static constexpr double kClimbRateSmoothingFactor = 0.50;
+  static constexpr double kZeroOffsetPoints = 200;
+
+  bool is_zeroing_;
+  int zero_points_count_;
+  double dp0_zero_offset_;
+  double dpa_zero_offset_;
+  double dpb_zero_offset_;
 
   InterpolationTable dpr_to_angle;
   double ias_;
@@ -77,7 +84,6 @@ private:
   double altitude_;
   double climb_rate_;
   bool valid_;
-  double climb_rate_buffer_[kClimbRatePoints];
 };
 
 } // namespace airball

@@ -29,10 +29,10 @@
 namespace airball {
 
 std::unique_ptr<airdata_sample> airdata(double baro,
-                       double temperature,
-                       double dp0,
-                       double dpA,
-                       double dpB) {
+                                        double temperature,
+                                        double dp0,
+                                        double dpA,
+                                        double dpB) {
   return std::unique_ptr<airdata_sample>(new airdata_sample(
       std::chrono::system_clock::now(),
       128,
@@ -44,30 +44,48 @@ std::unique_ptr<airdata_sample> airdata(double baro,
       dpB));
 }
 
+void update(Airdata *ad, const airdata_sample *d, const double qnh) {
+  airdata_sample sample(
+      std::chrono::system_clock::now(),
+      128,
+      999,
+      0,
+      0,
+      0,
+      0,
+      0);
+  for (int i = 0; i < 1000; i++) {
+    ad->update(&sample, qnh);
+  }
+  ad->update(d, qnh);
+}
+
 TEST(Airdata, simple_zero_condition) {
   Airdata ad;
-  ad.update(
+  update(
+      &ad,
       airdata(
           101.3e+03,
           15.0,
           6000,
           0.0,
           0.0).get(),
-       101300);
+      101300);
   EXPECT_NEAR(0.0, ad.alpha(), 0.001);
   EXPECT_NEAR(0.0, ad.beta(), 0.001);
 }
 
 TEST(Airdata, ias_test) {
   Airdata ad;
-  ad.update(
+  update(
+      &ad,
       airdata(
           101.3e+03,
           15.0,
           6125,
           0.0,
           0.0).get(),
-       101300);
+      101300);
   EXPECT_NEAR(100, ad.ias(), 0.02);
 }
 
@@ -76,14 +94,15 @@ TEST(Airdata, tas_test) {
   // At standard pressure, T=226.85, dry air density = 0.706
   // At that density, Q=3530, true airspeed=100
   // TODO: Add a test for nonstandard pressure
-  ad.update(
+  update(
+      &ad,
       airdata(
           101.3e+03,
           226.85,
           3530,
           0.0,
           0.0).get(),
-       101300);
+      101300);
   EXPECT_NEAR(100, ad.tas(), 0.02);
 }
 
@@ -94,56 +113,60 @@ TEST(Airdata, tas_test) {
 
 TEST(Airdata, alpha_test) {
   Airdata ad;
-  ad.update(
+  update(
+      &ad,
       airdata(
           101.3e+03,
           15.0,
           100,
           10,
           0).get(),
-       101300);
+      101300);
   EXPECT_NEAR(-0.02, ad.alpha(), 0.01);
   EXPECT_NEAR(0, ad.beta(), 0.01);
 }
 
 TEST(Airdata, beta_test) {
   Airdata ad;
-  ad.update(
+  update(
+      &ad,
       airdata(
           101.3e+03,
           15.0,
           100,
           0,
           10).get(),
-       101300);
+      101300);
   EXPECT_NEAR(0, ad.alpha(), 0.01);
   EXPECT_NEAR(0.02, ad.beta(), 0.01);
 }
 
 TEST(Airdata, alpha_beta_test) {
   Airdata ad;
-  ad.update(
+  update(
+      &ad,
       airdata(
           101.3e+03,
           15.0,
           6125,
           612.5,
           612.5).get(),
-       101300);
+      101300);
   EXPECT_NEAR(-0.0222, ad.alpha(), 0.01);
   EXPECT_NEAR(0.0222, ad.beta(), 0.01);
 }
 
 TEST(Airdata, ias_deflected_test) {
   Airdata ad;
-  ad.update(
+  update(
+      &ad,
       airdata(
           101.3e+03,
           15.0,
           6125,
           612.5,
           612.5).get(),
-       101300);
+      101300);
   EXPECT_NEAR(100.111, ad.ias(), 0.01);
 }
 

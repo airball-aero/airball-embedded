@@ -51,4 +51,6 @@ constexpr double kPascalsPerInHg = 3386.39;
 
 constexpr double kMetersPerFoot = 0.3048;
 
+constexpr double kSecondsPerMinute = 60;
+
 #endif  // AIRBALL_UNITS_H
