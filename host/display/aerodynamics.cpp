@@ -53,21 +53,15 @@ static constexpr double kAltK = 1.313e-05;
 static constexpr double kAltN = 0.1903;
 static constexpr double kAltPb = 29.92126;
 
-// https://www.av8n.com/physics/altimetry.htm
 // The formulae are given in English units. To maintain a consistent API
 // throughout our system, the function inputs and outputs are in SI units. The
 // tradeoff is we do a few more unit conversions than needed, in return for a
 // hopefully less error-prone set of APIs.
-double pressure_to_altitude(double p, double qnh) {
-  double p_inHg = p / kPascalsPerInHg;
-  double pS_inHg = qnh / kPascalsPerInHg;
-  double h_feet =
-      (pow(pS_inHg, kAltN) / kAltK) *
-      (
-          pow(pS_inHg / kAltPb, kAltN) -
-          pow(p_inHg / kAltPb, kAltN)
-      );
-  return kMetersPerFoot * h_feet;
+double pressure_to_altitude(double t, double p, double qnh) {
+  double ratio = (qnh / p);
+  double t_kelvin = t + 273.15;
+  double power = 1 / 5.257;
+  return (pow(ratio, power) - 1) * t_kelvin / 0.0065;
 }
 
 } // namespace airball
