@@ -1,6 +1,3 @@
-// This program logs telemetry, with a timestamp, to standard output (which can
-// be redirected to a file).
-
 #include <iostream>
 #include <backward/strstream>
 #include <fstream>
@@ -9,6 +6,19 @@
 #include "xbee_telemetry_client.h"
 #include "xbee_known_types.h"
 #include "airdata_sample.h"
+
+void print_quantity(const long int value, const char symbol) {
+  std::ostrstream s;
+  for (int i = 0; i < value; i++) {
+    if (i % 10 == 0) {
+      s << "|";
+    } else {
+      s << symbol;
+    }
+  }
+  s << std::ends;
+  printf("%03ld %s\n", value, s.str());
+}
 
 constexpr unsigned int AIRDATA_BUF_LEN = 1024;
 char airdata_buf[AIRDATA_BUF_LEN];
@@ -25,8 +35,19 @@ int main(int argc, char **argv) {
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wmissing-noreturn"
 
-  for (;;) {
+  auto previous_loop_time = std::chrono::system_clock::now();
+
+  for (int packet_number=0; ; packet_number++) {
     std::unique_ptr<sample> sample = telemetry_client.get();
+    auto now = std::chrono::system_clock::now();
+    std::chrono::system_clock::duration since_last =
+        now.time_since_epoch() -
+        previous_loop_time.time_since_epoch();
+    auto since_last_mills =
+        std::chrono::duration_cast<std::chrono::duration<unsigned int, std::milli>>(since_last);
+    previous_loop_time = now;
+    print_quantity(static_cast<int>(sample->get_rssi()), '+');
+    print_quantity(since_last_mills.count(), '.');
     auto ads = dynamic_cast<airdata_sample*>(sample.get());
     if (ads != nullptr) {
       ads->snprintf(airdata_buf, AIRDATA_BUF_LEN);

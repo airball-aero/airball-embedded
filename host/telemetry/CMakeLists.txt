@@ -13,6 +13,11 @@ add_library(airball_telemetry_client
 target_link_libraries(airball_telemetry_client
         Threads::Threads)
 
+add_executable(monitor_telemetry
+        monitor_telemetry_main.cpp)
+target_link_libraries(monitor_telemetry
+        airball_telemetry_client)
+
 add_executable(log_telemetry
         log_telemetry_main.cpp)
 target_link_libraries(log_telemetry
