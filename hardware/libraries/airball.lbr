@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.1.1">
+<eagle version="9.4.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
@@ -4038,6 +4038,67 @@ TE Connectivity AMP 1473149-4 DDR200 1.8V&lt;p/&gt;</description>
 <wire x1="34.5" y1="30" x2="34.5" y2="31" width="0.127" layer="21" style="shortdash"/>
 <wire x1="-34.5" y1="30" x2="34.5" y2="30" width="0.0762" layer="21" style="shortdash"/>
 </package>
+<package name="ADAFRUIT_TCA9548A_BREAKOUT">
+<pad name="P$1" x="-7.62" y="13.97" drill="0.6"/>
+<pad name="P$2" x="-7.62" y="11.43" drill="0.6"/>
+<pad name="P$3" x="-7.62" y="8.89" drill="0.6"/>
+<pad name="P$4" x="-7.62" y="6.35" drill="0.6"/>
+<pad name="P$5" x="-7.62" y="3.81" drill="0.6"/>
+<pad name="P$6" x="-7.62" y="1.27" drill="0.6"/>
+<pad name="P$7" x="-7.62" y="-1.27" drill="0.6"/>
+<pad name="P$8" x="-7.62" y="-3.81" drill="0.6"/>
+<pad name="P$9" x="-7.62" y="-6.35" drill="0.6"/>
+<pad name="P$10" x="-7.62" y="-8.89" drill="0.6"/>
+<pad name="P$11" x="-7.62" y="-11.43" drill="0.6"/>
+<pad name="P$12" x="-7.62" y="-13.97" drill="0.6"/>
+<pad name="P$13" x="7.62" y="-13.97" drill="0.6"/>
+<pad name="P$14" x="7.62" y="-11.43" drill="0.6"/>
+<pad name="P$15" x="7.62" y="-8.89" drill="0.6"/>
+<pad name="P$16" x="7.62" y="-6.35" drill="0.6"/>
+<pad name="P$17" x="7.62" y="-3.81" drill="0.6"/>
+<pad name="P$18" x="7.62" y="-1.27" drill="0.6"/>
+<pad name="P$19" x="7.62" y="1.27" drill="0.6"/>
+<pad name="P$20" x="7.62" y="3.81" drill="0.6"/>
+<pad name="P$21" x="7.62" y="6.35" drill="0.6"/>
+<pad name="P$22" x="7.62" y="8.89" drill="0.6"/>
+<pad name="P$23" x="7.62" y="11.43" drill="0.6"/>
+<pad name="P$24" x="7.62" y="13.97" drill="0.6"/>
+<wire x1="-8.89" y1="15.24" x2="8.89" y2="15.24" width="0.127" layer="21"/>
+<wire x1="8.89" y1="15.24" x2="8.89" y2="-15.24" width="0.127" layer="21"/>
+<wire x1="8.89" y1="-15.24" x2="-8.89" y2="-15.24" width="0.127" layer="21"/>
+<wire x1="-8.89" y1="-15.24" x2="-8.89" y2="15.24" width="0.127" layer="21"/>
+<text x="-2.54" y="10.16" size="0.762" layer="21">Adafruit
+TCA9548A
+Breakout</text>
+<text x="-6.35" y="13.97" size="1.27" layer="21">1</text>
+</package>
+<package name="HONEYWELL_TRUSTABILITY_DIP_RR">
+<pad name="P$1" x="-6.35" y="3.81" drill="0.6"/>
+<pad name="P$2" x="-6.35" y="1.27" drill="0.6"/>
+<pad name="P$3" x="-6.35" y="-1.27" drill="0.6"/>
+<pad name="P$4" x="-6.35" y="-3.81" drill="0.6"/>
+<pad name="P$5" x="6.35" y="-3.81" drill="0.6"/>
+<pad name="P$6" x="6.35" y="-1.27" drill="0.6"/>
+<pad name="P$7" x="6.35" y="1.27" drill="0.6"/>
+<pad name="P$8" x="6.35" y="3.81" drill="0.6"/>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="-5.08" width="0.127" layer="21"/>
+<wire x1="-5.08" y1="-5.08" x2="5.08" y2="-5.08" width="0.127" layer="21"/>
+<wire x1="5.08" y1="-5.08" x2="5.08" y2="5.08" width="0.127" layer="21"/>
+<text x="-3.81" y="-1.27" size="0.762" layer="21">HONEYWELL
+PRESSURE
+DIP RR</text>
+<wire x1="3.81" y1="5.08" x2="3.81" y2="7.62" width="0.127" layer="21"/>
+<wire x1="3.81" y1="7.62" x2="2.54" y2="7.62" width="0.127" layer="21"/>
+<wire x1="2.54" y1="7.62" x2="2.54" y2="5.08" width="0.127" layer="21"/>
+<wire x1="-2.54" y1="5.08" x2="-2.54" y2="7.62" width="0.127" layer="21"/>
+<wire x1="-2.54" y1="7.62" x2="-3.81" y2="7.62" width="0.127" layer="21"/>
+<wire x1="-3.81" y1="7.62" x2="-3.81" y2="5.08" width="0.127" layer="21"/>
+<text x="4.445" y="5.715" size="1.27" layer="21">1</text>
+<text x="-5.08" y="5.715" size="1.27" layer="21">2</text>
+<wire x1="-5.08" y1="5.08" x2="-3.81" y2="5.08" width="0.127" layer="21"/>
+<wire x1="-2.54" y1="5.08" x2="2.54" y2="5.08" width="0.127" layer="21"/>
+<wire x1="3.81" y1="5.08" x2="5.08" y2="5.08" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="SPARKFUN_FIO_V3">
@@ -4989,6 +5050,19 @@ Control</text>
 <pin name="D-" x="-7.62" y="2.54" visible="pin" length="short"/>
 <pin name="D+" x="-7.62" y="0" visible="pin" length="short"/>
 <pin name="GND" x="-7.62" y="-2.54" visible="pin" length="short" direction="pwr"/>
+</symbol>
+<symbol name="HONEYWELL_TRUSTABILITY_I2C_3.3V">
+<pin name="VS" x="15.24" y="2.54" length="middle" rot="R180"/>
+<pin name="GND" x="15.24" y="-2.54" length="middle" rot="R180"/>
+<pin name="SCL" x="-15.24" y="-2.54" length="middle"/>
+<pin name="SDA" x="-15.24" y="2.54" length="middle"/>
+<text x="-2.54" y="-2.54" size="1.016" layer="94">HONEYWELL
+PRESS
+I2C 3.3V</text>
+<wire x1="-10.16" y1="-5.08" x2="-10.16" y2="5.08" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="5.08" x2="10.16" y2="5.08" width="0.254" layer="94"/>
+<wire x1="10.16" y1="5.08" x2="10.16" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-5.08" x2="-10.16" y2="-5.08" width="0.254" layer="94"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -6372,6 +6446,35 @@ Source: MaxStream, Inc. xbee_productmanual.pdf</description>
 <connect gate="G$1" pin="D-" pad="D-"/>
 <connect gate="G$1" pin="GND" pad="GND SH@1 SH@2"/>
 <connect gate="G$1" pin="VCC" pad="VBUS"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ADAFRUIT_TCA9548A_BREAKOUT">
+<gates>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="HONEYWELL_TRUSTABILITY_I2C_3.3V">
+<gates>
+<gate name="G$1" symbol="HONEYWELL_TRUSTABILITY_I2C_3.3V" x="10.16" y="0"/>
+</gates>
+<devices>
+<device name="" package="HONEYWELL_TRUSTABILITY_DIP_RR">
+<connects>
+<connect gate="G$1" pin="GND" pad="P$1"/>
+<connect gate="G$1" pin="SCL" pad="P$4"/>
+<connect gate="G$1" pin="SDA" pad="P$3"/>
+<connect gate="G$1" pin="VS" pad="P$2"/>
 </connects>
 <technologies>
 <technology name=""/>
