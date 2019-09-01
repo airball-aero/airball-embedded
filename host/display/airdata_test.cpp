@@ -106,7 +106,7 @@ TEST(Airdata, tas_test) {
   EXPECT_NEAR(100, ad.tas(), 0.02);
 }
 
-// To a very rough approximation, for small deflctions, we know that the
+// To a very rough approximation, for small deflections, we know that the
 // nondimensional pressure difference between top and bottom holes is related
 // to the angle of attack via a scaling factor (angle in radians):
 //   alpha = (dpAlpha / dp0) * .2

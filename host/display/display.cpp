@@ -763,7 +763,7 @@ void Display::paintVsiPointer(
     Point bottom_right,
     double radians_per_fpm) {
   double climb_rate =
-      airdata_->climb_rate() / kMetersPerFoot / kSecondsPerMinute;
+      airdata_->climb_rate() / kMetersPerFoot * kSecondsPerMinute;
   climb_rate = fmin(climb_rate, kVsiMaxFpm);
   climb_rate = fmax(climb_rate, -kVsiMaxFpm);
   double angle = climb_rate * radians_per_fpm;
@@ -808,8 +808,9 @@ void Display::paintAltitude(
   Point center_right,
   Point bottom_left,
   Point bottom_right) {
-  int thousands = (int) floor(airdata_->altitude() / 1000);
-  int last_three_digits = ((int) round(airdata_->altitude() / 10) * 10) % 1000;
+  double altitude = airdata_->altitude() / kMetersPerFoot;
+  int thousands = (int) floor(altitude / 1000);
+  int last_three_digits = ((int) round(altitude / 10) * 10) % 1000;
   Point baseline(
       center_left.x() + (center_right.x() - center_left.x())
                         * kAltimeterBaselineRatio,

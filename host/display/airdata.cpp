@@ -78,8 +78,15 @@ double find_dpr_to_angle(InterpolationTable &table, double dpr) {
 }
 
 Airdata::Airdata()
-    : climb_rate_(0) {
+    : climb_rate_(0),
+      climb_rate_initialized_(false),
+      climb_rate_init_index_(0),
+      climb_rate_init_accumulator_(0.0) {
   populate_table(dpr_to_angle);
+}
+
+static double smooth(double current, double datum, double smoothingFactor) {
+  return smoothingFactor * datum + (1.0 - smoothingFactor * current);
 }
 
 void Airdata::update(const airdata_sample *d, const double qnh) {
@@ -94,10 +101,24 @@ void Airdata::update(const airdata_sample *d, const double qnh) {
   tas_ = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
   double new_altitude = pressure_to_altitude(d->get_temperature(), d->get_baro(), qnh);
   double instantaneous_climb_rate = (new_altitude - altitude_) * kSamplesPerSecond;
+  std::cout << "instantaneous_climb_rate=" << instantaneous_climb_rate << std::endl;
   altitude_ = new_altitude;
-  climb_rate_ = kClimbRateSmoothingFactor * instantaneous_climb_rate + (1.0 - kClimbRateSmoothingFactor) * climb_rate_;
+  if (climb_rate_initialized_) {
+    climb_rate_ = smooth(
+        climb_rate_,
+        instantaneous_climb_rate,
+        kClimbRateSmoothingFactor);
+  } else {
+    climb_rate_init_accumulator_ += instantaneous_climb_rate;
+    climb_rate_init_index_++;
+    if (climb_rate_init_index_ == kClimbRateInitPoints) {
+      climb_rate_ =
+          climb_rate_init_accumulator_ / ((double) kClimbRateInitPoints);
+      std::cout << "ACCUMULATOR = " << climb_rate_init_accumulator_ << std::endl;
+      climb_rate_initialized_ = true;
+    }
+  }
   valid_ = !isnan(alpha_) && !isnan(beta_);
 }
 
 } // namespace airball
-

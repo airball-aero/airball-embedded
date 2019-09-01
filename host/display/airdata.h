@@ -66,7 +66,8 @@ public:
 
 private:
   static constexpr int kSamplesPerSecond = 20;
-  static constexpr double kClimbRateSmoothingFactor = 0.50;
+  static constexpr uint kClimbRateInitPoints = 100;
+  static constexpr double kClimbRateSmoothingFactor = 0.0025;
 
   InterpolationTable dpr_to_angle;
   double ias_;
@@ -76,6 +77,9 @@ private:
   double free_stream_q_;
   double altitude_;
   double climb_rate_;
+  double climb_rate_init_accumulator_;
+  uint climb_rate_init_index_;
+  bool climb_rate_initialized_;
   bool valid_;
 };
 
