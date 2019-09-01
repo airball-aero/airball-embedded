@@ -30,8 +30,8 @@
 // messages to the console.
 //#define AIRBALL_DEBUG
 
-// Whether the XBee wireless module is 802.11. If not then it is a 900 MHz module
-#define WIRELESS_80211 false
+// Whether the XBee wireless module is 802.14. If not then it is a 900 MHz module
+#define WIRELESS_80214 true
 
 #if AIRBALL_PROBE_VERSION == 4
 #define HAVE_TMP275
@@ -186,9 +186,9 @@ void appendInteger(char *buf, unsigned long seq, char const *delim) {
 char sentence[128];
 
 void send_packet() {
-  if (WIRELESS_80211) {
+  if (WIRELESS_80214) {
     radio.send_packet_x01_send_16_bit(
-        0x8888, 
+        0x8888,
         sentence, 
         strlen(sentence));
   } else {
@@ -240,6 +240,10 @@ uint8_t measurement_slot = 0;
 unsigned long airdata_seq = 0;
 unsigned long battery_seq = 0;
 
+unsigned long autozero_seq;
+unsigned long NUM_AUTOZERO_SAMPLES = 1024;
+struct MeasurementOffsets autozero_accumulator;
+
 // Collect data from all sensors and send the data.
 void completeMeasurementAndReport() {
   // Request start of measurements from all sensors, to allow them all to run concurrently.
@@ -282,6 +286,19 @@ void completeMeasurementAndReport() {
 
   mux.selectChannel(MUX_CHANNEL_baro);
   baro.readData();
+
+  if (autozero_seq < NUM_AUTOZERO_SAMPLES) {
+    autozero_accumulator.dp0 += dp0.pressure;
+    autozero_accumulator.dpA += dpA.pressure;
+    autozero_accumulator.dpB += dpB.pressure;
+    autozero_seq++;
+    if (autozero_seq == NUM_AUTOZERO_SAMPLES) {
+      measurement_offsets.dp0 = autozero_accumulator.dp0 / (float)NUM_AUTOZERO_SAMPLES;
+      measurement_offsets.dpA = autozero_accumulator.dpA / (float)NUM_AUTOZERO_SAMPLES;
+      measurement_offsets.dpB = autozero_accumulator.dpB / (float)NUM_AUTOZERO_SAMPLES;
+      saveConfigurationMeasurementOffsets();
+    }
+  }
 
   // Send the data sentence to the display.
   sendAirDataSentence(airdata_seq++, baro.pressure, oat_temperature,
@@ -614,7 +631,7 @@ void configureBatteryManagement() {
 void configureRadio() {
   radio.enterCommandMode();
 
-  if (WIRELESS_80211) {
+  if (WIRELESS_80214) {
     radio.sendCommand("ATNIAIRBALL_PROBE");
     radio.sendCommand("ATSM=0");
     radio.sendCommand("ATSP=64");
@@ -647,10 +664,12 @@ void setup() {
 #endif
 
   // Initialize the XBee serial (for data telemetry).
-  Serial1.begin(9600);
+  Serial1.begin(19200);
   while(!Serial1) {} // Wait for XBee serial to come up.
 
-  readConfigurationMeasurementOffsets();
+  // We do not read measurement offsets so we can *see* the autozero
+  // clearly every time the probe starts up.
+  // readConfigurationMeasurementOffsets();
 
   // Enable the TCA9548A multiplexer; RST is active-low.
   pinMode(MUX_RESET, OUTPUT);
