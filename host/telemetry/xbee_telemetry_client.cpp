@@ -14,7 +14,7 @@ XbeeTelemetryClient::XbeeTelemetryClient(
     const airball::xbee_known_types::xbee_type type,
     const std::string& serial_device_filename)
     : serial_device_filename_(serial_device_filename),
-      radio_(serial_device_filename_, 9600) {
+      radio_(serial_device_filename_, 19200) {
   radio_.enter_command_mode();
 
   switch (type) {
