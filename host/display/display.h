@@ -52,7 +52,7 @@ private:
   void paintRawAirball(
       const Point& center,
       const double radius,
-      const double opacity);
+      const double bright);
   void paintSmoothAirball();
   void paintAirballLowAirspeed(const Point& center);
   void paintAirballAirspeed(const Point& center, const double radius);
