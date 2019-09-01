@@ -33,6 +33,23 @@ namespace airball {
 
 class Airdata {
 public:
+  class Ball {
+  public:
+    Ball(double alpha, double beta, double ias)
+        : alpha_(alpha), beta_(beta), ias_(ias) {}
+    Ball() : Ball(0, 0, 0) {}
+    ~Ball() = default;
+
+    double alpha() const { return alpha_; }
+    double beta() const { return beta_; }
+    double ias() const { return ias_; }
+
+  private:
+    double alpha_;
+    double beta_;
+    double ias_;
+  };
+
   Airdata();
 
   // Indicated air speed
@@ -64,10 +81,16 @@ public:
   //   qnh -- Current sea level barometric pressure in pascals
   void update(const airdata_sample* d, const double qnh);
 
+  const Ball& smooth_ball() const { return smooth_ball_; }
+
+  const std::vector<Ball>& raw_balls() const { return raw_balls_; }
+
 private:
   static constexpr int kSamplesPerSecond = 20;
   static constexpr uint kClimbRateInitPoints = 100;
   static constexpr double kClimbRateSmoothingFactor = 0.005;
+  static constexpr double kBallSmoothingFactor = 0.05;
+  static constexpr uint kNumBalls = 20;
 
   InterpolationTable dpr_to_angle;
   double ias_;
@@ -82,6 +105,8 @@ private:
   bool climb_rate_initialized_;
   bool climb_rate_first_sample_;
   bool valid_;
+  Ball smooth_ball_;
+  std::vector<Ball> raw_balls_;
 };
 
 } // namespace airball

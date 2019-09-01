@@ -80,6 +80,8 @@ constexpr Color kBackground(0, 0, 0);
 
 constexpr Color kAirballFill(0, 0, 255);
 
+constexpr double kRawAirballsMaxBrightness = 0.375;
+
 constexpr Stroke kAirballCrosshairsStroke(
     Color(255, 255, 255),
     2);
@@ -274,7 +276,8 @@ void Display::paint() {
   cairo_rectangle(screen_->cr(), 0, 0, kWidth, kAirballHeight);
   cairo_clip(screen_->cr());
   if (status_->flight_data_up()) {
-    paintAirball();
+    paintRawAirballs();
+    paintSmoothAirball();
   } else {
     paintNoFlightData();
   }
@@ -302,9 +305,34 @@ void Display::paintBackground() {
       kBackground);
 }
 
-void Display::paintAirball() {
-  Point center(beta_to_x(airdata_->beta()), alpha_to_y((airdata_->alpha())));
-  double radius = airspeed_to_radius(airdata_->ias());
+void Display::paintRawAirballs() {
+  for (uint i = airdata_->raw_balls().size(); i-- > 0; ) {
+    uint bright_index = airdata_->raw_balls().size() - i;
+    double bright =
+        ((double) bright_index) / ((double) airdata_->raw_balls().size()) *
+        kRawAirballsMaxBrightness;
+    Point center(
+        beta_to_x(airdata_->raw_balls()[i].beta()),
+        alpha_to_y((airdata_->raw_balls()[i].alpha())));
+    double radius = airspeed_to_radius(airdata_->raw_balls()[i].ias());
+    paintRawAirball(center, radius, bright);
+  }
+}
+
+void Display::paintRawAirball(
+    const Point& center,
+    const double radius,
+    const double bright) {
+  disc(
+      screen_->cr(),
+      center,
+      radius,
+      kAirballFill.with_brightness(bright));
+}
+
+void Display::paintSmoothAirball() {
+  Point center(beta_to_x(airdata_->smooth_ball().beta()), alpha_to_y((airdata_->smooth_ball().alpha())));
+  double radius = airspeed_to_radius(airdata_->smooth_ball().ias());
   if (radius < kLowSpeedThresholdAirballRadius) {
     paintAirballLowAirspeed(center);
   } else {

@@ -78,11 +78,15 @@ double find_dpr_to_angle(InterpolationTable &table, double dpr) {
 }
 
 Airdata::Airdata()
-    : climb_rate_(0),
+    : alpha_(0),
+      beta_(0),
+      ias_(0),
+      climb_rate_(0),
       climb_rate_initialized_(false),
       climb_rate_init_index_(0),
       climb_rate_init_accumulator_(0.0),
-      climb_rate_first_sample_(true) {
+      climb_rate_first_sample_(true),
+      raw_balls_(kNumBalls) {
   populate_table(dpr_to_angle);
 }
 
@@ -94,12 +98,29 @@ void Airdata::update(const airdata_sample *d, const double qnh) {
   double dp0 = d->get_dp0();
   double dpa = d->get_dpA();
   double dpb = d->get_dpB();
-  alpha_ = -find_dpr_to_angle(dpr_to_angle, dpa / dp0);
-  beta_ = find_dpr_to_angle(dpr_to_angle, dpb / dp0);
+
+  double new_alpha = -find_dpr_to_angle(dpr_to_angle, dpa / dp0);
+  double new_beta = find_dpr_to_angle(dpr_to_angle, dpb / dp0);
   const double total_angle = sqrt(alpha_ * alpha_ + beta_ * beta_);
   free_stream_q_ = dp0 / single_point_sphere_pressure_coefficient(total_angle);
-  ias_ = q_to_ias(free_stream_q_);
+  double new_ias = q_to_ias(free_stream_q_);
+
+  smooth_ball_ = Ball(
+      smooth(smooth_ball_.alpha(), new_alpha, kBallSmoothingFactor),
+      smooth(smooth_ball_.beta(), new_beta, kBallSmoothingFactor),
+      smooth(smooth_ball_.ias(), new_ias, kBallSmoothingFactor));
+
+  alpha_ = new_alpha;
+  beta_ = new_beta;
+  ias_ = new_ias;
+
+  for (int i = raw_balls_.size() - 1; i > 0; i--) {
+    raw_balls_[i] = raw_balls_[i - 1];
+  }
+  raw_balls_[0] = Ball(alpha_, beta_, ias_);
+
   tas_ = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
+
   double new_altitude = pressure_to_altitude(d->get_temperature(), d->get_baro(), qnh);
   double instantaneous_climb_rate = climb_rate_first_sample_
       ? 0.0 : (new_altitude - altitude_) * kSamplesPerSecond;

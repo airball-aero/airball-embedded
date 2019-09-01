@@ -60,6 +60,9 @@ public:
   constexpr Color with_alpha(double a) const {
     return Color(r_, g_, b_, a);
   }
+  constexpr Color with_brightness(double bright) const {
+    return Color(r_ * bright, g_ * bright, b_ * bright, a_);
+  }
   double r() const {return r_;}
   double g() const {return g_;}
   double b() const {return b_;}

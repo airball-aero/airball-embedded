@@ -48,7 +48,12 @@ public:
 
 private:
   void paintBackground();
-  void paintAirball();
+  void paintRawAirballs();
+  void paintRawAirball(
+      const Point& center,
+      const double radius,
+      const double opacity);
+  void paintSmoothAirball();
   void paintAirballLowAirspeed(const Point& center);
   void paintAirballAirspeed(const Point& center, const double radius);
   void paintAirballAirspeedLimits(const Point& center);
