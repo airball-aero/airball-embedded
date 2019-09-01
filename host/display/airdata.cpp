@@ -78,32 +78,14 @@ double find_dpr_to_angle(InterpolationTable &table, double dpr) {
 }
 
 Airdata::Airdata()
-    : is_zeroing_(true),
-      zero_points_count_(0),
-      dp0_zero_offset_(0),
-      dpa_zero_offset_(0),
-      dpb_zero_offset_(0),
-      climb_rate_(0) {
+    : climb_rate_(0) {
   populate_table(dpr_to_angle);
 }
 
 void Airdata::update(const airdata_sample *d, const double qnh) {
-  if (is_zeroing_) {
-    dp0_zero_offset_ += d->get_dp0();
-    dpa_zero_offset_ += d->get_dpA();
-    dpb_zero_offset_ += d->get_dpB();
-    zero_points_count_++;
-    if (zero_points_count_ >= kZeroOffsetPoints) {
-      dp0_zero_offset_ /= kZeroOffsetPoints;
-      dpa_zero_offset_ /= kZeroOffsetPoints;
-      dpb_zero_offset_ /= kZeroOffsetPoints;
-      is_zeroing_ = false;
-    }
-    return;
-  }
-  double dp0 = d->get_dp0() - dp0_zero_offset_;
-  double dpa = d->get_dpA() - dpa_zero_offset_;
-  double dpb = d->get_dpB() - dpb_zero_offset_;
+  double dp0 = d->get_dp0();
+  double dpa = d->get_dpA();
+  double dpb = d->get_dpB();
   alpha_ = -find_dpr_to_angle(dpr_to_angle, dpa / dp0);
   beta_ = find_dpr_to_angle(dpr_to_angle, dpb / dp0);
   const double total_angle = sqrt(alpha_ * alpha_ + beta_ * beta_);

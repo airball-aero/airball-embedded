@@ -20,13 +20,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+find_package(Boost REQUIRED program_options)
+include_directories(${BOOST_INCLUDE_DIRS})
+message("boost lib: ${Boost_LIBRARIES}")
+message("boost inc: ${Boost_INCLUDE_DIR}")
+
 add_library(airball_display
         widgets.cpp airdata.cpp settings.cpp display.cpp one_shot_timer.cpp
         controller.cpp screen.cpp user_input_source.cpp delay_timer.cpp
         aerodynamics.cpp fake_telemetry_client.cpp interpolation_table.cpp
-        system_status.cpp device_keyboard_listener.cpp)
+        system_status.cpp device_keyboard_listener.cpp
+        log_reader_telemetry_client.cpp)
 target_link_libraries(airball_display
-        X11 cairo pthread)
+        X11 cairo pthread
+        airball_telemetry_client
+        ${Boost_LIBRARIES})
 
 add_executable(ab
         ab_main.cpp)
