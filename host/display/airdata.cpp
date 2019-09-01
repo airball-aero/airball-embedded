@@ -104,22 +104,23 @@ void Airdata::update(const airdata_sample *d, const double qnh) {
   const double total_angle = sqrt(alpha_ * alpha_ + beta_ * beta_);
   free_stream_q_ = dp0 / single_point_sphere_pressure_coefficient(total_angle);
   double new_ias = q_to_ias(free_stream_q_);
+  double new_tas = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
 
   smooth_ball_ = Ball(
       smooth(smooth_ball_.alpha(), new_alpha, kBallSmoothingFactor),
       smooth(smooth_ball_.beta(), new_beta, kBallSmoothingFactor),
-      smooth(smooth_ball_.ias(), new_ias, kBallSmoothingFactor));
+      smooth(smooth_ball_.ias(), new_ias, kBallSmoothingFactor),
+      smooth(smooth_ball_.tas(), new_tas, kBallSmoothingFactor));
 
   alpha_ = new_alpha;
   beta_ = new_beta;
   ias_ = new_ias;
+  tas_ = new_tas;
 
   for (int i = raw_balls_.size() - 1; i > 0; i--) {
     raw_balls_[i] = raw_balls_[i - 1];
   }
-  raw_balls_[0] = Ball(alpha_, beta_, ias_);
-
-  tas_ = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
+  raw_balls_[0] = Ball(alpha_, beta_, ias_, tas_);
 
   double new_altitude = pressure_to_altitude(d->get_temperature(), d->get_baro(), qnh);
   double instantaneous_climb_rate = climb_rate_first_sample_

@@ -483,11 +483,14 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
 
 void Display::paintAirballTrueAirspeed(const Point& center) {
   double tas_stroke_alpha;
-  if (airdata_->tas() < airdata_->ias() || airdata_->ias() == 0) {
+  if (airdata_->smooth_ball().tas() <
+      airdata_->smooth_ball().ias() || airdata_->smooth_ball().ias() == 0) {
     tas_stroke_alpha = 0;
   } else {
-    double ias_squared = airdata_->ias() * airdata_->ias();
-    double tas_squared = airdata_->tas() * airdata_->tas();
+    double ias_squared =
+        airdata_->smooth_ball().ias() * airdata_->smooth_ball().ias();
+    double tas_squared =
+        airdata_->smooth_ball().tas() * airdata_->smooth_ball().tas();
     double ratio = (tas_squared - ias_squared) / ias_squared;
     tas_stroke_alpha = (ratio > kTasThresholdRatio)
                        ? 1.0 : (ratio / kTasThresholdRatio);
@@ -495,7 +498,7 @@ void Display::paintAirballTrueAirspeed(const Point& center) {
   rosette(
       screen_->cr(),
       center,
-      airspeed_to_radius(airdata_->tas()),
+      airspeed_to_radius(airdata_->smooth_ball().tas()),
       4,
       kTrueAirspeedRosetteHalfAngle,
       0.25 * M_PI,
