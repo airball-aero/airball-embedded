@@ -106,6 +106,14 @@ void Airdata::update(const airdata_sample *d, const double qnh) {
   double new_ias = q_to_ias(free_stream_q_);
   double new_tas = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
 
+  // If we allow NaN's to get through, they will "pollute" the smoothing
+  // computation and every smoothed value thereafter will be NaN. This guard
+  // is therefore necessary prior to using data as a smoothing filter input.
+  if (isnan(new_alpha)) { new_alpha = alpha_; }
+  if (isnan(new_beta)) { new_beta = beta_; }
+  if (isnan(new_ias)) { new_ias = ias_; }
+  if (isnan(new_tas)) { new_tas = tas_; }
+  
   smooth_ball_ = Ball(
       smooth(smooth_ball_.alpha(), new_alpha, kBallSmoothingFactor),
       smooth(smooth_ball_.beta(), new_beta, kBallSmoothingFactor),
