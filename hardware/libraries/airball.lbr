@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
@@ -4176,6 +4176,25 @@ Only</text>
 <wire x1="11.43" y1="33.02" x2="19.05" y2="33.02" width="0.127" layer="21"/>
 <text x="11.43" y="26.67" size="1.27" layer="21">MicroUSB</text>
 </package>
+<package name="ADAFRUIT_BMP388_BREAKOUT">
+<wire x1="0" y1="16.51" x2="21.59" y2="16.51" width="0.127" layer="21"/>
+<wire x1="21.59" y1="16.51" x2="21.59" y2="0" width="0.127" layer="21"/>
+<wire x1="21.59" y1="0" x2="0" y2="0" width="0.127" layer="21"/>
+<wire x1="0" y1="16.51" x2="0" y2="0" width="0.127" layer="21"/>
+<pad name="P$1" x="1.905" y="2.54" drill="1"/>
+<pad name="P$2" x="4.445" y="2.54" drill="1"/>
+<pad name="P$3" x="6.985" y="2.54" drill="1"/>
+<pad name="P$4" x="9.525" y="2.54" drill="1"/>
+<pad name="P$5" x="12.065" y="2.54" drill="1"/>
+<pad name="P$6" x="14.605" y="2.54" drill="1"/>
+<pad name="P$7" x="17.145" y="2.54" drill="1"/>
+<pad name="P$8" x="19.685" y="2.54" drill="1"/>
+<text x="11.43" y="5.08" size="1.016" layer="21" align="center">Adafruit BMP388 Breakout</text>
+<hole x="2.54" y="13.97" drill="1"/>
+<hole x="19.05" y="13.97" drill="1"/>
+<text x="10.795" y="14.605" size="1.27" layer="25" align="center">&gt;Name</text>
+<text x="10.795" y="11.43" size="1.27" layer="27" align="center">&gt;Value</text>
+</package>
 </packages>
 <symbols>
 <symbol name="SPARKFUN_FIO_V3">
@@ -5188,6 +5207,25 @@ Battery
 Babysitter</text>
 <text x="-6.35" y="26.67" size="1.778" layer="95">&gt;Name</text>
 <text x="-5.08" y="5.08" size="1.778" layer="96">&gt;Value</text>
+</symbol>
+<symbol name="ADAFRUIT_BMP388_BREAKOUT">
+<pin name="VIN" x="-22.86" y="10.16" length="middle"/>
+<pin name="3VO" x="-22.86" y="7.62" length="middle"/>
+<pin name="GND" x="-22.86" y="5.08" length="middle"/>
+<pin name="SCK_SCL" x="-22.86" y="2.54" length="middle"/>
+<pin name="SDO" x="-22.86" y="0" length="middle"/>
+<pin name="SDI_SDA" x="-22.86" y="-2.54" length="middle"/>
+<pin name="CS" x="-22.86" y="-5.08" length="middle"/>
+<pin name="INT" x="-22.86" y="-7.62" length="middle"/>
+<text x="-5.08" y="7.62" size="1.27" layer="94" align="center">Adafruit
+BMP388
+Breakout</text>
+<wire x1="-17.78" y1="12.7" x2="-17.78" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="-10.16" x2="0" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="0" y1="-10.16" x2="0" y2="12.7" width="0.254" layer="94"/>
+<wire x1="0" y1="12.7" x2="-17.78" y2="12.7" width="0.254" layer="94"/>
+<text x="-10.16" y="15.24" size="1.27" layer="94" align="center">&gt;Name</text>
+<text x="-10.16" y="-12.7" size="1.27" layer="94" align="center">&gt;Value</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -6655,6 +6693,28 @@ Source: MaxStream, Inc. xbee_productmanual.pdf</description>
 <connect gate="G$1" pin="SDA" pad="P$3"/>
 <connect gate="G$1" pin="VOUT" pad="P$5"/>
 <connect gate="G$1" pin="VPU" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ADAFRUIT_BMP388_BREAKOUT">
+<gates>
+<gate name="G$1" symbol="ADAFRUIT_BMP388_BREAKOUT" x="7.62" y="-2.54"/>
+</gates>
+<devices>
+<device name="" package="ADAFRUIT_BMP388_BREAKOUT">
+<connects>
+<connect gate="G$1" pin="3VO" pad="P$2"/>
+<connect gate="G$1" pin="CS" pad="P$7"/>
+<connect gate="G$1" pin="GND" pad="P$3"/>
+<connect gate="G$1" pin="INT" pad="P$8"/>
+<connect gate="G$1" pin="SCK_SCL" pad="P$4"/>
+<connect gate="G$1" pin="SDI_SDA" pad="P$6"/>
+<connect gate="G$1" pin="SDO" pad="P$5"/>
+<connect gate="G$1" pin="VIN" pad="P$1"/>
 </connects>
 <technologies>
 <technology name=""/>
