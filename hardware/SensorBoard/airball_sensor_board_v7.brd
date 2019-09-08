@@ -7,9 +7,9 @@
 <setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="25" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="12.5" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
@@ -29,11 +29,11 @@
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
@@ -47,9 +47,9 @@
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
 <layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
 <layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
-<layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
-<layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
 <layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
@@ -59,7 +59,7 @@
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
@@ -1429,6 +1429,8 @@ Please make sure your boards conform to these design rules.</description>
 <wire x1="71.12" y1="8.3075" x2="71.5725" y2="8.76" width="0.3048" layer="1"/>
 <via x="135.89" y="36.83" extent="1-16" drill="0.35"/>
 <contactref element="J1" pad="2"/>
+<via x="97.79" y="30.1625" extent="1-16" drill="0.35"/>
+<via x="110.1725" y="31.115" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="MUX_SDA">
 <contactref element="MUX" pad="23"/>
@@ -1567,34 +1569,33 @@ Please make sure your boards conform to these design rules.</description>
 <signal name="ARDUINO_TX">
 <contactref element="B1" pad="1"/>
 <contactref element="XBEE" pad="3"/>
-<wire x1="114.3" y1="31.115" x2="107.95" y2="37.465" width="0.1524" layer="16"/>
-<wire x1="34.925" y1="37.465" x2="107.95" y2="37.465" width="0.1524" layer="16"/>
-<wire x1="34.925" y1="37.465" x2="30.48" y2="33.02" width="0.1524" layer="16"/>
-<wire x1="30.48" y1="33.02" x2="30.48" y2="30.48" width="0.1524" layer="16"/>
-<wire x1="30.48" y1="30.48" x2="31.115" y2="29.845" width="0.1524" layer="16"/>
-<wire x1="31.115" y1="29.845" x2="31.115" y2="11.43" width="0.1524" layer="16"/>
-<wire x1="29.765" y1="10.08" x2="29.765" y2="6.51" width="0.1524" layer="16"/>
-<wire x1="31.115" y1="11.43" x2="29.765" y2="10.08" width="0.1524" layer="16"/>
+<wire x1="114.3" y1="31.115" x2="113.03" y2="32.385" width="0.1524" layer="16"/>
+<wire x1="113.03" y1="32.385" x2="97.79" y2="32.385" width="0.1524" layer="16"/>
 <contactref element="J1" pad="1"/>
 <wire x1="114.3" y1="31.115" x2="109.855" y2="35.56" width="0.1524" layer="1"/>
 <wire x1="109.855" y1="35.56" x2="102.87" y2="35.56" width="0.1524" layer="1"/>
 <wire x1="102.87" y1="35.56" x2="100.965" y2="33.655" width="0.1524" layer="1"/>
+<wire x1="97.79" y1="32.385" x2="94.9325" y2="29.5275" width="0.1524" layer="16"/>
+<wire x1="94.9325" y1="29.5275" x2="37.7825" y2="29.5275" width="0.1524" layer="16"/>
+<wire x1="29.4475" y1="21.1925" x2="29.4475" y2="6.8275" width="0.1524" layer="16"/>
+<wire x1="29.4475" y1="6.8275" x2="29.765" y2="6.51" width="0.1524" layer="16"/>
+<wire x1="37.7825" y1="29.5275" x2="29.4475" y2="21.1925" width="0.1524" layer="16"/>
 </signal>
 <signal name="ARDUINO_RX">
 <contactref element="B1" pad="2"/>
 <contactref element="XBEE" pad="2"/>
-<wire x1="99.06" y1="36.83" x2="36.83" y2="36.83" width="0.1524" layer="16"/>
-<wire x1="36.83" y1="36.83" x2="33.02" y2="33.02" width="0.1524" layer="16"/>
-<wire x1="33.02" y1="33.02" x2="33.02" y2="30.48" width="0.1524" layer="16"/>
-<wire x1="33.02" y1="30.48" x2="31.765" y2="29.225" width="0.1524" layer="16"/>
-<wire x1="31.765" y1="9.445" x2="31.765" y2="29.225" width="0.1524" layer="16"/>
+<wire x1="100.965" y1="31.115" x2="96.8375" y2="26.9875" width="0.1524" layer="16"/>
+<wire x1="96.8375" y1="26.9875" x2="39.0525" y2="26.9875" width="0.1524" layer="16"/>
 <contactref element="J1" pad="3"/>
-<wire x1="99.06" y1="36.83" x2="99.06" y2="33.02" width="0.1524" layer="16"/>
-<wire x1="112.395" y1="30.48" x2="114.3" y2="28.575" width="0.1524" layer="16"/>
-<wire x1="107.315" y1="36.83" x2="112.395" y2="31.75" width="0.1524" layer="16"/>
-<wire x1="112.395" y1="31.75" x2="112.395" y2="30.48" width="0.1524" layer="16"/>
-<wire x1="99.06" y1="36.83" x2="107.315" y2="36.83" width="0.1524" layer="16"/>
-<wire x1="99.06" y1="33.02" x2="100.965" y2="31.115" width="0.1524" layer="16"/>
+<wire x1="100.965" y1="31.115" x2="101.2825" y2="31.115" width="0.1524" layer="16"/>
+<wire x1="101.2825" y1="31.115" x2="102.5525" y2="29.845" width="0.1524" layer="16"/>
+<wire x1="113.9825" y1="28.8925" x2="114.3" y2="28.575" width="0.1524" layer="16"/>
+<wire x1="105.7275" y1="28.8925" x2="113.9825" y2="28.8925" width="0.1524" layer="16"/>
+<wire x1="39.0525" y1="26.9875" x2="32.4" y2="20.335" width="0.1524" layer="16"/>
+<wire x1="32.4" y1="20.335" x2="32.4" y2="10.08" width="0.1524" layer="16"/>
+<wire x1="32.4" y1="10.08" x2="31.765" y2="9.445" width="0.1524" layer="16"/>
+<wire x1="102.5525" y1="29.845" x2="104.775" y2="29.845" width="0.1524" layer="16"/>
+<wire x1="104.775" y1="29.845" x2="105.7275" y2="28.8925" width="0.1524" layer="16"/>
 </signal>
 <signal name="V_BATT_SWITCHED">
 <contactref element="B1" pad="24"/>
@@ -1700,10 +1701,10 @@ Please make sure your boards conform to these design rules.</description>
 <via x="125.73" y="35.56" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND20" class="1">
-<via x="92.71" y="30.48" extent="1-16" drill="0.35"/>
+<via x="92.71" y="31.115" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND21" class="1">
-<via x="86.36" y="30.48" extent="1-16" drill="0.35"/>
+<via x="86.36" y="31.115" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND22" class="1">
 <via x="86.36" y="25.4" extent="1-16" drill="0.35"/>
@@ -1727,16 +1728,16 @@ Please make sure your boards conform to these design rules.</description>
 <via x="99.06" y="3.81" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND29" class="1">
-<via x="76.2" y="30.48" extent="1-16" drill="0.35"/>
+<via x="76.2" y="31.115" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND30" class="1">
-<via x="68.58" y="30.48" extent="1-16" drill="0.35"/>
+<via x="68.58" y="31.115" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND31" class="1">
-<via x="43.18" y="30.48" extent="1-16" drill="0.35"/>
+<via x="43.18" y="31.115" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND32" class="1">
-<via x="36.83" y="30.48" extent="1-16" drill="0.35"/>
+<via x="36.83" y="31.115" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND33" class="1">
 <via x="44.45" y="12.7" extent="1-16" drill="0.35"/>
@@ -1745,10 +1746,10 @@ Please make sure your boards conform to these design rules.</description>
 <via x="36.83" y="12.7" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND35" class="1">
-<via x="59.69" y="30.48" extent="1-16" drill="0.35"/>
+<via x="59.69" y="31.115" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND36" class="1">
-<via x="52.07" y="30.48" extent="1-16" drill="0.35"/>
+<via x="52.07" y="31.115" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="GND37" class="1">
 <via x="52.07" y="15.24" extent="1-16" drill="0.35"/>
@@ -1827,6 +1828,36 @@ Please make sure your boards conform to these design rules.</description>
 </signal>
 <signal name="GND62" class="1">
 <via x="24.13" y="15.24" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND64" class="1">
+<via x="86.36" y="28.2575" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND65" class="1">
+<via x="92.71" y="28.2575" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND66" class="1">
+<via x="76.2" y="28.2575" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND67" class="1">
+<via x="68.58" y="28.2575" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND68" class="1">
+<via x="59.69" y="28.2575" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND69" class="1">
+<via x="52.07" y="28.2575" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND70" class="1">
+<via x="43.18" y="28.2575" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND71" class="1">
+<via x="30.7975" y="20.32" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND72" class="1">
+<via x="30.7975" y="15.24" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="GND73" class="1">
+<via x="34.925" y="24.765" extent="1-16" drill="0.35"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
