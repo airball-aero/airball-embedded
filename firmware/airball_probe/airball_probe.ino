@@ -1,7 +1,9 @@
 #include <TI_TCA9548A.h>
 #include <TimerOne.h>
 #include <DallasTemperature.h>
-#include "Adafruit_BMP3XX.h"
+#include <SparkFunBQ27441.h>
+#include <Adafruit_BMP3XX.h>
+
 #include "XBee.h"
 
 // TI TCA9548A I2C multiplexer
@@ -9,6 +11,9 @@ TI_TCA9548A mux(&Wire);
 
 // Bosch BMP388 barometric pressure sensor
 Adafruit_BMP3XX barometer;
+
+// BQ27441 battery monitor
+BQ27441 battery;
 
 // XBee wireless radio
 XBee radio(&Serial1);
@@ -38,11 +43,26 @@ DeviceAddress ext_oat_address;
 #define HSC_FULL_SCALE 4000
 
 // How frequently (in uS) should measurements be taken?
-// #define MEASUREMENT_INTERVAL_US 50000
-#define MEASUREMENT_INTERVAL_US 500000
+#define MEASUREMENT_INTERVAL_US 50000
+// #define MEASUREMENT_INTERVAL_US 500000
+
+// How many airdata samples per OAT sample?
+#define OAT_MEASUREMENT_INTERVAL 50
+
+// How many airdata samples per battery sample?
+#define BATTERY_MEASUREMENT_INTERVAL 100
 
 // Speed of the I2C bus
 #define I2C_BUS_SPEED 400000L // 400 kHz
+
+// Battery capacity in mAH
+#define BATTERY_CAPACITY_MAH 1000
+
+// LED for signaling data out
+#define RXLED 17
+
+// Outgoing sentence, for global use
+char sentence[128];
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -58,21 +78,19 @@ void configureRadio() {
   radio.sendCommand("ATDL=8888"); // Default destination address
   radio.sendCommand("ATID=5555"); // Network ID
   radio.sendCommand("ATMY=7777"); // My ID
-  radio.sendCommand("ATAP=1");    // API mode
+  radio.sendCommand("ATAP=0");    // API mode
 
   radio.exitCommandMode();
 }
 
 void send_packet(char* buf, uint16_t len) {
-  radio.send_packet_x01_send_16_bit(
-      0x8888,
-      buf,
-      len);
+  buf[len] = '\0';
+  radio.write(buf);
 }
 
 ////////////////////////////////////////////////////////////////////////
 //
-// Primary air data
+// Air data
 //
 
 uint16_t read_hsc_raw(uint16_t mux_channel, uint16_t sensor_address) {
@@ -139,8 +157,6 @@ void appendInteger(char *buf, unsigned long seq, char const *delim) {
   if (delim) strcat(buf, delim);
 }
 
-char sentence[128];
-
 void send_air_data_sentence(
     unsigned long seq,
     float baro,
@@ -148,11 +164,8 @@ void send_air_data_sentence(
     float dp0,
     float dpA,
     float dpB) {
-  // Start with an empty string.
   sentence[0] = 0;
 
-  // Append all variables to the sentence buffer, separated
-  // by commas and ended by a CR/NL.
   appendString(sentence, "$A", ",");
   appendInteger(sentence, seq, ",");
   appendFloat(sentence, baro, ",");
@@ -161,11 +174,13 @@ void send_air_data_sentence(
   appendFloat(sentence, dpA, ",");
   appendFloat(sentence, dpB, "\r\n");
 
-  // Write the sentence to the stream.
   send_packet(sentence, strlen(sentence));
 }
 
 unsigned long airdata_seq = 0;
+
+unsigned long oat_measurement_count = 0;
+float oat;
 
 void read_airdata() {
   float baro = 0.0;
@@ -174,8 +189,11 @@ void read_airdata() {
     baro = barometer.pressure;
   }
 
-  float oat = ext_oat_sensors.getTempC(ext_oat_address);
-  ext_oat_sensors.requestTemperaturesByAddress(ext_oat_address);
+  if (oat_measurement_count++ > OAT_MEASUREMENT_INTERVAL) {
+    oat = ext_oat_sensors.getTempC(ext_oat_address);
+    ext_oat_sensors.requestTemperaturesByAddress(ext_oat_address);
+    oat_measurement_count = 0;
+  }
 
   float dp0 = pressure_count_to_value_hsc(
       read_hsc_raw(MUX_CHANNEL_DP0, HSC_I2C_ADDRESS),
@@ -198,11 +216,57 @@ void read_airdata() {
 
 ////////////////////////////////////////////////////////////////////////
 //
+// Battery
+//
+
+void send_battery_sentence(
+  unsigned long seq, 
+  float bm_V, 
+  float bm_mA, 
+  float bm_capacity_mAh, 
+  float bm_capacity_pct) {
+  // Start with an empty string.
+  sentence[0] = 0;
+
+  // Append all variables to the sentence buffer, separated by commas and ended by a CR/NL.
+  appendString(sentence, "$B", ",");
+  appendInteger(sentence, seq, ",");
+  appendFloat(sentence, bm_V, ",");
+  appendFloat(sentence, bm_mA, ",");
+  appendFloat(sentence, bm_capacity_mAh, ",");
+  appendFloat(sentence, bm_capacity_pct, "\r\n");
+
+  send_packet(sentence, strlen(sentence));
+}
+
+unsigned long battery_seq = 0;
+
+unsigned long battery_measurement_count = 0;
+
+void read_battery() {
+  if (battery_measurement_count++ > BATTERY_MEASUREMENT_INTERVAL) {
+    mux.selectChannel(MUX_CHANNEL_BATTERY);
+    send_battery_sentence(
+      battery_seq++,
+      (float) battery.voltage(),
+      (float) battery.current(),
+      (float) battery.capacity(),
+      ((float) battery.capacity()) / ((float) BATTERY_CAPACITY_MAH));
+    battery_measurement_count = 0;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////
+//
 // Central measurement function
 //
 
 void completeMeasurementAndReport() {
   read_airdata();
+  read_battery();
+  digitalWrite(RXLED, LOW);
+  delay(10);
+  digitalWrite(RXLED, HIGH);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -218,16 +282,15 @@ void callbackReadyForMeasurement() {
   measurement_requested = true;
 }
 
-void setup() {
-
-  Serial.begin(19200);
-  while (!Serial) {}
+void setup() {  
+  // Initialize the LED for signaling the event loop
+  pinMode(RXLED, OUTPUT);
   
   // Initialize the XBee serial (for data telemetry).
   Serial1.begin(19200);
-  while(!Serial1) {}
+  while (!Serial1) {}
   configureRadio();
-  
+
   // Tie the I2C mux reset pin high and keep it there
   pinMode(MUX_RESET, OUTPUT);
   digitalWrite(MUX_RESET, HIGH);
@@ -242,6 +305,11 @@ void setup() {
   barometer.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
   barometer.setPressureOversampling(BMP3_OVERSAMPLING_4X);
   barometer.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
+
+  // Initialize the battery monitoring
+  mux.selectChannel(MUX_CHANNEL_BATTERY);
+  battery.begin();
+  battery.setCapacity(BATTERY_CAPACITY_MAH); 
 
   // Initialize the 1Wire temperature sensor
   ext_oat_sensors.begin();
@@ -260,9 +328,7 @@ void loop() {
   if (measurement_requested) {
     measurement_requested = false;
 
-    unsigned long t = millis();
     completeMeasurementAndReport();
-    Serial.println(millis() - t);
     
     // We're not using the *incoming* data from the XBee serial for anything,
     // but we do need to read it and throw it away or the buffer will fill up.
