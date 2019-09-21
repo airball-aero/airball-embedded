@@ -52,6 +52,9 @@ DeviceAddress ext_oat_address;
 // How many airdata samples per battery sample?
 #define BATTERY_MEASUREMENT_INTERVAL 100
 
+// How many airdata samples for autozero?
+#define AUTOZERO_NUM_READINGS 100
+
 // Speed of the I2C bus
 #define I2C_BUS_SPEED 400000L // 400 kHz
 
@@ -182,6 +185,13 @@ unsigned long airdata_seq = 0;
 unsigned long oat_measurement_count = 0;
 float oat;
 
+unsigned long autozero_count = 0;
+bool autozero_complete = false;
+
+float offset_dp0 = 0;
+float offset_dpA = 0;
+float offset_dpB = 0;
+
 void read_airdata() {
   float baro = 0.0;
   mux.selectChannel(MUX_CHANNEL_BAROMETER);
@@ -204,6 +214,24 @@ void read_airdata() {
   float dpB = pressure_count_to_value_hsc(
       read_hsc_raw(MUX_CHANNEL_DPB, HSC_I2C_ADDRESS),
       HSC_FULL_SCALE);
+
+  if (autozero_complete) {
+    dp0 -= offset_dp0;
+    dpA -= offset_dpA;
+    dpB -= offset_dpB;
+  } else {
+    if (autozero_count == AUTOZERO_NUM_READINGS) {
+      offset_dp0 /= (float) AUTOZERO_NUM_READINGS;
+      offset_dpA /= (float) AUTOZERO_NUM_READINGS;
+      offset_dpB /= (float) AUTOZERO_NUM_READINGS;
+      autozero_complete = true;
+    } else {
+      offset_dp0 += dp0;
+      offset_dpA += dpA;
+      offset_dpB += dpB;
+    }
+    autozero_count++;
+  }
 
   send_air_data_sentence(
     airdata_seq++,
@@ -264,9 +292,6 @@ void read_battery() {
 void completeMeasurementAndReport() {
   read_airdata();
   read_battery();
-  digitalWrite(RXLED, LOW);
-  delay(10);
-  digitalWrite(RXLED, HIGH);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -323,6 +348,8 @@ void setup() {
   Timer1.attachInterrupt(callbackReadyForMeasurement);
 }
 
+bool led_state = false;
+
 void loop() {
   // Measurement was requested by the global timer; go ahead and start one.
   if (measurement_requested) {
@@ -333,5 +360,8 @@ void loop() {
     // We're not using the *incoming* data from the XBee serial for anything,
     // but we do need to read it and throw it away or the buffer will fill up.
     radio.discard();
+
+    digitalWrite(RXLED, led_state ? HIGH : LOW);
+    led_state = !led_state;
   }
 }
