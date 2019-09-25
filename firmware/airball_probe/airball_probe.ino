@@ -1,6 +1,6 @@
 #include <TI_TCA9548A.h>
 #include <TimerOne.h>
-#include <DallasTemperature.h>
+#include <OneWire.h>
 #include <SparkFunBQ27441.h>
 #include <Adafruit_BMP3XX.h>
 
@@ -21,11 +21,6 @@ XBee radio(&Serial1);
 // One-Wire bus pin assignment
 #define ONE_WIRE_BUS_PIN_NUMBER 4
 
-// Dallas Semiconductor temperature probe
-OneWire onewire_bus(ONE_WIRE_BUS_PIN_NUMBER);
-DallasTemperature ext_oat_sensors(&onewire_bus);
-DeviceAddress ext_oat_address;
-
 // Which pin is the TCA9548A reset pin tied to?
 #define MUX_RESET 4
 
@@ -43,14 +38,13 @@ DeviceAddress ext_oat_address;
 #define HSC_FULL_SCALE 4000
 
 // How frequently (in uS) should measurements be taken?
-#define MEASUREMENT_INTERVAL_US 50000
-// #define MEASUREMENT_INTERVAL_US 500000
+#define MEASUREMENT_INTERVAL_US 50000 // 50 ms = 20 Hz
 
 // How many airdata samples per OAT sample?
 #define OAT_MEASUREMENT_INTERVAL 50
 
 // How many airdata samples per battery sample?
-#define BATTERY_MEASUREMENT_INTERVAL 100
+#define BATTERY_MEASUREMENT_INTERVAL 20
 
 // How many airdata samples for autozero?
 #define AUTOZERO_NUM_READINGS 100
@@ -89,6 +83,55 @@ void configureRadio() {
 void send_packet(char* buf, uint16_t len) {
   buf[len] = '\0';
   radio.write(buf);
+}
+
+////////////////////////////////////////////////////////////////////////
+//
+// Temperature
+//
+
+#define READSCRATCH    0xBE
+#define STARTCONVO     0x44
+
+OneWire wire(ONE_WIRE_BUS_PIN_NUMBER);
+uint8_t oat_address[8];
+
+bool valid_device_address(uint8_t *addr) {
+  return (wire.crc8(addr, 7) == addr[7]);
+}
+
+void init_oat() {
+  bool found = false;
+  wire.reset_search();
+  while (wire.search(oat_address)) {
+    if (valid_device_address(oat_address)) {
+      found = true;
+    }
+  }
+  start_oat_conversion();
+}
+
+float start_oat_conversion() {
+  wire.skip();
+  wire.write(STARTCONVO, false);
+  wire.reset();  
+}
+
+float read_oat() {
+  wire.select(oat_address);
+  wire.write(READSCRATCH);
+  uint8_t temp_lsb = wire.read();
+  uint8_t temp_msb = wire.read();
+  wire.reset();
+
+  int16_t raw = (((int16_t)temp_msb) << 8) | temp_lsb;
+  return (float)(raw >> 3) * 0.5;
+}
+
+float measure_oat() {
+  float t = read_oat();
+  start_oat_conversion();
+  return t;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -200,8 +243,7 @@ void read_airdata() {
   }
 
   if (oat_measurement_count++ > OAT_MEASUREMENT_INTERVAL) {
-    oat = ext_oat_sensors.getTempC(ext_oat_address);
-    ext_oat_sensors.requestTemperaturesByAddress(ext_oat_address);
+    oat = measure_oat();
     oat_measurement_count = 0;
   }
 
@@ -337,11 +379,7 @@ void setup() {
   battery.setCapacity(BATTERY_CAPACITY_MAH); 
 
   // Initialize the 1Wire temperature sensor
-  ext_oat_sensors.begin();
-  if (ext_oat_sensors.getAddress(ext_oat_address, 0)) {
-    ext_oat_sensors.setWaitForConversion(false);
-    ext_oat_sensors.requestTemperaturesByAddress(ext_oat_address);
-  }
+  init_oat();
 
   // Set up a timer to trigger a new measurement.
   Timer1.initialize(MEASUREMENT_INTERVAL_US);
