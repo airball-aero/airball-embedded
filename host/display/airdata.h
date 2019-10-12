@@ -72,6 +72,9 @@ public:
   // Current altitude
   double altitude() const { return altitude_; }
 
+  // Current pressure altitude, without barometric compensation
+  double pressure_altitude() const { return pressure_altitude_; }
+
   // Current climb rate
   double climb_rate() const { return climb_rate_; }
 
@@ -81,7 +84,13 @@ public:
   // Commands this model to update its contents based on the given data.
   //   d -- airdata sample
   //   qnh -- Current sea level barometric pressure in pascals
-  void update(const airdata_sample* d, const double qnh);
+  //   ball_smoothing_factor -- Smoothing factor for airball data
+  //   vsi_smoothing_factor -- Smoothing factor for VSI data
+  void update(
+      const airdata_sample* d,
+      const double qnh,
+      const double ball_smoothing_factor,
+      const double vsi_smoothing_factor);
 
   const Ball& smooth_ball() const { return smooth_ball_; }
 
@@ -89,9 +98,6 @@ public:
 
 private:
   static constexpr int kSamplesPerSecond = 20;
-  static constexpr uint kClimbRateInitPoints = 100;
-  static constexpr double kClimbRateSmoothingFactor = 0.005;
-  static constexpr double kBallSmoothingFactor = 0.05;
   static constexpr uint kNumBalls = 20;
 
   InterpolationTable dpr_to_angle;
@@ -100,11 +106,9 @@ private:
   double alpha_;
   double beta_;
   double free_stream_q_;
+  double pressure_altitude_;
   double altitude_;
   double climb_rate_;
-  double climb_rate_init_accumulator_;
-  uint climb_rate_init_index_;
-  bool climb_rate_initialized_;
   bool climb_rate_first_sample_;
   bool valid_;
   Ball smooth_ball_;

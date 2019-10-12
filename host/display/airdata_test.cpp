@@ -54,10 +54,7 @@ void update(Airdata *ad, const airdata_sample *d, const double qnh) {
       0,
       0,
       0);
-  for (int i = 0; i < 1000; i++) {
-    ad->update(&sample, qnh);
-  }
-  ad->update(d, qnh);
+  ad->update(d, qnh, 0, 0);
 }
 
 TEST(Airdata, simple_zero_condition) {

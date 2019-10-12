@@ -482,7 +482,7 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
 }
 
 void Display::paintAirballTrueAirspeed(const Point& center) {
-  double tas_stroke_alpha;
+  double tas_stroke_alpha = 0;
   if (airdata_->smooth_ball().tas() <
       airdata_->smooth_ball().ias() || airdata_->smooth_ball().ias() == 0) {
     tas_stroke_alpha = 0;
@@ -839,19 +839,45 @@ void Display::paintAltitude(
   Point center_right,
   Point bottom_left,
   Point bottom_right) {
-  double altitude = airdata_->altitude() / kMetersPerFoot;
-  int thousands = (int) floor(altitude / 1000);
-  int last_three_digits = ((int) round(altitude / 10) * 10) % 1000;
+  int altitude = (int) round(airdata_->altitude() / kMetersPerFoot);
+  int thousands = abs(altitude) / 1000;
+  int last_three_digits = (abs(altitude) - (thousands * 1000)) / 10 * 10;
   Point baseline(
       center_left.x() + (center_right.x() - center_left.x())
                         * kAltimeterBaselineRatio,
       center_left.y());
   char buf[kPrintBufSize];
-  snprintf(
-      buf,
-      kPrintBufSize,
-      "%d",
-      thousands);
+  // Print the thousands string
+  if (thousands == 0) {
+    if (altitude < 0) {
+      // Print just a negative sign
+      snprintf(
+          buf,
+          kPrintBufSize,
+          "-");
+    } else {
+      // Leave the thousands blank
+      snprintf(
+          buf,
+          kPrintBufSize,
+          "");
+    }
+  } else {
+    if (altitude < 0) {
+      snprintf(
+          buf,
+          kPrintBufSize,
+          "-%d",
+          thousands);
+    } else {
+      // Leave the thousands blank
+      snprintf(
+          buf,
+          kPrintBufSize,
+          "%d",
+          thousands);
+    }
+  }
   text(
       screen_->cr(),
       buf,
@@ -922,7 +948,7 @@ void Display::paintAdjusting() {
   snprintf(
       buf,
       kPrintBufSize,
-      "%.2f",
+      "%.3f",
       settings_->adjusting_param_value());
   text(
       screen_->cr(),
@@ -968,7 +994,7 @@ void Display::paintBatteryStatus() {
       kStatusDisplayUnit - kStatusDisplayStrokeWidth/2;
   const double barWidth =
       status_->battery_health() *
-      (2.0 * (kStatusDisplayUnit - kStatusDisplayStrokeWidth/2));
+      (2.0 * (kStatusDisplayUnit - kStatusDisplayStrokeWidth/2));;
   const Color barColor =
       status_->battery_health() < 0.5
       ? status_->battery_health() < 0.25

@@ -6,6 +6,10 @@
 #include <asio/streambuf.hpp>
 #include <istream>
 #include <iostream>
+#include <thread>
+#include <mutex>
+#include <list>
+#include <condition_variable>
 #include "xbee_api_frame.h"
 
 namespace airball {
@@ -28,36 +32,22 @@ public:
   xbee(std::string serial_device_filename,
       unsigned int baud_rate);
 
+  ~xbee();
+
   // RAW DATA WRITE HELPERS
 
   // Write a number of different data types
   void write(char c);
   void write(const char *s, int len);
   void write(std::string str);
-  void write_uint8(uint8_t value);
-  void write_uint16(uint16_t value);
 
   // RAW DATA READ HELPERS
 
-  // Read a specified number of bytes.
-  std::string read(uint16_t size);
-
-  // Discard inputs until a given input is seen
-  void discard_until(char c);
-  void discard_until(char *str);
+  // Read a character.
+  char read();
 
   // Gets a contiguous line of text
   std::string get_line(const char end = '\n');
-
-  // Reads inputs until a given input is seen
-  std::string read_until(const char end = 0x7e);
-
-  // API MODE HELPERS
-  // These functions assume the XBee has been put into API mode
-  // already via AT commands.
-
-  void write_api_frame(const xbee_api_frame& frame);
-  xbee_api_frame read_api_frame();
 
   // XBEE CONFIGURATION HELPERS
 
@@ -68,23 +58,24 @@ public:
   void send_command(std::string command);
   void exit_command_mode();
 
-  void enter_api_mode();
-
-  std::string get_hardware_version(); // TODO(ihab): Deprecated
-
 private:
   void ensure_command_mode(const std::function<void()> &f);
 
   const std::string device_filename;
   const unsigned int baud_rate;
 
-  asio::io_service io_service;
-  asio::serial_port serial_port;
+  std::mutex buffer_mutex_;
+  std::list<char> buffer_;
 
+  asio::io_service io_service_;
+
+  std::mutex serial_port_mutex_;
+  asio::serial_port serial_port_;
+
+  std::thread reader_;
+  std::condition_variable cv_;
   bool in_command_mode_ = false;
-
-  static const char API_FRAME_START_DELIMITER = 0x7e;
-  static const char XBEE_NEWLINE = 0x0d;
+  bool reading_ = true;
 };
 
 } // namespace airball

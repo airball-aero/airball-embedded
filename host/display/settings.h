@@ -103,6 +103,16 @@ public:
   double baro_setting() const;
 
   /**
+   * @return the ball smoothing factor.
+   */
+  double ball_smoothing_factor() const;
+
+  /**
+   * @return the VSI smoothing factor.
+   */
+  double vsi_smoothing_factor() const;
+
+  /**
    * @return whether the settings are currently being adjusted.
    */
   bool adjusting() const;

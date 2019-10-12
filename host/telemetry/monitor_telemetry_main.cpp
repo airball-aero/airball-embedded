@@ -20,17 +20,13 @@ void print_quantity(const long int value, const char symbol) {
   printf("%03ld %s\n", value, s.str());
 }
 
-constexpr unsigned int AIRDATA_BUF_LEN = 1024;
-char airdata_buf[AIRDATA_BUF_LEN];
+constexpr unsigned int BUF_LEN = 1024;
+char print_buf[BUF_LEN];
 
 int main(int argc, char **argv) {
-  // TODO: Not a good idea to directly pass enum values as an integer.
-  const airball::xbee_known_types::xbee_type type =
-      (airball::xbee_known_types::xbee_type)
-          std::stoi(argv[1], nullptr, 10);
-  auto device = std::string(argv[2]);
+  auto device = std::string(argv[1]);
 
-  airball::XbeeTelemetryClient telemetry_client(type, device);
+  airball::XbeeTelemetryClient telemetry_client(device);
 
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wmissing-noreturn"
@@ -50,8 +46,8 @@ int main(int argc, char **argv) {
     print_quantity(since_last_mills.count(), '.');
     auto ads = dynamic_cast<airdata_sample*>(sample.get());
     if (ads != nullptr) {
-      ads->snprintf(airdata_buf, AIRDATA_BUF_LEN);
-      std::cout << airdata_buf << std::endl;
+      ads->snprintf(print_buf, BUF_LEN);
+      std::cout << print_buf << std::endl;
     }
   }
 

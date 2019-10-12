@@ -82,19 +82,20 @@ Airdata::Airdata()
       beta_(0),
       ias_(0),
       climb_rate_(0),
-      climb_rate_initialized_(false),
-      climb_rate_init_index_(0),
-      climb_rate_init_accumulator_(0.0),
       climb_rate_first_sample_(true),
       raw_balls_(kNumBalls) {
   populate_table(dpr_to_angle);
 }
 
-static double smooth(double current, double datum, double smoothingFactor) {
-  return (smoothingFactor * datum) + ((1.0 - smoothingFactor) * current);
+static double smooth(double current_value, double new_value, double smoothing_factor) {
+  return (smoothing_factor * new_value) + ((1.0 - smoothing_factor) * current_value);
 }
 
-void Airdata::update(const airdata_sample *d, const double qnh) {
+void Airdata::update(
+    const airdata_sample* d,
+    const double qnh,
+    const double ball_smoothing_factor,
+    const double vsi_smoothing_factor) {
   double dp0 = d->get_dp0();
   double dpa = d->get_dpA();
   double dpb = d->get_dpB();
@@ -113,12 +114,12 @@ void Airdata::update(const airdata_sample *d, const double qnh) {
   if (isnan(new_beta)) { new_beta = beta_; }
   if (isnan(new_ias)) { new_ias = ias_; }
   if (isnan(new_tas)) { new_tas = tas_; }
-  
+
   smooth_ball_ = Ball(
-      smooth(smooth_ball_.alpha(), new_alpha, kBallSmoothingFactor),
-      smooth(smooth_ball_.beta(), new_beta, kBallSmoothingFactor),
-      smooth(smooth_ball_.ias(), new_ias, kBallSmoothingFactor),
-      smooth(smooth_ball_.tas(), new_tas, kBallSmoothingFactor));
+      smooth(smooth_ball_.alpha(), new_alpha, ball_smoothing_factor),
+      smooth(smooth_ball_.beta(), new_beta, ball_smoothing_factor),
+      smooth(smooth_ball_.ias(), new_ias, ball_smoothing_factor),
+      smooth(smooth_ball_.tas(), new_tas, ball_smoothing_factor));
 
   alpha_ = new_alpha;
   beta_ = new_beta;
@@ -130,25 +131,30 @@ void Airdata::update(const airdata_sample *d, const double qnh) {
   }
   raw_balls_[0] = Ball(alpha_, beta_, ias_, tas_);
 
-  double new_altitude = pressure_to_altitude(d->get_temperature(), d->get_baro(), qnh);
-  double instantaneous_climb_rate = climb_rate_first_sample_
-      ? 0.0 : (new_altitude - altitude_) * kSamplesPerSecond;
-  climb_rate_first_sample_ = false;
-  altitude_ = new_altitude;
-  if (climb_rate_initialized_) {
-    climb_rate_ = smooth(
-        climb_rate_,
-        instantaneous_climb_rate,
-        kClimbRateSmoothingFactor);
-  } else {
-    climb_rate_init_accumulator_ += instantaneous_climb_rate;
-    climb_rate_init_index_++;
-    if (climb_rate_init_index_ == kClimbRateInitPoints) {
-      climb_rate_ =
-          climb_rate_init_accumulator_ / ((double) kClimbRateInitPoints);
-      climb_rate_initialized_ = true;
-    }
+  altitude_ = pressure_to_altitude(
+      d->get_temperature(),
+      d->get_baro(),
+      qnh);
+
+  double new_pressure_altitude = pressure_to_altitude(
+      d->get_temperature(),
+      d->get_baro(),
+      QNH_STANDARD);
+  double instantaneous_climb_rate =
+      (new_pressure_altitude - pressure_altitude_) * kSamplesPerSecond;
+  pressure_altitude_ = new_pressure_altitude;
+
+  climb_rate_ = smooth(
+      climb_rate_,
+      instantaneous_climb_rate,
+      vsi_smoothing_factor);
+
+  if (climb_rate_first_sample_) {
+    climb_rate_ = 0.0;
+    instantaneous_climb_rate = 0;
+    climb_rate_first_sample_ = false;
   }
+
   valid_ = !isnan(alpha_) && !isnan(beta_);
 }
 

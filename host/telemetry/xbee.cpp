@@ -1,8 +1,7 @@
 #include "xbee.h"
 
-#include <asio/read.hpp>
-#include <asio/read_until.hpp>
-#include <asio/write.hpp>
+#include <thread>
+#include <strstream>
 #include <asio/impl/read.hpp>
 #include <asio/impl/write.hpp>
 
@@ -12,22 +11,46 @@ xbee::xbee(std::string serial_device_filename,
            unsigned int baud_rate) :
     device_filename(serial_device_filename),
     baud_rate(baud_rate),
-    serial_port(io_service) {
-  serial_port.open(serial_device_filename);
-  serial_port.set_option(asio::serial_port_base::baud_rate(
+    serial_port_(io_service_) {
+  serial_port_.open(serial_device_filename);
+  serial_port_.set_option(asio::serial_port_base::baud_rate(
       baud_rate));
-  serial_port.set_option(asio::serial_port_base::character_size(
+  serial_port_.set_option(asio::serial_port_base::character_size(
       8));
-  serial_port.set_option(asio::serial_port_base::parity(
+  serial_port_.set_option(asio::serial_port_base::parity(
       asio::serial_port_base::parity::none));
-  serial_port.set_option(asio::serial_port_base::stop_bits(
+  serial_port_.set_option(asio::serial_port_base::stop_bits(
       asio::serial_port_base::stop_bits::one));
-  serial_port.set_option(asio::serial_port_base::flow_control(
+  serial_port_.set_option(asio::serial_port_base::flow_control(
       asio::serial_port_base::flow_control::none));
+
+  reader_ = std::thread([&]() {
+    while (reading_) {
+      char buf = 0;
+      {
+        std::unique_lock<std::mutex> lock(serial_port_mutex_);
+        asio::read(
+            serial_port_,
+            asio::buffer(&buf, 1),
+            asio::transfer_all());
+      }
+      {
+        std::unique_lock<std::mutex> lock(buffer_mutex_);
+        buffer_.emplace_back(buf);
+      }
+      cv_.notify_one();
+    }
+  });
+}
+
+xbee::~xbee() {
+  reading_ = false;
+  reader_.join();
 }
 
 void xbee::write(char c) {
-  asio::write(serial_port, asio::buffer(&c, 1));
+  std::unique_lock<std::mutex> lock(serial_port_mutex_);
+  asio::write(serial_port_, asio::buffer(&c, 1));
 }
 
 void xbee::write(const char *s, int len) {
@@ -40,91 +63,23 @@ void xbee::write(std::string str) {
   write(str.data(), str.length());
 }
 
-void xbee::write_uint8(uint8_t value) {
-  write(value);
-}
-
-void xbee::write_uint16(uint16_t value) {
-  write((uint8_t) ((value >> 8) & 0xff));   // MSB
-  write((uint8_t) ((value     ) & 0xff));   // LSB
-}
-
-std::string xbee::read(uint16_t size) {
-  char buf[size];
-  memset(buf, 0, size);
-  asio::read(
-      serial_port,
-      asio::buffer(buf, size),
-      asio::transfer_all());
-  return std::string(buf, size);
-}
-
-void xbee::discard_until(char c) {
-  char cr;
-  do {
-    serial_port.read_some(asio::buffer(&cr, 1));
-  } while (cr != c);
-}
-
-void xbee::discard_until(char *str) {
-  int p = 0;
-  size_t l = strlen(str) - 1;
-  std::cout << "Trying to discard data" << std::endl;
-  asio::error_code ec;
-  do {
-    char c;
-    std::cout << "Trying to read" << std::endl;
-    size_t len = serial_port.read_some(asio::buffer(&c, 1), ec);
-
-    std::cout << "Got data to discard: " << len << ": " << c << std::endl;
-    std::cout << "Error code: " << ec.value() << ", message: " << ec.message()
-              << std::endl;
-
-    if (str[p] == c) {
-      std::cout << "Found " << c << " moving to next char " << str[p + 1]
-                << std::endl;
-      if (p == l) {
-        std::cout << "Got a match" << std::endl;
-        return;
-      }
-      p++;
-    } else {
-      std::cout << "No match" << std::endl;
-      p = 0;
-    }
-
-  } while (ec.value() != asio::error::misc_errors::eof);
+char xbee::read() {
+  std::unique_lock<std::mutex> lock(buffer_mutex_);
+  cv_.wait(lock, [&](){ return !buffer_.empty(); });
+  char c = buffer_.front();
+  buffer_.pop_front();
+  return c;
 }
 
 std::string xbee::get_line(const char end) {
-  asio::streambuf input_data_buffer;
-  std::istream input_buffer(&input_data_buffer);
-  char line[512] = {0};
-  asio::read_until(serial_port, input_data_buffer, end);
-  input_buffer.getline(line, sizeof(line));
-  return std::string(line);
-}
-
-std::string xbee::read_until(const char end) {
-  asio::streambuf input_data_buffer;
-  std::istream input_buffer(&input_data_buffer);
-  char line[512] = {0};
-  asio::read_until(serial_port, input_data_buffer, end);
-  input_buffer.getline(line, sizeof(line));
-  return std::string(line);
-}
-
-void xbee::write_api_frame(const xbee_api_frame& frame) {
-  write(frame.to_bytes());
-}
-
-xbee_api_frame xbee::read_api_frame() {
-  return xbee_api_frame::from_bytes([&](char* buf, size_t size) {
-    asio::read(
-        serial_port,
-        asio::buffer(buf, size),
-        asio::transfer_all());
-  });
+  std::vector<char> line;
+  for (;;) {
+    char c = read();
+    if (c == end) {
+      return std::string(line.begin(), line.end());
+    }
+    line.push_back(c);
+  }
 }
 
 void xbee::enter_command_mode(unsigned int guard_time) {
@@ -145,27 +100,6 @@ void xbee::exit_command_mode() {
   if (!in_command_mode_) { return; }
   send_command("ATCN");
   in_command_mode_ = false;
-}
-
-void xbee::enter_api_mode() {
-  // At this point, we don't know whether we are or are not already in API mode.
-  // Our best hope is to send the AT commands to enter API mode. If we are not
-  // in API mode, we'll enter it. If we are, then the XBee will interpret the
-  // commands as garbage data and absorb them. Any error messages resulting
-  // should be drained and ignored by subsequent application reads of API mode
-  // packets.
-  ensure_command_mode([&]() {
-    send_command("ATAP=1");
-  });
-}
-
-std::string xbee::get_hardware_version() {
-  std::string result;
-  ensure_command_mode([&]() {
-    send_command("ATHV");
-    result = read(5).substr(0, 4);
-  });
-  return result;
 }
 
 void xbee::ensure_command_mode(const std::function<void()> &f) {

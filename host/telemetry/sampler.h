@@ -5,6 +5,7 @@
 #include "sample.h"
 #include "airdata_sample.h"
 #include "battery_sample.h"
+#include <iostream>
 
 class sampler {
 private:

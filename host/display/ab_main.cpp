@@ -5,6 +5,7 @@
 #include "controller.h"
 #include "fake_telemetry_client.h"
 #include "log_reader_telemetry_client.h"
+#include "../telemetry/xbee_telemetry_client.h"
 
 namespace po = boost::program_options;
 
@@ -28,7 +29,7 @@ static po::options_description add_options() {
       (
           "telemetry",
           po::value<std::string>(),
-          "telemetry source (fake, log)"
+          "telemetry source (fake, log, xbee)"
       )
       (
           "telemetry_log_filename",
@@ -44,6 +45,11 @@ static po::options_description add_options() {
           "telemetry_log_start_sample",
           po::value<uint>(),
           "telemetry=log first sample to skip to"
+      )
+      (
+          "telemetry_xbee_device",
+          po::value<std::string>(),
+          "telemetry=probe serial device"
       );
   return desc;
 }
@@ -101,9 +107,9 @@ int main(int argc, char **argv) {
       if (vm.count("telemetry_log_filename") != 1 ||
           vm.count("telemetry_log_samples_per_second") != 1 ||
           vm.count("telemetry_log_start_sample") != 1) {
-        std::cout << "Option telemetry=log requires telemetry_log_* options"
+        std::cerr << "Option telemetry=log requires telemetry_log_* options"
                   << std::endl;
-        std::cout << options << std::endl;
+        std::cerr << options << std::endl;
         return 1;
       }
       telemetry = std::unique_ptr<airball::TelemetryClient>
@@ -111,6 +117,16 @@ int main(int argc, char **argv) {
               vm["telemetry_log_filename"].as<std::string>(),
               vm["telemetry_log_samples_per_second"].as<uint>(),
               vm["telemetry_log_start_sample"].as<uint>()));
+    } else if (v == "xbee") {
+      if (vm.count("telemetry_xbee_device") != 1) {
+        std::cerr << "Option telemetry=probe requires telemetry_xbee_* options"
+                  << std::endl;
+        std::cerr << options << std::endl;
+        return 1;
+      }
+      telemetry = std::unique_ptr<airball::TelemetryClient>
+          (new airball::XbeeTelemetryClient(
+              vm["telemetry_xbee_device"].as<std::string>()));
     } else {
       std::cout << "Invalid telemetry option " << v << std::endl;
       std::cout << options << std::endl;

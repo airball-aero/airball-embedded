@@ -27,6 +27,8 @@
 
 namespace airball {
 
+constexpr double QNH_STANDARD = 101.3e+03; // pascals
+
 /**
  * Compute the dynamic pressure given indicated air speed.
  *

@@ -10,27 +10,36 @@
 #include "xbee_known_types.h"
 #include "airdata_sample.h"
 
-constexpr unsigned int AIRDATA_BUF_LEN = 1024;
-char airdata_buf[AIRDATA_BUF_LEN];
+constexpr unsigned int BUF_LEN = 1024;
+char print_buf[BUF_LEN];
+
+#define AIR_DATA     "airdata: "
+#define BATTERY_DATA "battery: "
 
 int main(int argc, char **argv) {
-  // TODO: Not a good idea to directly pass enum values as an integer.
-  const airball::xbee_known_types::xbee_type type =
-      (airball::xbee_known_types::xbee_type)
-          std::stoi(argv[1], nullptr, 10);
-  auto device = std::string(argv[2]);
+  auto device = std::string(argv[1]);
 
-  airball::XbeeTelemetryClient telemetry_client(type, device);
+  airball::XbeeTelemetryClient telemetry_client(device);
 
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wmissing-noreturn"
 
   for (;;) {
-    std::unique_ptr<sample> sample = telemetry_client.get();
-    auto ads = dynamic_cast<airdata_sample*>(sample.get());
-    if (ads != nullptr) {
-      ads->snprintf(airdata_buf, AIRDATA_BUF_LEN);
-      std::cout << airdata_buf << std::endl;
+    const std::unique_ptr<sample> s = telemetry_client.get();
+    print_buf[0] = '\0';
+    {
+      auto st = dynamic_cast<const airdata_sample*>(s.get());
+      if (st != nullptr) {
+        st->snprintf(print_buf, BUF_LEN);
+        std::cout << AIR_DATA << print_buf << std::endl;
+      }
+    }
+    {
+      auto st = dynamic_cast<const battery_sample *>(s.get());
+      if (st != nullptr) {
+        st->snprintf(print_buf, BUF_LEN);
+        std::cout << BATTERY_DATA << print_buf << std::endl;
+      }
     }
   }
 

@@ -222,7 +222,10 @@ void Controller::run() {
         const sample* d = (*it).get();
         auto ad = dynamic_cast<const airdata_sample*>(d);
         if (ad != nullptr) {
-          airdata.update(ad, kPascalsPerInHg * settings.baro_setting());
+          airdata.update(ad,
+              kPascalsPerInHg * settings.baro_setting(),
+              settings.ball_smoothing_factor(),
+              settings.vsi_smoothing_factor());
         }
         status.update(d);
       }

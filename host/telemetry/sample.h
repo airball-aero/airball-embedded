@@ -41,7 +41,7 @@ public:
         return out;
     }
 
-    std::string format_time() {
+    std::string format_time() const {
         char time_buf[200];
         double unix_time = std::chrono::duration_cast<std::chrono::milliseconds>(time.time_since_epoch()).count() / 1000.0;
         sprintf(time_buf, "%.3f", unix_time);

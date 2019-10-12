@@ -199,6 +199,28 @@ constexpr Parameter BARO_SETTING = {
     .count_default=2992,
 };
 
+constexpr Parameter BALL_SMOOTHING_FACTOR = {
+    .name="ball_smoothing_factor",
+    .display_name = "SF ball",
+    "",
+    .offset=0,
+    .scale=0.005,
+    .count_min=0,
+    .count_max=200,
+    .count_default=200,
+};
+
+constexpr Parameter VSI_SMOOTHING_FACTOR = {
+    .name="vsi_smoothing_factor",
+    .display_name = "SF vsi",
+    "",
+    .offset=0,
+    .scale=0.005,
+    .count_min=0,
+    .count_max=200,
+    .count_default=200,
+};
+
 constexpr const Parameter* ALL_SETTINGS[]{
     &V_FULL_SCALE,
     &V_R,
@@ -213,6 +235,8 @@ constexpr const Parameter* ALL_SETTINGS[]{
     &BETA_FULL_SCALE,
     &BETA_BIAS,
     &BARO_SETTING,
+    &BALL_SMOOTHING_FACTOR,
+    &VSI_SMOOTHING_FACTOR,
 };
 
 constexpr const Parameter* SEQUENCED_SETTINGS[]{
@@ -228,6 +252,8 @@ constexpr const Parameter* SEQUENCED_SETTINGS[]{
     &ALPHA_REF,
     &BETA_FULL_SCALE,
     &BETA_BIAS,
+    &BALL_SMOOTHING_FACTOR,
+    &VSI_SMOOTHING_FACTOR,
 };
 
 constexpr const int NUM_ALL_SETTINGS =
@@ -355,6 +381,14 @@ double Settings::beta_bias() const {
 
 double Settings::baro_setting() const {
   return get_value(&BARO_SETTING);
+}
+
+double Settings::ball_smoothing_factor() const {
+  return get_value(&BALL_SMOOTHING_FACTOR);
+}
+
+double Settings::vsi_smoothing_factor() const {
+  return get_value(&VSI_SMOOTHING_FACTOR);
 }
 
 void Settings::adjust_baro_setting_up() {
