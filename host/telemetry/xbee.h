@@ -43,9 +43,6 @@ public:
 
   // RAW DATA READ HELPERS
 
-  // Read a character.
-  char read();
-
   // Gets a contiguous line of text
   std::string get_line(const char end = '\n');
 
@@ -64,18 +61,10 @@ private:
   const std::string device_filename;
   const unsigned int baud_rate;
 
-  std::mutex buffer_mutex_;
-  std::list<char> buffer_;
-
+  asio::streambuf streambuf_;
   asio::io_service io_service_;
-
-  std::mutex serial_port_mutex_;
   asio::serial_port serial_port_;
-
-  std::thread reader_;
-  std::condition_variable cv_;
   bool in_command_mode_ = false;
-  bool reading_ = true;
 };
 
 } // namespace airball

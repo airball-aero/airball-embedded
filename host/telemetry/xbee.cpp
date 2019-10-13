@@ -4,6 +4,7 @@
 #include <strstream>
 #include <asio/impl/read.hpp>
 #include <asio/impl/write.hpp>
+#include <asio/read_until.hpp>
 
 namespace airball {
 
@@ -23,33 +24,11 @@ xbee::xbee(std::string serial_device_filename,
       asio::serial_port_base::stop_bits::one));
   serial_port_.set_option(asio::serial_port_base::flow_control(
       asio::serial_port_base::flow_control::none));
-
-  reader_ = std::thread([&]() {
-    while (reading_) {
-      char buf = 0;
-      {
-        std::unique_lock<std::mutex> lock(serial_port_mutex_);
-        asio::read(
-            serial_port_,
-            asio::buffer(&buf, 1),
-            asio::transfer_all());
-      }
-      {
-        std::unique_lock<std::mutex> lock(buffer_mutex_);
-        buffer_.emplace_back(buf);
-      }
-      cv_.notify_one();
-    }
-  });
 }
 
-xbee::~xbee() {
-  reading_ = false;
-  reader_.join();
-}
+xbee::~xbee() {}
 
 void xbee::write(char c) {
-  std::unique_lock<std::mutex> lock(serial_port_mutex_);
   asio::write(serial_port_, asio::buffer(&c, 1));
 }
 
@@ -63,23 +42,12 @@ void xbee::write(std::string str) {
   write(str.data(), str.length());
 }
 
-char xbee::read() {
-  std::unique_lock<std::mutex> lock(buffer_mutex_);
-  cv_.wait(lock, [&](){ return !buffer_.empty(); });
-  char c = buffer_.front();
-  buffer_.pop_front();
-  return c;
-}
-
 std::string xbee::get_line(const char end) {
-  std::vector<char> line;
-  for (;;) {
-    char c = read();
-    if (c == end) {
-      return std::string(line.begin(), line.end());
-    }
-    line.push_back(c);
-  }
+  asio::read_until(serial_port_, streambuf_, "\r\n");
+  std::istream is(&streambuf_);
+  std::string line;
+  std::getline(is, line);
+  return line;
 }
 
 void xbee::enter_command_mode(unsigned int guard_time) {
