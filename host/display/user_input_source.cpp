@@ -135,6 +135,16 @@ void export_gpio(const int k) {
   echo("/sys/class/gpio/export", str(k));
 }
 
+void wait_for_export(const int k) {
+  while (true) {
+    std::fstream fs;
+    fs.open(gpio_dir(k) + "/value", std::fstream::in);
+    if (fs.is_open()) {
+      return;
+    }
+  }
+}
+
 int setup_and_open(const int k) {
   echo(gpio_dir(k) + "/direction", "in");
   echo(gpio_dir(k) + "/edge", "both");
@@ -147,6 +157,7 @@ int setup_and_open(const int k) {
 
 void setup(struct pollfd fds[], int index, int gpio) {
   export_gpio(gpio);
+  wait_for_export(gpio);
   fds[index].fd = setup_and_open(gpio);
   fds[index].events = POLLPRI;
 }
@@ -204,7 +215,7 @@ UserInputSource::Input GpioUserInputSource::next_input() {
 
     if (current_value_push != last_value_push_) {
       // A pushbutton event occurred
-      input_push = (current_value_push == 0)
+      input_push = (current_value_push == 1)
           ? Input::ADJUST_KEY_PRESSED : Input::ADJUST_KEY_RELEASED;
      }
 
