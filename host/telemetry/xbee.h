@@ -2,8 +2,9 @@
 #define AIRBALL_XBEE_H
 
 #include <string>
-#include <asio/serial_port.hpp>
-#include <asio/streambuf.hpp>
+#include <boost/asio/serial_port.hpp>
+#include <boost/asio/streambuf.hpp>
+#include <boost/asio/io_service.hpp>
 #include <istream>
 #include <iostream>
 #include <thread>
@@ -61,9 +62,9 @@ private:
   const std::string device_filename;
   const unsigned int baud_rate;
 
-  asio::streambuf streambuf_;
-  asio::io_service io_service_;
-  asio::serial_port serial_port_;
+  boost::asio::streambuf streambuf_;
+  boost::asio::io_service io_service_;
+  boost::asio::serial_port serial_port_;
   bool in_command_mode_ = false;
 };
 

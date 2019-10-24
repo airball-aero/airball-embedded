@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-find_package(Boost REQUIRED program_options)
+find_package(Boost REQUIRED program_options iostreams system)
 include_directories(${BOOST_INCLUDE_DIRS})
 message("boost lib: ${Boost_LIBRARIES}")
 message("boost inc: ${Boost_INCLUDE_DIR}")
