@@ -39,10 +39,16 @@
 namespace airball {
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
-    kAdjustKeyStartResolution(10);
+    kAdjustModeTimerResolution(10);
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
-    kAdjustKeyStartDelay(2000);
+    kAdjustModeTimerDelay(2000);
+
+constexpr static std::chrono::duration<unsigned int, std::milli>
+    kExitTimerResolution(10);
+
+constexpr static std::chrono::duration<unsigned int, std::milli>
+    kExitTimerDelay(10000);
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kPaintDelay(33);
@@ -141,9 +147,9 @@ void Controller::run() {
   bool adjusting = false;
   bool suppress_adjust_next = false;
 
-  DelayTimer timer(
-      kAdjustKeyStartResolution,
-      kAdjustKeyStartDelay,
+  DelayTimer adjustModeTimer(
+      kAdjustModeTimerResolution,
+      kAdjustModeTimerDelay,
       [&]() {
         std::lock_guard<std::mutex> lock(input_mutex);
         commands.put(adjusting
@@ -153,16 +159,25 @@ void Controller::run() {
         suppress_adjust_next = adjusting;
       });
 
+  DelayTimer exitTimer(
+      kExitTimerResolution,
+      kExitTimerDelay,
+      [&]() {
+        std::exit(0);
+      });
+
   std::thread input_thread([&]() {
     while (true) {
       auto input = input_->next_input();
       std::lock_guard<std::mutex> lock(input_mutex);
       switch (input) {
         case UserInputSource::Input::ADJUST_KEY_PRESSED:
-          timer.start();
+          adjustModeTimer.start();
+          exitTimer.start();
           break;
         case UserInputSource::Input::ADJUST_KEY_RELEASED:
-          timer.cancel();
+          adjustModeTimer.cancel();
+          exitTimer.cancel();
           if (adjusting) {
             if (suppress_adjust_next) {
               suppress_adjust_next = false;
@@ -199,7 +214,6 @@ void Controller::run() {
   std::thread data_thread([&]() {
     while (true) {
       data.put(std::move(telemetry_->get()));
-      std::lock_guard<std::mutex> lock(input_mutex);
       if (!running) { break; }
     }
   });
@@ -236,7 +250,6 @@ void Controller::run() {
       // sleeping for a fixed delay.
       std::this_thread::sleep_for(kPaintDelay);
 
-      std::lock_guard<std::mutex> lock(input_mutex);
       if (!running) { break; }
     }
   });
