@@ -56,6 +56,7 @@ private:
   void paintSmoothAirball();
   void paintAirballLowAirspeed(const Point& center);
   void paintAirballAirspeed(const Point& center, const double radius);
+  void paintAirballAirspeedText(const Point& center, const double ias);
   void paintAirballAirspeedLimits(const Point& center);
   void paintAirballAirspeedLimitsNormal(const Point& center);
   void paintAirballAirspeedLimitsRotate(const Point& center);

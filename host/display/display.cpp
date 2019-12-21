@@ -38,6 +38,9 @@ constexpr double ce_floor(double x) {
   return static_cast<double>(static_cast<int64_t>(x));
 }
 
+constexpr char kFontName[] =
+    "Noto Sans";
+
 constexpr double kWidth = 272;
 constexpr double kHeight = 480;
 
@@ -78,12 +81,12 @@ constexpr int kNumCowCatcherLines = 3;
 
 constexpr Color kBackground(0, 0, 0);
 
-constexpr Color kAirballFill(0, 0, 255);
+constexpr Color kAirballFill(255, 255, 255);
 
 constexpr double kRawAirballsMaxBrightness = 0.375;
 
 constexpr Stroke kAirballCrosshairsStroke(
-    Color(255, 255, 255),
+    Color(128, 128, 128),
     2);
 
 constexpr double kLowSpeedAirballStrokeWidth = 4.0;
@@ -121,6 +124,22 @@ constexpr Stroke kVneStroke(
     Color(255, 0, 0),
     3);
 
+constexpr Stroke kVBackgroundStroke(
+    Color(0, 0, 0),
+    6);
+
+constexpr double kIASTextFontSize =
+    kWidth / 5.0;
+
+constexpr Font kIASTextFont(
+    kFontName,
+    kIASTextFontSize);
+
+constexpr double kIASTextMargin =
+    2;
+
+constexpr Color kIASTextColor(0, 0, 0);
+
 constexpr double kAdjustingTextFontSize = kWidth / 14;
 constexpr double kAdjustingRegionWidth = kAdjustingTextFontSize * 10;
 constexpr double kAdjustingRegionHeight = kAdjustingTextFontSize + 8;
@@ -128,9 +147,6 @@ constexpr double kAdjustingRegionHeight = kAdjustingTextFontSize + 8;
 constexpr Stroke kAdjustingWindowStroke(
     Color(255, 255, 255),
     1);
-
-constexpr char kFontName[] =
-    "Noto Sans";
 
 constexpr Font kAdjustingTextFont(
     kFontName,
@@ -337,6 +353,9 @@ void Display::paintSmoothAirball() {
     paintAirballLowAirspeed(center);
   } else {
     paintAirballAirspeed(center, radius);
+    if ((radius * 2) > (kIASTextFontSize * 1.5)) {
+      paintAirballAirspeedText(center, airdata_->smooth_ball().ias());
+    }
     paintAirballTrueAirspeed(center);
     paintAirballAirspeedLimits(center);
   }
@@ -368,6 +387,33 @@ void Display::paintAirballAirspeed(const Point& center, const double radius) {
       Point(center.x() - radius, center.y()),
       Point(center.x() + radius, center.y()),
       kAirballCrosshairsStroke);
+}
+
+void Display::paintAirballAirspeedText(const Point& center, const double ias) {
+  char buf[kPrintBufSize];
+  double ias_knots = meters_per_second_to_knots(ias);
+  snprintf(
+      buf,
+      kPrintBufSize,
+      "%.0f",
+      ias_knots);
+  Size sz = text_size(screen_->cr(), buf, kIASTextFont);
+  rectangle(
+      screen_->cr(),
+      Point(
+          center.x() - sz.w() / 2 - kIASTextMargin,
+          center.y() - sz.h() / 2 - kIASTextMargin),
+      Size(
+          sz.w() + 2 * kIASTextMargin,
+          sz.h() + 2 * kIASTextMargin),
+      kAirballFill);
+  text(
+      screen_->cr(),
+      buf,
+      center,
+      TextReferencePoint::CENTER_MID_UPPERCASE,
+      kIASTextFont,
+      kIASTextColor);
 }
 
 void Display::paintAirballAirspeedLimits(const Point& center) {
@@ -461,7 +507,15 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
       airspeed_knots_to_radius(settings_->v_fe()),
       4,
       kSpeedLimitsRosetteHalfAngle,
-      0,
+      M_PI_4,
+      kVBackgroundStroke);
+  rosette(
+      screen_->cr(),
+      center,
+      airspeed_knots_to_radius(settings_->v_fe()),
+      4,
+      kSpeedLimitsRosetteHalfAngle,
+      M_PI_4,
       kVfeStroke);
   rosette(
       screen_->cr(),
@@ -469,7 +523,15 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
       airspeed_knots_to_radius(settings_->v_no()),
       4,
       kSpeedLimitsRosetteHalfAngle,
-      0,
+      M_PI_4,
+      kVBackgroundStroke);
+  rosette(
+      screen_->cr(),
+      center,
+      airspeed_knots_to_radius(settings_->v_no()),
+      4,
+      kSpeedLimitsRosetteHalfAngle,
+      M_PI_4,
       kVnoStroke);
   rosette(
       screen_->cr(),
@@ -477,7 +539,15 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
       airspeed_knots_to_radius(settings_->v_ne()),
       4,
       kSpeedLimitsRosetteHalfAngle,
-      0,
+      M_PI_4,
+      kVBackgroundStroke);
+  rosette(
+      screen_->cr(),
+      center,
+      airspeed_knots_to_radius(settings_->v_ne()),
+      4,
+      kSpeedLimitsRosetteHalfAngle,
+      M_PI_4,
       kVneStroke);
 }
 
@@ -501,7 +571,7 @@ void Display::paintAirballTrueAirspeed(const Point& center) {
       airspeed_to_radius(airdata_->smooth_ball().tas()),
       4,
       kTrueAirspeedRosetteHalfAngle,
-      0.25 * M_PI,
+      0,
       Stroke(
           kTasRingColor.with_alpha(tas_stroke_alpha),
           kTasRingStrokeWidth));

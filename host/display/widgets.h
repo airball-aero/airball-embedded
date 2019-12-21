@@ -158,7 +158,13 @@ enum TextReferencePoint {
   TOP_RIGHT,
   CENTER_LEFT_UPPERCASE,
   CENTER_RIGHT_UPPERCASE,
+  CENTER_MID_UPPERCASE,
 };
+
+Size text_size(
+    cairo_t* cr,
+    const std::string& str,
+    const Font& font);
 
 void text(
     cairo_t* cr,

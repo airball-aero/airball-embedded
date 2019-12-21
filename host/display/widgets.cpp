@@ -67,6 +67,7 @@ void arc(
     const double start_angle,
     const double end_angle,
     const Stroke& stroke) {
+  cairo_new_path(cr);
   cairo_arc(cr,
             center.x(),
             center.y(),
@@ -182,7 +183,18 @@ void shape(
   cairo_fill(cr);
 }
 
+Size text_size(
+    cairo_t* cr,
+    const std::string& str,
+    const Font& font) {
+  font.apply(cr);
+  cairo_text_extents_t extents;
+  cairo_text_extents (cr, str.c_str(), &extents);
+  return {extents.width, extents.height};
+}
+
 static constexpr double kUppercaseVerticalOffsetRatio = 0.375;
+
 
 void text(
     cairo_t* cr,
@@ -208,19 +220,25 @@ void text(
       break;
     case TOP_RIGHT:
     case CENTER_RIGHT_UPPERCASE:
-      cairo_text_extents_t extents;
-      cairo_text_extents (cr, str.c_str(), &extents);
+    case CENTER_MID_UPPERCASE:
+      Size size = text_size(cr, str, font);
       switch (ref) {
         case TOP_RIGHT:
           cairo_move_to(
               cr,
-              point.x() - extents.width,
+              point.x() - size.w(),
               point.y() + font.size());
           break;
         case CENTER_RIGHT_UPPERCASE:
           cairo_move_to(
               cr,
-              point.x() - extents.width,
+              point.x() - size.w(),
+              point.y() + kUppercaseVerticalOffsetRatio * font.size());
+          break;
+        case CENTER_MID_UPPERCASE:
+          cairo_move_to(
+              cr,
+              point.x() - size.w() / 2,
               point.y() + kUppercaseVerticalOffsetRatio * font.size());
           break;
       }
