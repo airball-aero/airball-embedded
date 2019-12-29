@@ -53,8 +53,6 @@ constexpr static std::chrono::duration<unsigned int, std::milli>
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kPaintDelay(33);
 
-constexpr static const char* kSettingsPath = "./airball-settings.json";
-
 template <class T>
 class InputQueue {
 public:
@@ -219,7 +217,7 @@ void Controller::run() {
   });
 
   std::thread paint_thread([&]() {
-    Settings settings(kSettingsPath);
+    Settings settings(Settings::kSettingsPath);
     SystemStatus status;
     Airdata airdata;
     Display display(screen_, &airdata, &settings, &status);
@@ -237,9 +235,9 @@ void Controller::run() {
         auto ad = dynamic_cast<const airdata_sample*>(d);
         if (ad != nullptr) {
           airdata.update(ad,
-              kPascalsPerInHg * settings.baro_setting(),
-              settings.ball_smoothing_factor(),
-              settings.vsi_smoothing_factor());
+                         kPascalsPerInHg * settings.baro_setting(),
+                         settings.ball_smoothing_factor(),
+                         settings.vsi_smoothing_factor());
         }
         status.update(d);
       }

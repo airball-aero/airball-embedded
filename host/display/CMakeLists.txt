@@ -30,7 +30,7 @@ add_library(airball_display
         controller.cpp screen.cpp user_input_source.cpp delay_timer.cpp
         aerodynamics.cpp fake_telemetry_client.cpp interpolation_table.cpp
         system_status.cpp device_keyboard_listener.cpp
-        log_reader_telemetry_client.cpp)
+        log_reader_telemetry_client.cpp image_screen.cpp)
 target_link_libraries(airball_display
         X11 cairo pthread
         airball_telemetry_client
@@ -44,6 +44,11 @@ target_link_libraries(ab
 add_executable(ab_device
         ab_device_main.cpp)
 target_link_libraries(ab_device
+        airball_display airball_telemetry_client)
+
+add_executable(replay
+        replay_main.cpp)
+target_link_libraries(replay
         airball_display airball_telemetry_client)
 
 add_executable(telemetry_to_airdata

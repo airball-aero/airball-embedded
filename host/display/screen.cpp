@@ -46,8 +46,6 @@ public:
 
   ~X11Screen();
 
-  int next_event() const;
-
   virtual cairo_t* cr() const override { return cr_; }
 
   virtual cairo_surface_t* cs() const override { return cs_; }
@@ -91,34 +89,11 @@ X11Screen::~X11Screen() {
   XCloseDisplay(dsp);
 }
 
-int X11Screen::next_event() const {
-  char keybuf[8];
-  KeySym key;
-  XEvent e;
-
-  XNextEvent(cairo_xlib_surface_get_display(cs_), &e);
-
-  switch (e.type) {
-    case ButtonPress:
-      printf("============== Got ButtonPress event\n");
-      return -e.xbutton.button;
-    case KeyPress:
-      XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
-      printf("============== Got event %s\n", keybuf);
-      return key;
-    default:
-      fprintf(stderr, "Dropping unhandled XEevent.type = %d.\n", e.type);
-      return key;
-  }
-}
-
 class FramebufferScreen : public Screen {
 public:
   FramebufferScreen();
 
   ~FramebufferScreen();
-
-  int next_event() const { return 0; }
 
   virtual cairo_t* cr() const override { return cr_; }
 

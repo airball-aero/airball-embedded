@@ -163,6 +163,8 @@ public:
    */
   void adjust_baro_setting_down();
 
+  constexpr static const char* kSettingsPath = "./airball-settings.json";
+
 private:
 
   void load();
@@ -175,7 +177,7 @@ private:
   void adjust_param_up(const Parameter* p);
   void adjust_param_down(const Parameter* p);
 
-    std::string path_;
+  std::string path_;
   std::map<const std::string, long int> values_;
   int adjusting_param_index_;
 };

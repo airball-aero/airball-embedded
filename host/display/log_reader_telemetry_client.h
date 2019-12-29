@@ -14,7 +14,8 @@ public:
   LogReaderTelemetryClient(
       const std::string& filename,
       const uint samples_per_second,
-      const uint start_sample);
+      const uint start_sample,
+      bool realtime);
   ~LogReaderTelemetryClient();
 
   std::unique_ptr<sample> get() override;
@@ -24,6 +25,7 @@ private:
   const std::chrono::system_clock::duration sample_interval;
   std::chrono::system_clock::time_point last_sample_time;
   const uint start_sample;
+  bool realtime_;
   bool skipped_start;
   std::ifstream input;
 };

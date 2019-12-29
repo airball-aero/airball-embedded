@@ -49,12 +49,6 @@ public:
   virtual cairo_surface_t* cs() const = 0;
 
   /**
-   * @deprecated this is X11 specific; use UserInputSource instead!!
-   * @return the next event.
-   */
-  virtual int next_event() const = 0;
-
-  /**
    * Creates a Screen that draws to an X11 window.
    *
    * @param x the X size of the window.
