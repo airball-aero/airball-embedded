@@ -116,7 +116,8 @@ int main(int argc, char **argv) {
           (new airball::LogReaderTelemetryClient(
               vm["telemetry_log_filename"].as<std::string>(),
               vm["telemetry_log_samples_per_second"].as<uint>(),
-              vm["telemetry_log_start_sample"].as<uint>()));
+              vm["telemetry_log_start_sample"].as<uint>(),
+              true));
     } else if (v == "xbee") {
       if (vm.count("telemetry_xbee_device") != 1) {
         std::cerr << "Option telemetry=probe requires telemetry_xbee_* options"
