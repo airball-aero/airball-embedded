@@ -55,7 +55,7 @@ public:
         return "battery";
     }
 
-    int snprintf(const char *str, size_t len) const {
+    virtual int snprintf(const char *str, size_t len) const {
         return std::snprintf((char *)str, len, "%s,%d,%ld,%.2f,%.2f,%.2f,%.2f",
                              format_time().c_str(), get_rssi(), seq, voltage, current, capacity_mAh, capacity_pct);
     }

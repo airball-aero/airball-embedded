@@ -52,7 +52,7 @@ public:
     std::chrono::time_point<std::chrono::system_clock> get_time() const { return time; }
     uint8_t get_rssi() const { return rssi; }
 
-    virtual int snprintf(const char *str, size_t len) {
+    virtual int snprintf(const char *str, size_t len) const {
         return std::snprintf((char *)str, len, "%s", format_time().c_str());
     };
 
