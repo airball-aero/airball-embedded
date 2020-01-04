@@ -48,7 +48,12 @@ std::unique_ptr<sample> LogReaderTelemetryClient::get() {
   if (!std::getline(input, line)) {
     return std::unique_ptr<sample>(nullptr);
   }
+
   auto all_fields = sample::split(line);
+  if (all_fields.size() != 8) {
+    return std::unique_ptr<sample>(nullptr);
+  }
+
   std::vector<std::string> sample_fields;
   sample_fields.emplace_back("$A");
   sample_fields.emplace_back("0");
