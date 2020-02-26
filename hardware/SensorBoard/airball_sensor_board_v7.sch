@@ -4010,6 +4010,9 @@ Pressure</text>
 <wire x1="175.26" y1="132.08" x2="175.26" y2="124.46" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="VIN"/>
 <wire x1="175.26" y1="124.46" x2="180.34" y2="124.46" width="0.1524" layer="91"/>
+<pinref part="MUX" gate="G$1" pin="#RESET"/>
+<wire x1="40.64" y1="124.46" x2="38.1" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="38.1" y1="124.46" x2="38.1" y2="160.02" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GND" class="1">
