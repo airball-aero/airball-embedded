@@ -1,0 +1,85 @@
+Partlist
+
+Exported from airball_sensor_board_v4.brd at 2/25/20 10:12 PM
+
+EAGLE Version 9.5.2 Copyright (c) 1988-2019 Autodesk, Inc.
+
+Assembly variant: 
+
+Part      Value               Package                Library             Position (mil)        Orientation
+
+BARO                          ALLSENSORS_E1BD        airball             (1562.5 375)          R270
+BM        DS2782              TSSOP8                 airball             (4725 825)            R0
+C1        0.1uF               0603                   SparkFun-Capacitors (1175 1425)           R180
+C2        0.1uF               0603                   SparkFun-Capacitors (1175 675)            R180
+C3        0.1uF               0603                   SparkFun-Capacitors (2425 1425)           R180
+C4        0.1uF               0603                   SparkFun-Capacitors (2425 675)            R180
+C5        0.1uF               0603                   SparkFun-Capacitors (3475 225)            R180
+C6        0.1uF               0603                   SparkFun-Capacitors (4875 425)            R180
+C7        10uF                EIA3216                SparkFun-Capacitors (4250 1287.5)         R270
+C8        1.0uF               0603                   SparkFun-Capacitors (4350 1287.5)         R90
+C9        0.1uF               0603                   SparkFun-Capacitors (4462.5 1287.5)       R90
+C10       22pF                0603                   SparkFun-Capacitors (3637.5 737.5)        R90
+C11       22pF                0603                   SparkFun-Capacitors (3287.5 737.5)        R270
+C12       1.0uF               0603                   SparkFun-Capacitors (3137.5 1187.5)       R270
+C13       1.0uF               0603                   SparkFun-Capacitors (3137.5 1412.5)       R270
+C14       0.1uF               0603                   SparkFun-Capacitors (3225 1412.5)         R270
+C15       0.1uF               0603                   SparkFun-Capacitors (3700 1412.5)         R270
+C16       10uF                EIA3216                SparkFun-Capacitors (4975 1037.5)         R90
+C17       10uF                EIA3216                SparkFun-Capacitors (687.5 750)           R270
+C18       10uF                EIA3216                SparkFun-Capacitors (837.5 750)           R270
+C19       10uF                EIA3216                SparkFun-Capacitors (987.5 750)           R270
+CC        MCP73831            SOT23-5                SparkFun-IC-Power   (4862.5 1175)         R0
+D1                            LED-0603               SparkFun-LED        (5000 162.5)          R0
+D2                            LED-0603               SparkFun-LED        (4800 162.5)          R0
+D3                            LED-0603               SparkFun-LED        (4587.5 162.5)        R0
+D4                            LED-0603               SparkFun-LED        (4387.5 162.5)        R0
+D5                            LED-0603               SparkFun-LED        (4175 162.5)          R0
+D6                            LED-0603               SparkFun-LED        (3975 162.5)          R0
+D7                            LED-0603               SparkFun-LED        (3775 162.5)          R0
+DP0                           ALLSENSORS_E1BD        airball             (1562.5 1125)         R270
+DPA                           ALLSENSORS_E1BD        airball             (2812.5 1125)         R270
+DPB                           ALLSENSORS_E1BD        airball             (2812.5 375)          R270
+EXT_OAT                       1X03                   SparkFun-Connectors (3912.5 1325)         R0
+EXT_POWER                     1X02                   SparkFun-Connectors (5137.5 1262.5)       R180
+EXT_SW                        1X02                   SparkFun-Connectors (5125 850)            R0
+F1        6V/0.5A             1206                   SparkFun-Fuses      (5137.5 1012.5)       R180
+F2        6V/0.5A             1206                   SparkFun-Fuses      (5125 712.5)          R0
+ICSP      AVR_SPI_PROG_3X2PTH 2X3                    SparkFun-Connectors (3912.5 1012.5)       R0
+J1                            JST-2-SMD              SparkFun-Connectors (4350 750)            MR270
+JP1       USB_MICROB_PLUG     USB_MICRO_B_TYCO       airball             (5437.5 1062.5)       R90
+MCU       32U4                TQFP44                 jcole               (3462.5 1150)         R0
+MUX                           TSSOP24                airball             (3475 425)            R270
+OAT       TMP275              SOIC8                  airball             (5337.5 387.5)        R270
+R1        4.7k                0603                   SparkFun-Resistors  (1175 1325)           R180
+R2        4.7k                0603                   SparkFun-Resistors  (1175 1225)           R180
+R3        4.7k                0603                   SparkFun-Resistors  (1175 575)            R180
+R4        4.7k                0603                   SparkFun-Resistors  (1175 475)            R180
+R5        4.7k                0603                   SparkFun-Resistors  (2425 1325)           R180
+R6        4.7k                0603                   SparkFun-Resistors  (2425 1225)           R180
+R7        4.7k                0603                   SparkFun-Resistors  (2425 575)            R180
+R8        4.7k                0603                   SparkFun-Resistors  (2425 475)            R180
+R9        4.7k                0603                   SparkFun-Resistors  (4825 562.5)          R270
+R10       4.7k                0603                   SparkFun-Resistors  (4925 562.5)          R270
+R11       1k                  0603                   SparkFun-Resistors  (4537.5 737.5)        R180
+R12       470                 0603                   SparkFun-Resistors  (4537.5 662.5)        R180
+R13       15m                 1206                   SparkFun-Resistors  (4937.5 837.5)        R0
+R14       4.7k                0603                   SparkFun-Resistors  (3962.5 1425)         R180
+R15       2.0k                0603                   SparkFun-Resistors  (4737.5 1200)         R90
+R16       4.7k                0603                   SparkFun-Resistors  (3687.5 875)          R270
+R17       4.7k                0603                   SparkFun-Resistors  (3787.5 875)          R270
+R18       330                 0603                   SparkFun-Resistors  (4800 275)            R0
+R19       22                  0603                   SparkFun-Resistors  (5137.5 1375)         R180
+R20       22                  0603                   SparkFun-Resistors  (5137.5 1437.5)       R180
+R21       4.7k                0603                   SparkFun-Resistors  (3850 450)            R0
+R22       4.7k                0603                   SparkFun-Resistors  (3850 537.5)          R0
+R23       10k                 0603                   SparkFun-Resistors  (3312.5 850)          R180
+R24       330                 0603                   SparkFun-Resistors  (4587.5 275)          R0
+R25       330                 0603                   SparkFun-Resistors  (4387.5 275)          R0
+R26       330                 0603                   SparkFun-Resistors  (4175 275)            R0
+R27       330                 0603                   SparkFun-Resistors  (3975 275)            R0
+R28       330                 0603                   SparkFun-Resistors  (3775 275)            R0
+S1                            SWITCH_SPST_SMD_A      SparkFun-Switches   (5425 687.5)          R270
+VREG      LT1963              SOT223-3               airball             (4450 1075)           R90
+XBEE      XBEE-PRO-SMD        XBEE-PRO-SMD           airball             (975 750)             MR90
+Y1        8MHz                CRYSTAL-SMD-5X3.2-4PAD SparkFun-Clocks     (3462.5 737.5)        R0
