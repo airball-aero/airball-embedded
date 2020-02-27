@@ -24,6 +24,9 @@ XBee radio(&Serial1);
 // Which pin is the TCA9548A reset pin tied to?
 #define MUX_RESET 4
 
+// Whether to perform autozero
+#define PERFORM_AUTOZERO true
+
 // I2C mux channels for the various sensors
 #define MUX_CHANNEL_DP0       0
 #define MUX_CHANNEL_DPA       1
@@ -229,7 +232,7 @@ unsigned long oat_measurement_count = 0;
 float oat;
 
 unsigned long autozero_count = 0;
-bool autozero_complete = false;
+bool autozero_complete = !PERFORM_AUTOZERO;
 
 float offset_dp0 = 0;
 float offset_dpA = 0;
@@ -274,6 +277,9 @@ void read_airdata() {
     }
     autozero_count++;
   }
+
+  // dp0 should physically never be negative, so we clamp it
+  if (dp0 < 0) { dp0 = 0; }
 
   send_air_data_sentence(
     airdata_seq++,
