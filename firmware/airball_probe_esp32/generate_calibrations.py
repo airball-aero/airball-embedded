@@ -197,12 +197,12 @@ def generate_file(fileprefix, raw2data):
     dp_alpha_min = -dp_range
     dp_alpha_max = dp_range
     dp_alpha_zero_offset = dp_range
-    n_alpha = int(((dp_alpha_max - dp_alpha_min) / dp_step) + 1)
+    n_alpha = int(round((dp_alpha_max - dp_alpha_min) / dp_step) + 1)
     
     dp_beta_min = 0.0
     dp_beta_max = dp_range
     dp_beta_zero_offset = 0.0
-    n_beta = int(((dp_beta_max - dp_beta_min) / dp_step) + 1)
+    n_beta = int(round((dp_beta_max - dp_beta_min) / dp_step) + 1)    
 
     for i in range(0, n_alpha):
         dpa = dp_alpha_min + dp_step * i

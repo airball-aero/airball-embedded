@@ -15,7 +15,7 @@
       .zero_offset = {{s.y.zero_offset}},
     },
     .data = (float[]) {
-      {% for v in s.data %}{{v}}, {% endfor %}
+      {% for v in s.data %}{{v}}f, {% endfor %}
     },
   };
 {% endfor %}

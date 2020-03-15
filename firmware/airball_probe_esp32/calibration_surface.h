@@ -1,6 +1,8 @@
 #ifndef CALIBRATION_SURFACE_H
 #define CALIBRATION_SURFACE_H
 
+#include <stdint.h>
+
 #if defined(__cplusplus)
 extern "C"
 {
