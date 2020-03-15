@@ -159,13 +159,11 @@ def plot_calibration(file_prefix, var_name, nx, ny, linear_data):
     xx, yy = np.meshgrid(xx, yy)
 
     gridded_data = []
-    k = 0;
-    for i in range(0, nx):
-        y_row = []
-        for j in range(0, ny):
-            y_row.append(linear_data[k])
-            k = k + 1
-        gridded_data.append(y_row)
+    for i in range(0, ny):
+        x_row = []
+        for j in range(0, nx):
+            x_row.append(linear_data[i + ny * j])
+        gridded_data.append(x_row)
 
     title = file_prefix + "_" + var_name
         
@@ -187,31 +185,37 @@ def plot_calibration(file_prefix, var_name, nx, ny, linear_data):
 
 # Generate a calibration data file for a given probe design
 
+dp_range = 1.40   # The absolute maximum for (dpx/dp0) we expect
+dp_step  = 0.05   # The step of (dpx/dp0) to generate precise data points
+
 def generate_file(fileprefix, raw2data):
     
     data_alpha = []
     data_beta = []
     data_q_over_dp0 = []
 
-    dp_min = -1.25
-    dp_max = 1.25
-    dp_step = 0.05
-    dp_zero_offset = 1.25
+    dp_alpha_min = -dp_range
+    dp_alpha_max = dp_range
+    dp_alpha_zero_offset = dp_range
+    n_alpha = int(((dp_alpha_max - dp_alpha_min) / dp_step) + 1)
+    
+    dp_beta_min = 0.0
+    dp_beta_max = dp_range
+    dp_beta_zero_offset = 0.0
+    n_beta = int(((dp_beta_max - dp_beta_min) / dp_step) + 1)
 
-    n = int(((dp_max - dp_min) / dp_step) + 1)
-
-    for i in range(0, n):
-        dpa = dp_min + dp_step * i
-        for j in range(0, n):
-            dpb = dp_min + dp_step * j
+    for i in range(0, n_alpha):
+        dpa = dp_alpha_min + dp_step * i
+        for j in range(0, n_beta):
+            dpb = dp_beta_min + dp_step * j
             [alpha, beta, q_over_dp0] = raw2data(1, dpa, dpb)
-            data_alpha.append(alpha);
-            data_beta.append(beta);
+            data_alpha.append(math.degrees(alpha));
+            data_beta.append(math.degrees(beta));
             data_q_over_dp0.append(q_over_dp0)
 
-    plot_calibration(fileprefix, "alpha", n, n, data_alpha)
-    plot_calibration(fileprefix, "beta", n, n, data_beta)
-    plot_calibration(fileprefix, "q_over_dp0", n, n, data_q_over_dp0)    
+    plot_calibration(fileprefix, "alpha", n_alpha, n_beta, data_alpha)
+    plot_calibration(fileprefix, "beta", n_alpha, n_beta, data_beta)
+    plot_calibration(fileprefix, "q_over_dp0", n_alpha, n_beta, data_q_over_dp0)    
             
     outfile = open(fileprefix + '_calibration.h', 'w')
             
@@ -221,42 +225,42 @@ def generate_file(fileprefix, raw2data):
             'alpha': {
                 'comment': 'Alpha as a function of (dpa/dp0, dpb/dp0)',
                 'x': {
-                    'size': n,
+                    'size': n_alpha,
                     'step': dp_step,
-                    'zero_offset': dp_zero_offset,
+                    'zero_offset': dp_alpha_zero_offset,
                 },
                 'y': {
-                    'size': n,
+                    'size': n_beta,
                     'step': dp_step,
-                    'zero_offset': dp_zero_offset,
+                    'zero_offset': dp_beta_zero_offset,
                 },
                 'data': data_alpha,
             },
             'beta': {
                 'comment': 'Beta as a function of (dpa/dp0, dpb/dp0)',
                 'x': {
-                    'size': n,
+                    'size': n_alpha,
                     'step': dp_step,
-                    'zero_offset': dp_zero_offset,
+                    'zero_offset': dp_alpha_zero_offset,
                 },
                 'y': {
-                    'size': n,
+                    'size': n_beta,
                     'step': dp_step,
-                    'zero_offset': dp_zero_offset,
+                    'zero_offset': dp_beta_zero_offset,
                 },
                 'data': data_beta,
             },
             'q_over_dp0': {
                 'comment': 'q/dp0 as a function of (dpa/dp0, dpb/dp0)',
                 'x': {
-                    'size': n,
+                    'size': n_alpha,
                     'step': dp_step,
-                    'zero_offset': dp_zero_offset,
+                    'zero_offset': dp_alpha_zero_offset,
                 },
                 'y': {
-                    'size': n,
+                    'size': n_beta,
                     'step': dp_step,
-                    'zero_offset': dp_zero_offset,
+                    'zero_offset': dp_beta_zero_offset,
                 },
                 'data': data_q_over_dp0,
             },
