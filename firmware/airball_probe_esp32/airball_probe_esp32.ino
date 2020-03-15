@@ -5,6 +5,7 @@
 
 void setup() {
   Serial.begin(115200);
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 
@@ -20,6 +21,11 @@ void update_dp() {
     dp = dp_min;
   }
 }
+
+constexpr int blink_interval = 15;
+
+int n = 0;
+bool state = false;
 
 void loop() {
   int err = 0;
@@ -43,6 +49,13 @@ void loop() {
   Serial.println();
 
   update_dp();
+
+  n++;
+  if (n > blink_interval) {
+    n = 0;
+    digitalWrite(LED_BUILTIN, state ? HIGH : LOW);
+    state = !state;
+  }
 
   delay(5);
 }
