@@ -1,0 +1,21 @@
+#include "calibration_surface.h"
+
+{% for name in structs %}
+  {% set s = structs[name] %}
+  // {{s.comment}}
+  const calibration_surface {{fileprefix}}_{{name}} = {
+    .x = {
+      .size = {{s.x.size}},
+      .step = {{s.x.step}},
+      .zero_offset = {{s.x.zero_offset}},
+    },
+    .y = {
+      .size = {{s.y.size}},
+      .step = {{s.y.step}},
+      .zero_offset = {{s.y.zero_offset}},
+    },
+    .data = (float[]) {
+      {% for v in s.data %}{{v}}, {% endfor %}
+    },
+  };
+{% endfor %}
