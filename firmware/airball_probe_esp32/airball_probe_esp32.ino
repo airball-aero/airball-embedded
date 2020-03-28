@@ -8,10 +8,12 @@
 #include <WiFiUdp.h>
 #include <WiFiClient.h>
 #include <WiFiAP.h>
+#include <vector>
 
 #include "calibration_surface.h"
 #include "v2_probe_calibration.h"
 #include "pressures_to_airdata.h"
+#include "metric.h"
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -21,24 +23,37 @@ char data_sentence_buffer[1024];
 
 ////////////////////////////////////////////////////////////////////////
 //
-// WiFi base station with sensor readings sent over UDP
+// WiFi base station with sensor readings sent over TCP
 
-#define WIFI_SSID     "ProbeOnAStick"
-#define WIFI_UDP_PORT 3333
+#define WIFI_SSID "ProbeOnAStick"
+#define WIFI_PORT 80
 
-WiFiUDP udp;
-IPAddress wifi_broadcast_ip;
+WiFiServer wifi_server(WIFI_PORT);
+std::vector<WiFiClient> wifi_clients;
 
 void wifi_begin() {
   WiFi.softAP(WIFI_SSID, "");
-  wifi_broadcast_ip = WiFi.broadcastIP();
+  wifi_server.begin();
 }
 
-
 void wifi_send(const char* sentence) {
-  udp.beginPacket(wifi_broadcast_ip, WIFI_UDP_PORT);
-  udp.print(sentence);
-  udp.endPacket();
+  while (true) {
+    WiFiClient client = wifi_server.available();
+    if (client) {
+      wifi_clients.push_back(client);
+    } else {
+      break;
+    }
+  }
+
+  for (auto it = wifi_clients.begin() ; it != wifi_clients.end(); ) {
+    if (it->connected()) {
+      it->printf("%s\n", sentence);
+      ++it;
+    } else {
+      wifi_clients.erase(it);
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -177,6 +192,8 @@ void airdata_begin() {
   thermometer_begin();
 }
 
+long airdata_count = 0L;
+
 void airdata_read_and_send() {
   pressures p = pressures_read();
   float baro = barometer_read();
@@ -196,7 +213,9 @@ void airdata_read_and_send() {
   }
 
   sprintf(data_sentence_buffer,
-	  "$AR,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f",
+	  "$AR,%ld,%ld,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f",
+	  airdata_count++,
+	  millis(),
 	  airdata.alpha,   // alpha TODO(ihab): degrees
 	  airdata.beta,    // beta  TODO(ihab): degrees
 	  airdata.q,       // q
@@ -215,7 +234,7 @@ void airdata_read_and_send() {
 #define BATTERY_CAPACITY_MAH 3400
 
 // How many airdata samples per battery sample?
-#define BATTERY_MEASUREMENT_INTERVAL 20
+#define BATTERY_MEASUREMENT_INTERVAL 50
 
 // Initialize our sensor
 BQ27441 battery_sensor;
@@ -234,7 +253,7 @@ void battery_read_and_send() {
   battery_measurement_count = 0;
   
   sprintf(data_sentence_buffer,
-	  "$B,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f",
+	  "$B,%10.6f,%10.6f,%10.6f,%10.6f",
 	  (float) battery_sensor.voltage(),
 	  (float) battery_sensor.current(),
 	  (float) battery_sensor.capacity(),
@@ -244,35 +263,70 @@ void battery_read_and_send() {
 
 ////////////////////////////////////////////////////////////////////////
 //
-// Central measurement function
+// Metrics
+
+#define METRICS_REPORTING_INTERVAL 100
+
+void metrics_begin() {}
+
+Metric metrics_looptime;
+Metric metrics_loopint;
+
+long metrics_last_loop_start = 0L;
+long metrics_this_loop_start = 0L;
+
+long metrics_count = 0L;
+
+void metrics_loop_start() {
+  long t = micros();
+  if (metrics_last_loop_start == 0L) {
+    metrics_last_loop_start = t;
+  } else {
+    metrics_loopint.add(t - metrics_last_loop_start);
+    metrics_last_loop_start = t;
+  }
+  metrics_this_loop_start = t;
+}
+
+void metrics_loop_end() {
+  metrics_looptime.add(micros() - metrics_this_loop_start);
+  if (++metrics_count > METRICS_REPORTING_INTERVAL) {
+    sprintf(data_sentence_buffer, "$M,looptime,%s", metrics_looptime.str());
+    wifi_send(data_sentence_buffer);
+    sprintf(data_sentence_buffer, "$M,loopint,%s", metrics_loopint.str());
+    wifi_send(data_sentence_buffer);
+    metrics_count = 0L;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////
 //
+// Central measurement function
 
 void measurements_begin() {
   wifi_begin();
   airdata_begin();
   battery_begin();
+  metrics_begin();
 }
 
 void measurements_read_and_send() {
-  int begin = millis();  
   airdata_read_and_send();
   battery_read_and_send();
-  int dur = millis() - begin;
-  sprintf(data_sentence_buffer, "DUR:%d", dur);
-  wifi_send(data_sentence_buffer);
 }
 
 ////////////////////////////////////////////////////////////////////////
 //
 // Arduino entry points
-//
 
-hw_timer_t * timer = NULL;
-volatile SemaphoreHandle_t timerSemaphore;
-portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
+hw_timer_t *timer = NULL;
+portMUX_TYPE timer_mux = portMUX_INITIALIZER_UNLOCKED;
+bool timer_start_measurement = false;
 
-void onTimer() {
-  xSemaphoreGiveFromISR(timerSemaphore, NULL);
+void timer_fired() {
+  portENTER_CRITICAL(&timer_mux);
+  timer_start_measurement = true;
+  portEXIT_CRITICAL(&timer_mux);
 }
 
 // Speed of the I2C bus
@@ -281,12 +335,9 @@ void onTimer() {
 // How frequently (in uS) should measurements be taken?
 #define MEASUREMENT_INTERVAL_US 50000 // 50 ms = 20 Hz
 
-#define CYCLE_LED 0x02
-
 void setup() {
-  // Initialize the LED for signaling the event loop
-  pinMode(CYCLE_LED, OUTPUT);
-
+  Serial.begin(115200);
+  
   // Initialize the SPI bus
   SPI.begin();
   
@@ -297,24 +348,30 @@ void setup() {
   measurements_begin();
   
   // Create semaphore to inform us when the timer has fired
-  timerSemaphore = xSemaphoreCreateBinary();
+  // timerSemaphore = xSemaphoreCreateBinary();
 
   // Use 1st timer of 4 (counted from zero).
   // Set 80 divider for prescaler (see ESP32 Technical Reference Manual
   // for more info).
   timer = timerBegin(0, 80, true);
-  timerAttachInterrupt(timer, &onTimer, true);
+  timerAttachInterrupt(timer, &timer_fired, true);
   timerAlarmWrite(timer, MEASUREMENT_INTERVAL_US, true);
   timerAlarmEnable(timer);
 }
 
-// State of the builtin LED, which we toggle each time we measure
-bool led_state = false;
-
 void loop() {
-  if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE){
+  bool measure = false;
+  
+  portENTER_CRITICAL(&timer_mux);
+  if (timer_start_measurement) {
+    measure = true;
+    timer_start_measurement = false;
+  }
+  portEXIT_CRITICAL(&timer_mux);
+  
+  if (measure) {
+    metrics_loop_start();
     measurements_read_and_send();
-    digitalWrite(CYCLE_LED, led_state ? HIGH : LOW);
-    led_state = !led_state;
+    metrics_loop_end();
   }
 }
