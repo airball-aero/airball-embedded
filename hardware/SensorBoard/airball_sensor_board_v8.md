@@ -1,5 +1,9 @@
 # Airball Sensor Board V8 design
 
+## Eagle files
+
+Files for the *main* board are `airball_sensor_board_v8_main.*` in this directory. The temperature sensor daughter board is a simple 4-connector I2C sensor breakout and is not yet designed.
+
 ## Introduction for electronic designers
 
 Airball is a hobbyist-grade prototype airplane instrument. It comes in two parts: (a) a probe, which sits outside the airplane and measures information about the airflow; and (b) a display, which is typically a Raspberry Pi with some screen and which shows a visualization. The sensor board is the heart of the probe.
