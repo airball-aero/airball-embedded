@@ -5264,6 +5264,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="D4" library="SparkFun-LED" deviceset="LED-RED" device="0603" value="RED"/>
 <part name="R19" library="SparkFun-Resistors" deviceset="10KOHM-1/10W-1%(0603)" device="0603" value="750"/>
 <part name="GND32" library="SparkFun-PowerSymbols" deviceset="GND" device=""/>
+<part name="FRAME1" library="SparkFun-Aesthetics" deviceset="FRAME-LETTER" device=""/>
+<part name="FRAME2" library="SparkFun-Aesthetics" deviceset="FRAME-LETTER" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5287,7 +5289,6 @@ designed by Jim Lindblom.</text>
 <wire x1="251.46" y1="0" x2="-2.54" y2="0" width="0.1524" layer="94"/>
 <text x="167.64" y="17.78" size="3.81" layer="94">Airball Sensor Board</text>
 <text x="170.18" y="7.62" size="3.81" layer="94">Ihab Awad</text>
-<text x="242.57" y="6.35" size="3.81" layer="94">8</text>
 <text x="17.78" y="60.96" size="1.778" layer="94">C1 is 1206 50V
 Cap for USB
 input only</text>
@@ -5296,6 +5297,7 @@ Sense Resistor</text>
 <text x="152.4" y="91.44" size="1.778" layer="94">D1 = Charging
 D2 = USB power available
 D3 = System powered on</text>
+<text x="242.57" y="6.35" size="3.81" layer="94">8</text>
 </plain>
 <instances>
 <instance part="GND13" gate="1" x="45.72" y="116.84" smashed="yes">
@@ -5454,6 +5456,7 @@ D3 = System powered on</text>
 <instance part="GND31" gate="1" x="233.68" y="116.84" smashed="yes">
 <attribute name="VALUE" x="231.14" y="114.3" size="1.778" layer="96"/>
 </instance>
+<instance part="FRAME2" gate="V" x="149.86" y="0" smashed="yes"/>
 </instances>
 <busses>
 </busses>
@@ -5876,6 +5879,7 @@ D3 = System powered on</text>
 <instance part="GND26" gate="1" x="104.14" y="66.04" smashed="yes">
 <attribute name="VALUE" x="101.6" y="63.5" size="1.778" layer="96"/>
 </instance>
+<instance part="FRAME1" gate="V" x="152.4" y="0" smashed="yes"/>
 </instances>
 <busses>
 </busses>

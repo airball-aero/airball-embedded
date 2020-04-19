@@ -1,27 +1,83 @@
-# Airball Sensor Board V8 design notes
+# Airball Sensor Board V8 design
+
+## Introduction for electronic designers
+
+Airball is a hobbyist-grade prototype airplane instrument. It comes in two parts: (a) a probe, which sits outside the airplane and measures information about the airflow; and (b) a display, which is typically a Raspberry Pi with some screen and which shows a visualization. The sensor board is the heart of the probe.
+
+The probe should look something like what is depicted in [this image](https://1.bp.blogspot.com/-OLFawE1X7NM/XpIvrAzd_8I/AAAAAAABbs8/Q8uxKjxnw9wugAqE_rUAlVgNzELpOufewCLcBGAsYHQ/s1600/toplevel_assy%2B%25286%2529.png), though details of the design change frequently.
+
+The probe measures pressures impinging on holes in the surface of some 3D printed parts, and uses these to infer data about the airflow. It also measures barometric pressure, and the temperature of the air. It does some really simple math, and then sends out the data over WiFi.
+
+The design requirements of the probe, and by corollary the sensor board, are:
+
+* Can be made from scratch from Open Source designs using 3D printing and hobbyist-accessible electronics fabrication.
+* Can be inexpensively built into a kit. The kit should require zero soldering on the part of the kit builder.
+* Battery powered and rechargeable.
+* Can be programmed by a hobbyist using an Arduino IDE; it should show up as some kind of "Arduino dev board" that just happens to have some extra sensors attached to it.
+
+This has led us to impose the following specific design constraints on the board:
+
+* Mostly single sided PCB for inexpensive and easy design.
+* Components that are not simple, single-sided SMT parts can be easily added on in a "post manufacture" step in a workshop.
+* Battery charging circuit built in.
+* USB interface circuit to the microprocessor built in.
 
 ## Overall design
 
-The design involves a main board that contains:
+The following are high-level design decisions we have made. The circuit has been prototyped and shown to work as required in [this blog post](http://www.airball.aero/2020/03/esp32-probe-ongoing-programming.html). The picture in the posting shows the breakout boards and dev boards required to prototype the system. The design we are creating right now merely integrates these components onto one compact SMT board that does not have the soldering and wiring, which in our experience tends to loosen when put into the high vibration environment of an airplane.
 
-1. 18650 battery, battery charger, and I2C battery fuel gauge
-1. ESP32-WROOM-32U microcontroller and Wi-Fi module
-1. Three Honeywell SPI HSC digital pressure sensors
-1. One Bosch BMP388 I2C digital barometer
+### Microcontroller
 
-This connects via a 4 conductor I2C pin header to a daughterboard that contains:
+We are using an [ESP32-WROOM-32U](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32d_esp32-wroom-32u_datasheet_en.pdf) microcontroller. We are specifically choosing the model with the u.FL antenna connector so that we have flexibility to use whatever sort of antenna we want.
 
-1. TI TMP102 I2C digital thermometer
+### USB interface to microcontroller
 
-The battery charging circuitry is based on the [Sparkfun Battery Babysitter](https://www.sparkfun.com/products/13777) product.
+We are copying the [ESP32-DevKitC](https://www.espressif.com/en/products/hardware/esp32-devkitc/overview) circuitry for USB. In so doing, we are using a [SiLabs CP2102](https://www.silabs.com/documents/public/data-sheets/CP2102-9.pdf) USB-to-serial chip, and a small transistor network.
+
+### Power supply
+
+We are using a high capacity (3.2 Ah or more) 18650 Li-Ion battery, having verified that it gives us the necessary battery life (more than 12 hours, or "all day", with very conservative use).
+
+Our battery charging circuitry is a copy of the [Sparkfun Battery Babysitter](https://www.sparkfun.com/products/13777). Our battery charger copies the Sparkfun product and is a [TI BQ24075](http://www.ti.com/lit/ds/slusau3b/slusau3b.pdf). Also as with the Sparkfun product, we use [TI BQ27441-G1](https://www.ti.com/lit/ds/symlink/bq27441-g1.pdf) I2C battery fuel gauge. We connect this to the microcontroller's I2C bus so we can send battery life information over WiFi.
+
+### Pressure sensors
+
+We need to measure three differential pressures. For this, we have chosen [Honeywell TruStability HSC Series](https://sensing.honeywell.com/honeywell-sensing-trustability-hsc-series-high-accuracy-board-mount-pressure-sensors-50099148-a-en.pdf) sensors. The electronically important aspects of these are that the ones we chose operate at 3.3V and have a SPI interface. Since they do not accept any data from the SPI bus master, they do not have a MISO pin -- only MOSI and SCLK. These chips have connectors for small hoses, which we will use to connect them to the proper parts of the outside of the probe.
+
+### Barometer
+
+To measure barometric pressure, we use a [Bosch BMP388](https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/pressure-sensors-bmp388.html) chip mounted to the board. In order to feed it the exact correct pressure, we will create a 3D printed "cap" on top of it, screwed to the PCB, that will attach to a hose that goes to the correct location on the outside of the probe. We connect to the barometer using I2C.
+
+### Thermometer
+
+To measure air temperature, we use a [TI TMP102](https://www.ti.com/lit/ds/symlink/tmp102.pdf) thermometer mounted on a daughterboard that sticks it outside in the airflow. Our main board contains a series of I2C pinouts on an 0.1" header to facilitate this.
+
+### User interface
+
+We provide a USB-C port for charging and programming, and an ON/OFF switch following the recommendations of the battery charger chip's data sheet.
+
+We provide 4 LEDs, corresponding to the following signals:
+
+* USB input voltage available
+* Battery charging
+* System power on
+* Microcontroller activity (one LED available for use by programs)
+
+## Design notes
+
+### Part selection
+
+**Unless specified**, we standardize on the following to minimize unique parts count:
+
+* 0805 10V capacitors
+* 0603 1% resistors
+* [0603 2 mA 1.8V LEDs](https://www.mouser.com/Optoelectronics/LED-Lighting/LED-Emitters/Standard-LEDs-SMD/_/N-b1bb1?P=1yzvlkxZ1yopobeZ1yuo9ge)
 
 ## Power and battery charging circuit
 
 The battery  charger is a TI [BQ24075](http://www.ti.com/lit/ds/slusau3b/slusau3b.pdf). We are using the BQ24075 (as opposed to its sibling devices) because (a) it is what's used on the Sparkfun product; and (b) so that we can have the SYSOFF feature which gives us a convenient on/off switch.
 
-The SparkFun design uses one 1206 50V cap to decouple the USB input voltage, while other caps are all 0805 10V, or one 0603 with unspecified voltage limits. Apart from the one input cap, we will standardize on 0805 10V caps for all our work to minimize unique parts count. For the same reason, we will standardize on 0603 resistors with 1% tolerance for all our resistors except where we need something special.
-
-We standardize on [2 mA 1.8V 0603 LEDs](https://www.mouser.com/Optoelectronics/LED-Lighting/LED-Emitters/Standard-LEDs-SMD/_/N-b1bb1?P=1yzvlkxZ1yopobeZ1yuo9ge) everywhere.
+The SparkFun design uses one 1206 50V cap to decouple the USB input voltage, while other caps are all 0805 10V, or one 0603 with unspecified voltage limits.
 
 We follow Figure 41 in the data sheet to construct a "standalone battery charger".  We choose:
 
@@ -53,5 +109,27 @@ This completes the battery and power circuitry. If we include the SYSOFF switch 
 * Power: GND, VCC
 * I2C: SDA, SCL
 
----
+### USB interface
 
+The USB interface and transistors are designed as a copy of the [ESP32-DevKitC](https://www.espressif.com/en/products/hardware/esp32-devkitc/overview). We duplicate the transistor network from the ESP32-DevKitC that allows a programmer on the USB side to reset the microcontroller by manipulating the DTR and RTS lines. We have added an ESD protection diode array per the recommendations of the TI CP2102 data sheet.
+
+### Microcontroller
+
+The microcontroller installation is straightforward. We have added decoupling caps for VCC following the recommendations of the data sheet.
+
+### Pressure sensors
+
+The Honeywell pressure sensors are mounted in straighforward fashion.
+
+### Barometer
+
+The barometer is straightforward, and connects to the system's I2C bus.
+
+### LEDs
+
+Where appropriate, we have followed the data sheet recommendations for how to wire LEDs to the charger system. For the remaining two, we have:
+
+* One LED from VCC go GND, indicating system power on.
+* One LED from a microcontroller's GPIO to GND, for use by programs.
+
+In both of these cases we have computed a series resistance of 750 Ω for each LED, given the specs of the LEDs we are using and assuming that the input in both cases is exactly 3.3 V.
