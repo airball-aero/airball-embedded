@@ -52,7 +52,7 @@ Our battery charging circuitry is a copy of the [Sparkfun Battery Babysitter](ht
 
 ### Pressure sensors
 
-We need to measure three differential pressures. For this, we have chosen [Honeywell TruStability HSC Series](https://sensing.honeywell.com/honeywell-sensing-trustability-hsc-series-high-accuracy-board-mount-pressure-sensors-50099148-a-en.pdf) sensors. The electronically important aspects of these are that the ones we chose operate at 3.3V and have a SPI interface. Since they do not accept any data from the SPI bus master, they do not have a MISO pin -- only MOSI and SCLK. These chips have connectors for small hoses, which we will use to connect them to the proper parts of the outside of the probe.
+We need to measure three differential pressures. For this, we have chosen [Honeywell TruStability HSC Series](https://sensing.honeywell.com/honeywell-sensing-trustability-hsc-series-high-accuracy-board-mount-pressure-sensors-50099148-a-en.pdf) sensors. The electronically important aspects of these are that the ones we chose operate at 3.3V and have a SPI interface. Since they do not accept any data from the SPI bus master, they do not have a MOSI pin -- only MISO and SCLK. These chips have connectors for small hoses, which we will use to connect them to the proper parts of the outside of the probe.
 
 ### Barometer
 
