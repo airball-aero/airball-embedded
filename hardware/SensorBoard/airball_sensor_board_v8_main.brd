@@ -2005,7 +2005,6 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 </polygon>
 <via x="14.9225" y="11.43" extent="1-16" drill="0.35"/>
 <via x="16.51" y="3.01625" extent="1-16" drill="0.35"/>
-<wire x1="16.3975" y1="11.18" x2="16.03095" y2="11.18" width="0.3048" layer="1"/>
 <via x="14.44625" y="11.90625" extent="1-16" drill="0.35"/>
 <via x="15.39875" y="11.90625" extent="1-16" drill="0.35"/>
 <via x="14.44625" y="10.95375" extent="1-16" drill="0.35"/>
@@ -2014,8 +2013,6 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <wire x1="16.3677" y1="11.1502" x2="15.835725" y2="11.1502" width="0.3048" layer="1"/>
 <wire x1="15.639275" y1="10.95375" x2="15.39875" y2="10.95375" width="0.3048" layer="1"/>
 <wire x1="15.835725" y1="11.1502" x2="15.639275" y2="10.95375" width="0.3048" layer="1"/>
-<wire x1="14.9225" y1="11.43" x2="14.6427" y2="11.7098" width="0.3048" layer="1"/>
-<wire x1="14.009275" y1="11.6502" x2="14.705725" y2="10.95375" width="0.3048" layer="1"/>
 <wire x1="14.705725" y1="10.95375" x2="15.39875" y2="10.95375" width="0.3048" layer="1"/>
 <wire x1="10.542725" y1="1.5903" x2="9.2298" y2="2.903225" width="0.3048" layer="1"/>
 <via x="8.89" y="32.22625" extent="1-16" drill="0.35"/>
@@ -2048,24 +2045,14 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <wire x1="16.3975" y1="12.18" x2="16.3841" y2="12.1666" width="0.3048" layer="1"/>
 <wire x1="16.3841" y1="12.1666" x2="16.2914" y2="12.1666" width="0.3048" layer="1"/>
 <wire x1="16.2914" y1="12.1666" x2="16.275" y2="12.1502" width="0.3048" layer="1"/>
-<wire x1="16.275" y1="12.1502" x2="16.1925" y2="12.1502" width="0.3048" layer="1"/>
 <via x="16.51" y="13.0175" extent="1-16" drill="0.35"/>
 <wire x1="15.41" y1="2.025" x2="16.430625" y2="3.045625" width="0.3048" layer="1"/>
 <wire x1="16.430625" y1="3.045625" x2="16.430625" y2="3.254375" width="0.3048" layer="1"/>
-<wire x1="15.8066" y1="9.43556875" x2="15.93306875" y2="9.3091" width="0.3048" layer="1"/>
-<wire x1="15.93306875" y1="9.3091" x2="16.11193125" y2="9.3091" width="0.3048" layer="1"/>
-<wire x1="19.369275" y1="10.0173" x2="19.5627" y2="10.210725" width="0.3048" layer="1"/>
-<wire x1="21.7427" y1="14.363225" x2="21.7427" y2="15.636775" width="0.3048" layer="1"/>
-<wire x1="21.7427" y1="15.636775" x2="21.549275" y2="15.8302" width="0.3048" layer="1"/>
-<wire x1="16.11193125" y1="9.3091" x2="16.82013125" y2="10.0173" width="0.3048" layer="1"/>
-<wire x1="16.82013125" y1="10.0173" x2="19.369275" y2="10.0173" width="0.3048" layer="1"/>
-<wire x1="19.5627" y1="10.210725" x2="19.5627" y2="12.183225" width="0.3048" layer="1"/>
-<wire x1="19.5627" y1="12.183225" x2="21.7427" y2="14.363225" width="0.3048" layer="1"/>
-<wire x1="15.6725" y1="9.955" x2="15.8066" y2="9.8209" width="0.3048" layer="1"/>
-<wire x1="15.8066" y1="9.8209" x2="15.8066" y2="9.43556875" width="0.3048" layer="1"/>
-<wire x1="14.402175" y1="11.7098" x2="15.158225" y2="10.95375" width="0.3048" layer="1"/>
 <wire x1="15.158225" y1="10.95375" x2="15.39875" y2="10.95375" width="0.3048" layer="1"/>
-<wire x1="21.549275" y1="15.8302" x2="19.0475" y2="15.8302" width="0.3048" layer="1"/>
+<wire x1="15.6725" y1="9.955" x2="15.6725" y2="10.43125" width="0.1778" layer="1"/>
+<wire x1="15.6725" y1="10.43125" x2="15.655459375" y2="10.414209375" width="0.1778" layer="1"/>
+<wire x1="14.9225" y1="11.14716875" x2="14.9225" y2="11.43" width="0.1778" layer="1"/>
+<wire x1="15.655459375" y1="10.414209375" x2="14.9225" y2="11.14716875" width="0.1778" layer="1"/>
 </signal>
 <signal name="V_USB">
 <contactref element="U1" pad="13"/>
@@ -2356,7 +2343,6 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <contactref element="D1" pad="A"/>
 <contactref element="U$1" pad="1"/>
 <contactref element="D2" pad="A"/>
-<wire x1="18.7325" y1="12.5975" x2="18.7325" y2="14.9225" width="0.1778" layer="1"/>
 <polygon width="0.1778" layer="1" thermals="no">
 <vertex x="14.605" y="12.7"/>
 <vertex x="15.24" y="12.7"/>
@@ -2367,16 +2353,19 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <vertex x="14.605" y="15.24"/>
 </polygon>
 <wire x1="35.2425" y1="7.5445" x2="33.3375" y2="7.5445" width="0.1778" layer="1"/>
-<wire x1="12.965" y1="16.129" x2="13.716" y2="16.129" width="0.1778" layer="1"/>
-<wire x1="13.716" y1="16.129" x2="14.9225" y2="14.9225" width="0.1778" layer="1"/>
-<via x="19.685" y="13.6525" extent="1-16" drill="0.35"/>
-<wire x1="19.685" y1="13.6525" x2="19.685" y2="14.2875" width="0.1778" layer="1"/>
-<wire x1="19.685" y1="13.6525" x2="32.385" y2="13.6525" width="0.1778" layer="16"/>
+<via x="19.05" y="14.9225" extent="1-16" drill="0.35"/>
+<wire x1="19.05" y1="14.9225" x2="20.32" y2="13.6525" width="0.1778" layer="16"/>
+<wire x1="32.385" y1="13.6525" x2="20.32" y2="13.6525" width="0.1778" layer="16"/>
 <wire x1="36.195" y1="9.8425" x2="32.385" y2="13.6525" width="0.1778" layer="16"/>
 <wire x1="36.195" y1="9.8425" x2="36.195" y2="9.2075" width="0.1778" layer="16"/>
 <via x="36.195" y="9.2075" extent="1-16" drill="0.35"/>
 <wire x1="36.195" y1="9.2075" x2="36.195" y2="8.497" width="0.1778" layer="1"/>
 <wire x1="36.195" y1="8.497" x2="35.2425" y2="7.5445" width="0.1778" layer="1"/>
+<wire x1="18.7325" y1="12.5975" x2="18.7325" y2="14.605" width="0.1778" layer="1"/>
+<wire x1="18.7325" y1="14.605" x2="19.05" y2="14.9225" width="0.1778" layer="1"/>
+<via x="15.39875" y="14.9225" extent="1-16" drill="0.35"/>
+<wire x1="12.965" y1="16.129" x2="14.19225" y2="16.129" width="0.1778" layer="1"/>
+<wire x1="14.19225" y1="16.129" x2="15.39875" y2="14.9225" width="0.1778" layer="1"/>
 </signal>
 <signal name="VCC">
 <contactref element="U$1" pad="3"/>
