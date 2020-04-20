@@ -6,7 +6,7 @@ Files for the *main* board are `airball_sensor_board_v8_main.*` in this director
 
 The *temperature sensor* daughter board will be in files named `airball_sensor_board_v8_temp.*` and is a simple 4-connector I2C sensor breakout. As of this writing, it is not yet designed. For now, we can prove out our design using a Sparkfun breakout board.
 
-We have used whatever libraries we can -- primarily from Sparkfun, but also others. The main issue we have is that the [BMP388 sensor footprint](https://www.snapeda.com/parts/BMP388/Bosch%20Sensortec/view-part/) we used generates some "clearance" errors, and it's not clear whether that's a problem with our design rules or with the footprint.
+We have used whatever libraries we can -- primarily from Sparkfun, but also others. The main issue we have is that the [BMP388 sensor footprint](https://www.snapeda.com/parts/BMP388/Bosch%20Sensortec/view-part/) we used generates some "clearance" errors, and it's not clear whether that's a problem with our design rules or with the footprint. **UPDATE: Changing design rules fixes that, so not an issue.**
 
 The design as shown includes enough vias to minimally connect the ground planes and avoid airwires, but does *not* include extra vias to ensure good grounding throughout. We will add this after we have checked out the design some more.
 
