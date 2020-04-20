@@ -4724,7 +4724,7 @@ Source: www.silabs.com .. CP2101.pdf / cp2102.pdf</description>
 <circle x="-1.5" y="0.3" radius="0.1" width="0.2" layer="21"/>
 <text x="-1.301759375" y="1.4019" size="0.40695" layer="25">&gt;NAME</text>
 <text x="-1.20183125" y="-1.702590625" size="0.40701875" layer="27">&gt;VALUE</text>
-<smd name="1" x="-0.765" y="0.25" dx="0.3048" dy="0.2286" layer="1" roundness="9" rot="R90"/>
+<smd name="1" x="-0.765" y="0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
 <smd name="2" x="-0.765" y="-0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
 <smd name="3" x="-0.5" y="-0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
 <smd name="4" x="0" y="-0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
@@ -4775,7 +4775,7 @@ Source: www.silabs.com .. CP2101.pdf / cp2102.pdf</description>
 <technologies>
 <technology name="">
 <attribute name="AVAILABILITY" value="Unavailable"/>
-<attribute name="DESCRIPTION" value=" P-Sensor SPI I2C 1, 25 Bar SMD "/>
+<attribute name="DESCRIPTION" value=" Pressure Sensor 4.35PSI ~ 18.13PSI _30kPa ~ 125kPa_ Absolute 10-WFLGA "/>
 <attribute name="MF" value="Bosch Sensortec"/>
 <attribute name="MP" value="BMP388"/>
 <attribute name="PACKAGE" value="WFLGA-10 Bosch Tools"/>
@@ -5264,8 +5264,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="D4" library="SparkFun-LED" deviceset="LED-RED" device="0603" value="RED"/>
 <part name="R19" library="SparkFun-Resistors" deviceset="10KOHM-1/10W-1%(0603)" device="0603" value="750"/>
 <part name="GND32" library="SparkFun-PowerSymbols" deviceset="GND" device=""/>
-<part name="FRAME1" library="SparkFun-Aesthetics" deviceset="FRAME-LETTER" device=""/>
-<part name="FRAME2" library="SparkFun-Aesthetics" deviceset="FRAME-LETTER" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5456,7 +5454,6 @@ D3 = System powered on</text>
 <instance part="GND31" gate="1" x="233.68" y="116.84" smashed="yes">
 <attribute name="VALUE" x="231.14" y="114.3" size="1.778" layer="96"/>
 </instance>
-<instance part="FRAME2" gate="V" x="149.86" y="0" smashed="yes"/>
 </instances>
 <busses>
 </busses>
@@ -5879,7 +5876,6 @@ D3 = System powered on</text>
 <instance part="GND26" gate="1" x="104.14" y="66.04" smashed="yes">
 <attribute name="VALUE" x="101.6" y="63.5" size="1.778" layer="96"/>
 </instance>
-<instance part="FRAME1" gate="V" x="152.4" y="0" smashed="yes"/>
 </instances>
 <busses>
 </busses>

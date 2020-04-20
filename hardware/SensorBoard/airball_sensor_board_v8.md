@@ -1,14 +1,20 @@
 # Airball Sensor Board V8 design
 
-## Eagle files
+## Quick start: Eagle files and routing considerations
 
-Files for the *main* board are `airball_sensor_board_v8_main.*` in this directory. The temperature sensor daughter board is a simple 4-connector I2C sensor breakout and is not yet designed.
+Files for the *main* board are `airball_sensor_board_v8_main.*` in this directory.
+
+The *temperature sensor* daughter board will be in files named `airball_sensor_board_v8_temp.*` and is a simple 4-connector I2C sensor breakout. As of this writing, it is not yet designed. For now, we can prove out our design using a Sparkfun breakout board.
+
+We have used whatever libraries we can -- primarily from Sparkfun, but also others. The main issue we have is that the [BMP388 sensor footprint](https://www.snapeda.com/parts/BMP388/Bosch%20Sensortec/view-part/) we used generates some "clearance" errors, and it's not clear whether that's a problem with our design rules or with the footprint.
+
+The design as shown includes enough vias to minimally connect the ground planes and avoid airwires, but does *not* include extra vias to ensure good grounding throughout. We will add this after we have checked out the design some more.
 
 ## Introduction for electronic designers
 
 Airball is a hobbyist-grade prototype airplane instrument. It comes in two parts: (a) a probe, which sits outside the airplane and measures information about the airflow; and (b) a display, which is typically a Raspberry Pi with some screen and which shows a visualization. The sensor board is the heart of the probe.
 
-The probe should look something like what is depicted in [this image](https://1.bp.blogspot.com/-OLFawE1X7NM/XpIvrAzd_8I/AAAAAAABbs8/Q8uxKjxnw9wugAqE_rUAlVgNzELpOufewCLcBGAsYHQ/s1600/toplevel_assy%2B%25286%2529.png), though details of the design change frequently.
+The entire probe should physically look something like what is depicted in [the following series of images](https://photos.app.goo.gl/cj4wwVtSAWHoV7az6).
 
 The probe measures pressures impinging on holes in the surface of some 3D printed parts, and uses these to infer data about the airflow. It also measures barometric pressure, and the temperature of the air. It does some really simple math, and then sends out the data over WiFi.
 
