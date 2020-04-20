@@ -14,7 +14,7 @@ The design as shown includes enough vias to minimally connect the ground planes 
 
 Airball is a hobbyist-grade prototype airplane instrument. It comes in two parts: (a) a probe, which sits outside the airplane and measures information about the airflow; and (b) a display, which is typically a Raspberry Pi with some screen and which shows a visualization. The sensor board is the heart of the probe.
 
-The entire probe should physically look something like what is depicted in [the following series of images](https://photos.app.goo.gl/cj4wwVtSAWHoV7az6).
+The entire probe should physically look something like what is depicted in [the following series of images](https://photos.app.goo.gl/cj4wwVtSAWHoV7az6). We have made several prototypes with "breakout boards", such as [this one](http://www.airball.aero/2019/10/new-probe-design.html). Our goal now is to make something integrated, reliable, and ergonomic that can be sent out to people to build as part of a kit.
 
 The probe measures pressures impinging on holes in the surface of some 3D printed parts, and uses these to infer data about the airflow. It also measures barometric pressure, and the temperature of the air. It does some really simple math, and then sends out the data over WiFi.
 
