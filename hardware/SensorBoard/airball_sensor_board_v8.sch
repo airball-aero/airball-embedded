@@ -5047,11 +5047,19 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <sheets>
 <sheet>
 <plain>
-<wire x1="223.52" y1="190.5" x2="223.52" y2="0" width="0.1524" layer="94"/>
-<wire x1="223.52" y1="0" x2="-30.48" y2="0" width="0.1524" layer="94"/>
+<wire x1="256.54" y1="190.5" x2="256.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="256.54" y1="0" x2="2.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="0" y1="0" x2="0" y2="190.5" width="0.1524" layer="94"/>
+<wire x1="0" y1="190.5" x2="256.54" y2="190.5" width="0.1524" layer="94"/>
+<text x="172.72" y="17.78" size="3.81" layer="94">Airball Sensor Board v8</text>
+<text x="172.72" y="7.62" size="3.81" layer="94">Ihab Awad</text>
+<text x="124.46" y="43.18" size="25.4" layer="94" align="bottom-center">Airball
+Sensor
+Board
+v8</text>
 </plain>
 <instances>
-<instance part="FRAME1" gate="V" x="121.92" y="0" smashed="yes"/>
+<instance part="FRAME1" gate="V" x="154.94" y="0" smashed="yes"/>
 </instances>
 <busses>
 </busses>
@@ -5062,9 +5070,10 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <plain>
 <text x="88.9" y="111.76" size="1.524" layer="97" font="vector" align="top-left">I2C ADDR: 0x55</text>
 <text x="119.38" y="124.46" size="6.35" layer="94" align="top-center">Power</text>
-<text x="165.1" y="114.3" size="2.54" layer="94">Power supply design is a copy of
+<text x="144.78" y="111.76" size="2.54" layer="94">Power supply design is a copy of
 the Sparkfun "Battery Babysitter",
-designed by Jim Lindblom.</text>
+designed by Jim Lindblom. See:
+https://www.sparkfun.com/products/13777</text>
 <text x="27.94" y="114.3" size="1.778" layer="94">R17 is 1206
 Current Sense
 Resistor</text>

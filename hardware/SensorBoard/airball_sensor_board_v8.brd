@@ -173,7 +173,7 @@
 <text x="-6.35" y="-6.985" size="0.8128" layer="47" font="vector" ratio="15" align="top-center">Units in inches</text>
 <dimension x1="0" y1="0" x2="3.81" y2="8.89" x3="-7.62" y3="4.445" textsize="0.8128" textratio="15" layer="47" dtype="vertical" unit="inch"/>
 <dimension x1="0" y1="0" x2="1.27" y2="11.43" x3="0.635" y3="-1.397" textsize="0.8128" textratio="15" layer="47" dtype="horizontal" unit="inch"/>
-<text x="114.3" y="-70.485" size="2.54" layer="21">Ihab Awad</text>
+<text x="41.91" y="-9.525" size="2.54" layer="21">Ihab Awad</text>
 <wire x1="9.68375" y1="22.06625" x2="30.48" y2="22.06625" width="0.1778" layer="21" grouprefs="POWER"/>
 <wire x1="30.48" y1="22.06625" x2="30.48" y2="4.60375" width="0.1778" layer="21" grouprefs="POWER"/>
 <wire x1="30.48" y1="4.60375" x2="9.68375" y2="4.60375" width="0.1778" layer="21" grouprefs="POWER"/>
@@ -1936,7 +1936,7 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <attribute name="PROD_ID" value="RES-12083" x="5.3975" y="32.7025" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="VALUE" x="4.6355" y="33.02" size="0.6096" layer="27" font="vector" ratio="20" rot="R270" align="top-center"/>
 </element>
-<element name="FRAME1" library="SparkFun-Aesthetics" package="CREATIVE_COMMONS" value="FRAME-LETTER" x="6.985" y="-79.0575" smashed="yes"/>
+<element name="FRAME1" library="SparkFun-Aesthetics" package="CREATIVE_COMMONS" value="FRAME-LETTER" x="11.049" y="-8.6995" smashed="yes"/>
 <element name="J4" library="SparkFun-Connectors" package="1X04" value="" x="25.7175" y="31.75" smashed="yes" rot="R270">
 <attribute name="NAME" x="27.1145" y="33.02" size="0.6096" layer="25" font="vector" ratio="20" rot="R270"/>
 <attribute name="PROD_ID" value="CONN-09696" x="25.7175" y="31.75" size="1.778" layer="27" rot="R270" display="off"/>
