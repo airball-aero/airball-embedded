@@ -6,7 +6,7 @@ Files for the *main* board are `airball_sensor_board_v8_main.*` in this director
 
 The *temperature sensor* daughter board will be in files named `airball_sensor_board_v8_temp.*` and is a simple 4-connector I2C sensor breakout. As of this writing, it is not yet designed. For now, we can prove out our design using a Sparkfun breakout board.
 
-We have used whatever libraries we can -- primarily from Sparkfun, but also others. The main issue we have is that the [BMP388 sensor footprint](https://www.snapeda.com/parts/BMP388/Bosch%20Sensortec/view-part/) we used generates some "clearance" errors, and it's not clear whether that's a problem with our design rules or with the footprint. **UPDATE: Changing design rules fixes that, so not an issue.**
+We have used whatever libraries we can -- primarily from Sparkfun, but also others.
 
 The design as shown includes enough vias to minimally connect the ground planes and avoid airwires, but does *not* include extra vias to ensure good grounding throughout. We will add this after we have checked out the design some more.
 
@@ -56,7 +56,7 @@ We need to measure three differential pressures. For this, we have chosen [Honey
 
 ### Barometer
 
-To measure barometric pressure, we use a [Bosch BMP388](https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/pressure-sensors-bmp388.html) chip mounted to the board. In order to feed it the exact correct pressure, we will create a 3D printed "cap" on top of it, screwed to the PCB, that will attach to a hose that goes to the correct location on the outside of the probe. We connect to the barometer using I2C.
+To measure barometric pressure, we use a [Bosch BMP388](https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp388-ds001.pdf) chip mounted to the board. In order to feed it the exact correct pressure, we will create a 3D printed "cap" on top of it, screwed to the PCB, that will attach to a hose that goes to the correct location on the outside of the probe. We connect to the barometer using I2C.
 
 ### Thermometer
 
@@ -95,10 +95,10 @@ We follow Figure 41 in the data sheet to construct a "standalone battery charger
 * OUT and BAT decoupling caps 10  μF.
 * !PGOOD and !CHG have LEDs via 1.5 kΩ resistors to charger OUT.
 * !CE pulled directly to GND.
-* EN2 via 100 kΩ resistor to OUT, EN1 to GND. This enables ILIM.
-* ILIM programmed to 1 A. RLIM = 1550 AΩ / 1 A = 1.55 kΩ. Choose closest value of 1.54 kΩ.
-* We are using at least a 2.6 Ah 18650 battery. This means our maximum safe charging rate should be about 1.3 A. Let's choose 1A for even greater safety. R_ISET_ = 890 AΩ / 1A, which means R_ISET_  should be at least 890 Ω, and the next size up is 898 Ω.
-* TMR is disabled by attaching to GND.
+* EN1 via 100 kΩ resistor to OUT, EN2 to GND. This disables the use of ILIM, and sets max current to 500 mA for USB500 compliance.
+* ILIM programmed to 1 A. According to the data sheet, leaving it unconnected will disable all charging so we might as well connect it to something. RLIM = 1550 AΩ / 1 A = 1.55 kΩ. Choose closest value of 1.54 kΩ.
+* We are using at least a 2.6 Ah 18650 battery. This means our maximum safe charging rate should be about 1.3 A. Let's choose 1A for even greater safety. R_ISET = 890 AΩ / 1A, which means R_ISET  should be at least 890 Ω, and the next size up is 898 Ω.
+* TMR is left at default by leaving unconnected.
 * No temperature sensing. TS is a 10 kΩ to GND.
 * SYSOFF uses a 100 kΩ resistor to pull it up to VBATT. This is copied from the SparkFun product.
 
