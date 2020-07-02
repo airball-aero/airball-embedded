@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.6.0">
+<eagle version="9.6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -4934,6 +4934,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </variantdefs>
 <classes>
 <class number="0" name="default" width="0" drill="0">
+<clearance class="0" value="0.205"/>
 </class>
 </classes>
 <parts>
@@ -5096,9 +5097,9 @@ D3 = System powered on</text>
 <wire x1="45.974" y1="92.71" x2="44.704" y2="95.25" width="0.1524" layer="94"/>
 <wire x1="44.704" y1="95.25" x2="43.434" y2="92.71" width="0.1524" layer="94"/>
 <wire x1="0" y1="129.54" x2="0" y2="0" width="0.1524" layer="94"/>
-<wire x1="0" y1="0" x2="248.92" y2="0" width="0.1524" layer="94"/>
-<wire x1="248.92" y1="0" x2="248.92" y2="129.54" width="0.1524" layer="94"/>
-<wire x1="248.92" y1="129.54" x2="0" y2="129.54" width="0.1524" layer="94"/>
+<wire x1="0" y1="0" x2="256.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="256.54" y1="0" x2="256.54" y2="129.54" width="0.1524" layer="94"/>
+<wire x1="256.54" y1="129.54" x2="0" y2="129.54" width="0.1524" layer="94"/>
 <wire x1="118.11" y1="52.324" x2="125.73" y2="52.324" width="0.1524" layer="94"/>
 <wire x1="123.19" y1="53.594" x2="125.73" y2="52.324" width="0.1524" layer="94"/>
 <wire x1="125.73" y1="52.324" x2="123.19" y2="51.054" width="0.1524" layer="94"/>
@@ -5461,7 +5462,7 @@ Power on:
 <net name="SYSOFF" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="SYSOFF"/>
-<label x="226.06" y="60.96" size="1.27" layer="95" font="vector" xref="yes"/>
+<label x="226.06" y="60.96" size="1.778" layer="95" font="vector" xref="yes"/>
 <wire x1="109.22" y1="38.1" x2="111.76" y2="38.1" width="0.1524" layer="91"/>
 <wire x1="111.76" y1="38.1" x2="111.76" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="111.76" y1="60.96" x2="226.06" y2="60.96" width="0.1524" layer="91"/>
@@ -5503,23 +5504,27 @@ Power on:
 <wire x1="129.54" y1="50.8" x2="129.54" y2="40.64" width="0.1524" layer="91"/>
 <junction x="129.54" y="50.8"/>
 <wire x1="129.54" y1="40.64" x2="127" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="167.64" y1="50.8" x2="167.64" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="167.64" y1="55.88" x2="226.06" y2="55.88" width="0.1524" layer="91"/>
+<label x="226.06" y="55.88" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="VCC" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="OUT"/>
 <label x="226.06" y="50.8" size="1.778" layer="95" xref="yes"/>
-<pinref part="C4" gate="G$1" pin="1"/>
+<wire x1="198.12" y1="50.8" x2="200.66" y2="50.8" width="0.1524" layer="91"/>
 <wire x1="200.66" y1="50.8" x2="213.36" y2="50.8" width="0.1524" layer="91"/>
 <wire x1="213.36" y1="50.8" x2="226.06" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="198.12" y1="50.8" x2="200.66" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="200.66" y1="50.8" x2="200.66" y2="25.4" width="0.1524" layer="91"/>
 <pinref part="D3" gate="G$1" pin="A"/>
 <wire x1="213.36" y1="48.26" x2="213.36" y2="50.8" width="0.1524" layer="91"/>
 <junction x="213.36" y="50.8"/>
 <pinref part="R15" gate="G$1" pin="2"/>
 <wire x1="213.36" y1="50.8" x2="213.36" y2="91.44" width="0.1524" layer="91"/>
 <wire x1="213.36" y1="91.44" x2="137.16" y2="91.44" width="0.1524" layer="91"/>
+<pinref part="C4" gate="G$1" pin="1"/>
+<wire x1="200.66" y1="25.4" x2="200.66" y2="50.8" width="0.1524" layer="91"/>
+<junction x="200.66" y="50.8"/>
 </segment>
 </net>
 <net name="N$14" class="0">
@@ -5844,8 +5849,8 @@ Power on:
 <attribute name="NAME" x="93.48188125" y="17.756709375" size="1.017309375" layer="95" rot="R90"/>
 <attribute name="VALUE" x="95.5013" y="17.759490625" size="1.0162" layer="96" rot="R90"/>
 </instance>
-<instance part="GND26" gate="1" x="78.74" y="12.7" smashed="yes">
-<attribute name="VALUE" x="76.2" y="10.16" size="1.778" layer="96"/>
+<instance part="GND26" gate="1" x="78.74" y="10.16" smashed="yes">
+<attribute name="VALUE" x="76.2" y="7.62" size="1.778" layer="96"/>
 </instance>
 <instance part="GND5" gate="1" x="137.16" y="58.42" smashed="yes">
 <attribute name="VALUE" x="134.62" y="55.88" size="1.778" layer="96"/>
@@ -5909,7 +5914,7 @@ Power on:
 <pinref part="U7" gate="G$1" pin="GND"/>
 <pinref part="GND26" gate="1" pin="GND"/>
 <wire x1="83.82" y1="17.78" x2="78.74" y2="17.78" width="0.1524" layer="91"/>
-<wire x1="78.74" y1="17.78" x2="78.74" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="17.78" x2="78.74" y2="12.7" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="J1" gate="J1" pin="1"/>
@@ -5948,14 +5953,9 @@ Power on:
 <net name="V_USB" class="0">
 <segment>
 <pinref part="J2" gate="J1" pin="VBUS"/>
-<wire x1="40.64" y1="38.1" x2="45.72" y2="38.1" width="0.1524" layer="91"/>
 <pinref part="U7" gate="G$1" pin="C"/>
-<wire x1="45.72" y1="38.1" x2="91.44" y2="38.1" width="0.1524" layer="91"/>
+<wire x1="40.64" y1="38.1" x2="91.44" y2="38.1" width="0.1524" layer="91"/>
 <wire x1="91.44" y1="25.4" x2="91.44" y2="38.1" width="0.1524" layer="91"/>
-<pinref part="J4" gate="J1" pin="2"/>
-<wire x1="33.02" y1="63.5" x2="45.72" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="45.72" y1="63.5" x2="45.72" y2="38.1" width="0.1524" layer="91"/>
-<junction x="45.72" y="38.1"/>
 </segment>
 </net>
 <net name="USB_D+" class="0">
@@ -6014,11 +6014,6 @@ Power on:
 <pinref part="U$3" gate="G$1" pin="P$1"/>
 </segment>
 </net>
-<net name="N$3" class="0">
-<segment>
-<junction x="10.16" y="45.72"/>
-</segment>
-</net>
 <net name="N$13" class="0">
 <segment>
 <wire x1="40.64" y1="30.48" x2="66.04" y2="30.48" width="0.1524" layer="91"/>
@@ -6048,6 +6043,14 @@ Power on:
 <wire x1="33.02" y1="66.04" x2="50.8" y2="66.04" width="0.1524" layer="91"/>
 <label x="50.8" y="66.04" size="1.778" layer="95" xref="yes"/>
 <pinref part="J4" gate="J1" pin="3"/>
+</segment>
+</net>
+<net name="V_SUPPLY_UNREG" class="0">
+<segment>
+<pinref part="J4" gate="J1" pin="2"/>
+<wire x1="33.02" y1="63.5" x2="45.72" y2="63.5" width="0.1524" layer="91"/>
+<label x="45.72" y="60.96" size="1.778" layer="95" xref="yes"/>
+<wire x1="45.72" y1="63.5" x2="45.72" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
