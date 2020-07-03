@@ -24,20 +24,20 @@
 <layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
 <layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
-<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="22" name="bPlace" color="14" fill="1" visible="yes" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="no" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="no" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="yes"/>
+<layer number="21" name="tPlace" color="16" fill="1" visible="no" active="yes"/>
+<layer number="22" name="bPlace" color="14" fill="1" visible="no" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
-<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
@@ -47,10 +47,10 @@
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
 <layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
 <layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
-<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
-<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
-<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
-<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
@@ -59,8 +59,8 @@
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="6" fill="1" visible="no" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
 <layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
@@ -1297,16 +1297,26 @@ Source: www.silabs.com .. CP2101.pdf</description>
 <circle x="-1.5" y="0.3" radius="0.1" width="0.2" layer="21"/>
 <text x="-1.301759375" y="1.4019" size="0.40695" layer="25">&gt;NAME</text>
 <text x="-1.20183125" y="-1.702590625" size="0.40701875" layer="27">&gt;VALUE</text>
-<smd name="1" x="-0.765" y="0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="2" x="-0.765" y="-0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="3" x="-0.5" y="-0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="4" x="0" y="-0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="5" x="0.5" y="-0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="6" x="0.765" y="-0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="7" x="0.765" y="0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="8" x="0.5" y="0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="9" x="0" y="0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="10" x="-0.5" y="0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
+<smd name="1" x="-0.765" y="0.25" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="2" x="-0.765" y="-0.25" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="3" x="-0.5" y="-0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="4" x="0" y="-0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="5" x="0.5" y="-0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="6" x="0.765" y="-0.25" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="7" x="0.765" y="0.25" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="8" x="0.5" y="0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="9" x="0" y="0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="10" x="-0.5" y="0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<rectangle x1="-0.889" y1="0.127" x2="-0.635" y2="0.381" layer="29"/>
+<rectangle x1="-0.889" y1="-0.381" x2="-0.635" y2="-0.127" layer="29"/>
+<rectangle x1="-0.635" y1="-0.889" x2="-0.381" y2="-0.635" layer="29"/>
+<rectangle x1="-0.127" y1="-0.889" x2="0.127" y2="-0.635" layer="29"/>
+<rectangle x1="0.3556" y1="-0.889" x2="0.635" y2="-0.635" layer="29"/>
+<rectangle x1="-0.635" y1="0.635" x2="-0.381" y2="0.889" layer="29"/>
+<rectangle x1="-0.127" y1="0.635" x2="0.127" y2="0.889" layer="29"/>
+<rectangle x1="0.381" y1="0.635" x2="0.635" y2="0.889" layer="29"/>
+<rectangle x1="0.635" y1="0.127" x2="0.889" y2="0.381" layer="29"/>
+<rectangle x1="0.635" y1="-0.381" x2="0.889" y2="-0.127" layer="29"/>
 </package>
 </packages>
 </library>
@@ -1511,7 +1521,7 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <param name="psElongationOffset" value="100"/>
 <param name="mvStopFrame" value="1"/>
 <param name="mvCreamFrame" value="0"/>
-<param name="mlMinStopFrame" value="4mil"/>
+<param name="mlMinStopFrame" value="1mil"/>
 <param name="mlMaxStopFrame" value="4mil"/>
 <param name="mlMinCreamFrame" value="0mil"/>
 <param name="mlMaxCreamFrame" value="0mil"/>
@@ -2215,8 +2225,8 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <via x="85.725" y="19.05" extent="1-16" drill="0.35"/>
 <via x="82.55" y="28.575" extent="1-16" drill="0.35"/>
 <via x="82.55" y="25.4" extent="1-16" drill="0.35"/>
+<wire x1="37.338" y1="28.829" x2="38.45625" y2="27.7425" width="0" layer="19" extent="1-1"/>
 <wire x1="6.86375" y1="21.08" x2="6.86375" y2="21.08" width="0" layer="19" extent="1-16"/>
-<wire x1="38.45625" y1="27.7425" x2="37.338" y2="28.829" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="V_USB">
 <contactref element="U1" pad="13"/>
@@ -2572,9 +2582,8 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <wire x1="73.914" y1="24.09825" x2="75.53325" y2="25.7175" width="0.4064" layer="1"/>
 <wire x1="75.53325" y1="25.7175" x2="75.565" y2="25.7175" width="0.4064" layer="1"/>
 <wire x1="84.7344" y1="22.86" x2="83.7184" y2="21.844" width="0.635" layer="16"/>
-<wire x1="73.914" y1="21.844" x2="80.391" y2="21.844" width="0.635" layer="16"/>
+<wire x1="73.914" y1="21.844" x2="81.788" y2="21.844" width="0.635" layer="16"/>
 <via x="83.82" y="32.893" extent="1-16" drill="0.35"/>
-<wire x1="80.391" y1="21.844" x2="81.788" y2="21.844" width="0.635" layer="16"/>
 <wire x1="83.82" y1="32.893" x2="81.788" y2="30.861" width="0.1778" layer="16"/>
 <wire x1="81.788" y1="30.861" x2="81.788" y2="21.844" width="0.1778" layer="16"/>
 <wire x1="73.914" y1="24.09825" x2="73.914" y2="21.844" width="0.4064" layer="1"/>
@@ -2590,12 +2599,12 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <wire x1="57.15725" y1="30.32125" x2="57.44375" y2="30.03475" width="0.1778" layer="1"/>
 <wire x1="57.44375" y1="30.03475" x2="57.44375" y2="29.0225" width="0.1778" layer="1"/>
 <wire x1="57.44375" y1="29.0225" x2="57.47485" y2="28.9914" width="0.1778" layer="1"/>
-<wire x1="57.47485" y1="28.9914" x2="57.47485" y2="28.8469875" width="0.1778" layer="1"/>
-<wire x1="57.47485" y1="28.8469875" x2="58.1873375" y2="28.1345" width="0.1778" layer="1"/>
-<wire x1="58.58175" y1="28.1345" x2="58.1873375" y2="28.1345" width="0.1778" layer="1"/>
-<wire x1="58.58175" y1="28.1345" x2="58.70875" y2="28.0075" width="0.1778" layer="1"/>
-<wire x1="57.44375" y1="29.0225" x2="57.44375" y2="28.7725" width="0.1778" layer="1"/>
-<wire x1="57.44375" y1="28.7725" x2="57.17875" y2="28.5075" width="0.1778" layer="1"/>
+<wire x1="57.47485" y1="28.9914" x2="57.47485" y2="28.5929875" width="0.1778" layer="1"/>
+<wire x1="57.47485" y1="28.5929875" x2="58.0603375" y2="28.0075" width="0.1778" layer="1"/>
+<wire x1="58.70875" y1="28.0075" x2="58.0603375" y2="28.0075" width="0.1778" layer="1"/>
+<wire x1="57.44375" y1="29.0225" x2="57.18975" y2="29.0225" width="0.1778" layer="1"/>
+<wire x1="57.18975" y1="29.0225" x2="57.18975" y2="28.5185" width="0.1778" layer="1"/>
+<wire x1="57.18975" y1="28.5185" x2="57.17875" y2="28.5075" width="0.1778" layer="1"/>
 <wire x1="57.17875" y1="28.5075" x2="57.17875" y2="28.8198" width="0.1778" layer="1"/>
 <wire x1="73.914" y1="13.87475" x2="72.42175" y2="12.3825" width="0.4064" layer="1"/>
 <wire x1="72.42175" y1="12.3825" x2="72.0725" y2="12.3825" width="0.4064" layer="1"/>
@@ -3065,7 +3074,6 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <approved hash="19,1,5b5a5d9a1bbc1d7c"/>
 <approved hash="19,1,d9ddd7fdd1dbdffb"/>
 <approved hash="19,1,5ada5bba1d9c1cfc"/>
-<approved hash="19,1,5ffc22ab010ec147"/>
 <approved hash="19,1,dbdad5f591d39ffc"/>
 <approved hash="19,1,1ada1b861da01cfc"/>
 <approved hash="19,1,dadbde3dd81bdcfd"/>

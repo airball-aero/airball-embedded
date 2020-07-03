@@ -4493,16 +4493,26 @@ Source: www.silabs.com .. CP2101.pdf / cp2102.pdf</description>
 <circle x="-1.5" y="0.3" radius="0.1" width="0.2" layer="21"/>
 <text x="-1.301759375" y="1.4019" size="0.40695" layer="25">&gt;NAME</text>
 <text x="-1.20183125" y="-1.702590625" size="0.40701875" layer="27">&gt;VALUE</text>
-<smd name="1" x="-0.765" y="0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="2" x="-0.765" y="-0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="3" x="-0.5" y="-0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="4" x="0" y="-0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="5" x="0.5" y="-0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="6" x="0.765" y="-0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="7" x="0.765" y="0.25" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="8" x="0.5" y="0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="9" x="0" y="0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
-<smd name="10" x="-0.5" y="0.765" dx="0.38" dy="0.35" layer="1" roundness="9" rot="R90"/>
+<smd name="1" x="-0.765" y="0.25" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="2" x="-0.765" y="-0.25" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="3" x="-0.5" y="-0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="4" x="0" y="-0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="5" x="0.5" y="-0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="6" x="0.765" y="-0.25" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="7" x="0.765" y="0.25" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="8" x="0.5" y="0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="9" x="0" y="0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<smd name="10" x="-0.5" y="0.765" dx="0.254" dy="0.254" layer="1" roundness="9" rot="R90" stop="no"/>
+<rectangle x1="-0.889" y1="0.127" x2="-0.635" y2="0.381" layer="29"/>
+<rectangle x1="-0.889" y1="-0.381" x2="-0.635" y2="-0.127" layer="29"/>
+<rectangle x1="-0.635" y1="-0.889" x2="-0.381" y2="-0.635" layer="29"/>
+<rectangle x1="-0.127" y1="-0.889" x2="0.127" y2="-0.635" layer="29"/>
+<rectangle x1="0.3556" y1="-0.889" x2="0.635" y2="-0.635" layer="29"/>
+<rectangle x1="-0.635" y1="0.635" x2="-0.381" y2="0.889" layer="29"/>
+<rectangle x1="-0.127" y1="0.635" x2="0.127" y2="0.889" layer="29"/>
+<rectangle x1="0.381" y1="0.635" x2="0.635" y2="0.889" layer="29"/>
+<rectangle x1="0.635" y1="0.127" x2="0.889" y2="0.381" layer="29"/>
+<rectangle x1="0.635" y1="-0.381" x2="0.889" y2="-0.127" layer="29"/>
 </package>
 </packages>
 <symbols>
