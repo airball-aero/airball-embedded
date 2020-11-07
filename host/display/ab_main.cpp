@@ -6,6 +6,7 @@
 #include "fake_telemetry_client.h"
 #include "log_reader_telemetry_client.h"
 #include "../telemetry/xbee_telemetry_client.h"
+#include "../telemetry/esp32_telemetry_client.h"
 
 namespace po = boost::program_options;
 
@@ -29,7 +30,7 @@ static po::options_description add_options() {
       (
           "telemetry",
           po::value<std::string>(),
-          "telemetry source (fake, log, xbee)"
+          "telemetry source (fake, log, xbee, esp32)"
       )
       (
           "telemetry_log_filename",
@@ -128,6 +129,9 @@ int main(int argc, char **argv) {
       telemetry = std::unique_ptr<airball::TelemetryClient>
           (new airball::XbeeTelemetryClient(
               vm["telemetry_xbee_device"].as<std::string>()));
+    } else if (v == "esp32") {
+      telemetry = std::unique_ptr<airball::TelemetryClient>
+          (new airball::ESP32TelemetryClient());
     } else {
       std::cout << "Invalid telemetry option " << v << std::endl;
       std::cout << options << std::endl;

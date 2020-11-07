@@ -6,6 +6,7 @@
 #include "../telemetry/telemetry_client.h"
 #include "../telemetry/airdata_sample.h"
 #include "../telemetry/battery_sample.h"
+#include "../telemetry/airdata_reduced_sample.h"
 
 namespace airball {
 
@@ -59,6 +60,7 @@ public:
 
 private:
   void update(const airdata_sample* d);
+  void update(const airdata_reduced_sample* d);
   void update(const battery_sample* d);
 
   double link_quality_;

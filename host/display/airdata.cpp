@@ -87,12 +87,14 @@ Airdata::Airdata()
   populate_table(dpr_to_angle);
 }
 
-static double smooth(double current_value, double new_value, double smoothing_factor) {
-  return (smoothing_factor * new_value) + ((1.0 - smoothing_factor) * current_value);
+static double
+smooth(double current_value, double new_value, double smoothing_factor) {
+  return (smoothing_factor * new_value) +
+         ((1.0 - smoothing_factor) * current_value);
 }
 
 void Airdata::update(
-    const airdata_sample* d,
+    const airdata_sample *d,
     const double qnh,
     const double ball_smoothing_factor,
     const double vsi_smoothing_factor) {
@@ -100,24 +102,50 @@ void Airdata::update(
   double dpa = d->get_dpA();
   double dpb = d->get_dpB();
 
-  double new_alpha = -find_dpr_to_angle(dpr_to_angle, dpa / dp0);
-  double new_beta = find_dpr_to_angle(dpr_to_angle, dpb / dp0);
+  double alpha = -find_dpr_to_angle(dpr_to_angle, dpa / dp0);
+  double beta = find_dpr_to_angle(dpr_to_angle, dpb / dp0);
   const double total_angle = sqrt(alpha_ * alpha_ + beta_ * beta_);
-  free_stream_q_ = dp0 / single_point_sphere_pressure_coefficient(total_angle);
-  double new_ias = q_to_ias(free_stream_q_);
-  double new_tas = q_to_tas(free_stream_q_, d->get_baro(), d->get_temperature());
+  const double q = dp0 / single_point_sphere_pressure_coefficient(total_angle);
+
+  update(alpha, beta, q, d->get_baro(), d->get_temperature(), qnh,
+         ball_smoothing_factor, vsi_smoothing_factor);
+}
+
+void Airdata::update(
+    const airdata_reduced_sample *d,
+    const double qnh,
+    const double ball_smoothing_factor,
+    const double vsi_smoothing_factor) {
+  update(d->get_alpha(), d->get_beta(), d->get_q(), d->get_baro(),
+         d->get_temperature(), qnh, ball_smoothing_factor,
+         vsi_smoothing_factor);
+}
+
+void Airdata::update(
+    const double alpha,
+    const double beta,
+    const double q,
+    const double p,
+    const double t,
+    const double qnh,
+    const double ball_smoothing_factor,
+    const double vsi_smoothing_factor) {
+  free_stream_q_ = q;
+
+  double new_ias = q_to_ias(q);
+  double new_tas = q_to_tas(free_stream_q_, p, t);
 
   // If we allow NaN's to get through, they will "pollute" the smoothing
   // computation and every smoothed value thereafter will be NaN. This guard
   // is therefore necessary prior to using data as a smoothing filter input.
-  if (isnan(new_alpha)) { new_alpha = alpha_; }
-  if (isnan(new_beta)) { new_beta = beta_; }
-  if (isnan(new_ias)) { new_ias = ias_; }
-  if (isnan(new_tas)) { new_tas = tas_; }
+  double new_alpha = isnan(alpha) ? alpha_ : alpha;
+  double new_beta = isnan(beta) ? beta_ : beta;
+  new_ias = isnan(new_ias) ? ias_ : new_ias;
+  new_tas = isnan(new_tas) ? tas_ : new_tas;
 
   smooth_ball_ = Ball(
-      smooth(smooth_ball_.alpha(), new_alpha, ball_smoothing_factor),
-      smooth(smooth_ball_.beta(), new_beta, ball_smoothing_factor),
+      smooth(smooth_ball_.alpha(), alpha, ball_smoothing_factor),
+      smooth(smooth_ball_.beta(), beta, ball_smoothing_factor),
       smooth(smooth_ball_.ias(), new_ias, ball_smoothing_factor),
       smooth(smooth_ball_.tas(), new_tas, ball_smoothing_factor));
 
@@ -131,15 +159,9 @@ void Airdata::update(
   }
   raw_balls_[0] = Ball(alpha_, beta_, ias_, tas_);
 
-  altitude_ = pressure_to_altitude(
-      d->get_temperature(),
-      d->get_baro(),
-      qnh);
+  altitude_ = pressure_to_altitude(t, p, qnh);
 
-  double new_pressure_altitude = pressure_to_altitude(
-      d->get_temperature(),
-      d->get_baro(),
-      QNH_STANDARD);
+  double new_pressure_altitude = pressure_to_altitude(t, p, QNH_STANDARD);
   double instantaneous_climb_rate =
       (new_pressure_altitude - pressure_altitude_) * kSamplesPerSecond;
   pressure_altitude_ = new_pressure_altitude;

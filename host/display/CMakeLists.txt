@@ -51,11 +51,6 @@ add_executable(replay
 target_link_libraries(replay
         airball_display airball_telemetry_client)
 
-add_executable(telemetry_to_airdata
-        telemetry_to_airdata_main.cpp)
-target_link_libraries(telemetry_to_airdata
-        airball_display airball_telemetry_client)
-
 add_executable(user_input_source_test
         user_input_source_test_main.cpp)
 target_link_libraries(user_input_source_test

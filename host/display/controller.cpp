@@ -29,6 +29,7 @@
 #include "delay_timer.h"
 #include "system_status.h"
 #include "units.h"
+#include "../telemetry/airdata_reduced_sample.h"
 
 #include <iostream>
 #include <thread>
@@ -232,14 +233,23 @@ void Controller::run() {
       std::vector<std::unique_ptr<sample>> cycle_data = data.get();
       for (auto it = cycle_data.begin(); it < cycle_data.end(); ++it) {
         const sample* d = (*it).get();
+        status.update(d);
+        const double qnh = kPascalsPerInHg * settings.baro_setting();
         auto ad = dynamic_cast<const airdata_sample*>(d);
         if (ad != nullptr) {
           airdata.update(ad,
-                         kPascalsPerInHg * settings.baro_setting(),
+                         qnh,
                          settings.ball_smoothing_factor(),
                          settings.vsi_smoothing_factor());
+        } else {
+          auto adr = dynamic_cast<const airdata_reduced_sample *>(d);
+          if (adr != nullptr) {
+            airdata.update(adr,
+                           qnh,
+                           settings.ball_smoothing_factor(),
+                           settings.vsi_smoothing_factor());
+          }
         }
-        status.update(d);
       }
 
       display.paint();

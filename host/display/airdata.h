@@ -28,6 +28,7 @@
 #include <string>
 #include "interpolation_table.h"
 #include "../telemetry/airdata_sample.h"
+#include "../telemetry/airdata_reduced_sample.h"
 
 namespace airball {
 
@@ -66,14 +67,8 @@ public:
   // Angle of yaw
   double beta() const {return beta_;}
 
-  // Free stream dynamic pressure
-  double free_stream_q() const {return free_stream_q_;}
-
   // Current altitude
   double altitude() const { return altitude_; }
-
-  // Current pressure altitude, without barometric compensation
-  double pressure_altitude() const { return pressure_altitude_; }
 
   // Current climb rate
   double climb_rate() const { return climb_rate_; }
@@ -86,8 +81,15 @@ public:
   //   qnh -- Current sea level barometric pressure in pascals
   //   ball_smoothing_factor -- Smoothing factor for airball data
   //   vsi_smoothing_factor -- Smoothing factor for VSI data
+
   void update(
       const airdata_sample* d,
+      const double qnh,
+      const double ball_smoothing_factor,
+      const double vsi_smoothing_factor);
+
+  void update(
+      const airdata_reduced_sample* d,
       const double qnh,
       const double ball_smoothing_factor,
       const double vsi_smoothing_factor);
@@ -97,6 +99,16 @@ public:
   const std::vector<Ball>& raw_balls() const { return raw_balls_; }
 
 private:
+  void update(
+      const double alpha,
+      const double beta,
+      const double q,
+      const double p,
+      const double t,
+      const double qnh,
+      const double ball_smoothing_factor,
+      const double vsi_smoothing_factor);
+
   static constexpr int kSamplesPerSecond = 20;
   static constexpr uint kNumBalls = 20;
 

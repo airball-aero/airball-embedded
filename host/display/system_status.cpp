@@ -53,10 +53,16 @@ void SystemStatus::update(const sample* d) {
   link_quality_ = std::min(1.0, link_quality_);
   link_quality_ = std::max(0.0, link_quality_);
   update(dynamic_cast<const airdata_sample*>(d));
+  update(dynamic_cast<const airdata_reduced_sample*>(d));
   update(dynamic_cast<const battery_sample*>(d));
 }
 
 void SystemStatus::update(const airdata_sample* d) {
+  if (d == nullptr) return;
+  last_airdata_time_ = std::chrono::system_clock::now();
+}
+
+void SystemStatus::update(const airdata_reduced_sample* d) {
   if (d == nullptr) return;
   last_airdata_time_ = std::chrono::system_clock::now();
 }

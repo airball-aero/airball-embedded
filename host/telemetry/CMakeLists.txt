@@ -14,7 +14,8 @@ message("boost inc: ${Boost_INCLUDE_DIR}")
 add_library(airball_telemetry_client
         xbee_telemetry_client.cpp xbee.cpp xbee_api_payload.cpp sample.cpp format.cpp
         battery_sample.cpp airdata_sample.cpp xbee_api_frame.cpp xbee_known_types.cpp
-        xbee_utils.cpp)
+        xbee_utils.cpp esp32_telemetry_client.cpp airdata_reduced_sample.cpp
+        deadline_tcp_line_reader.cpp)
 target_link_libraries(airball_telemetry_client
         Threads::Threads boost_system)
 
