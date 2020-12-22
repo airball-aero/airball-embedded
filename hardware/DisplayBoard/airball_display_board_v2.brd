@@ -2585,8 +2585,8 @@ Please make sure your boards conform to these design rules.</description>
 <vertex x="31.6" y="76.5"/>
 <vertex x="31.6" y="77.9"/>
 </polygon>
-<wire x1="30.7" y1="75.9" x2="31.5" y2="76.7" width="0.3048" layer="1"/>
-<wire x1="27.5" y1="75.9" x2="30.7" y2="75.9" width="0.3048" layer="1"/>
+<wire x1="30.6" y1="75.9" x2="31.4" y2="76.7" width="0.3048" layer="1"/>
+<wire x1="27.5" y1="75.9" x2="30.6" y2="75.9" width="0.3048" layer="1"/>
 <via x="27" y="101" extent="1-16" drill="0.35"/>
 <via x="16.85" y="101" extent="1-16" drill="0.35"/>
 <via x="37" y="101" extent="1-16" drill="0.35"/>
@@ -3175,7 +3175,6 @@ Please make sure your boards conform to these design rules.</description>
 <wire x1="38.15" y1="16.75" x2="38.4" y2="16.5" width="0.3048" layer="1"/>
 <wire x1="38.55" y1="16.35" x2="38.4" y2="16.5" width="0.3048" layer="1"/>
 <via x="30.9" y="81.8" extent="1-16" drill="0.35"/>
-<wire x1="30.75" y1="81.65" x2="30.9" y2="81.8" width="0.3048" layer="16"/>
 <wire x1="30.85" y1="85.45" x2="30.85" y2="81.85" width="0.75" layer="16"/>
 <wire x1="30.9" y1="81.8" x2="30.85" y2="81.85" width="0.75" layer="16"/>
 <wire x1="30.85" y1="85.45" x2="44.2" y2="98.8" width="0.75" layer="16"/>
