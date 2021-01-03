@@ -82,9 +82,9 @@ Airdata::Airdata()
       beta_(0),
       ias_(0),
       climb_rate_(0),
-      climb_rate_first_sample_(true),
       raw_balls_(kNumBalls) {
   populate_table(dpr_to_angle);
+  climbrateFilter_init(&climb_rate_filter_);
 }
 
 static double
@@ -159,23 +159,14 @@ void Airdata::update(
   }
   raw_balls_[0] = Ball(alpha_, beta_, ias_, tas_);
 
+  double old_pressure_altitude = pressure_altitude_;
+  pressure_altitude_ = pressure_to_altitude(t, p, QNH_STANDARD);
+  climbrateFilter_put(
+      &climb_rate_filter_,
+      (pressure_altitude_ - old_pressure_altitude) / (1.0 / kSamplesPerSecond));
+  climb_rate_ = climbrateFilter_get(&climb_rate_filter_);
+
   altitude_ = pressure_to_altitude(t, p, qnh);
-
-  double new_pressure_altitude = pressure_to_altitude(t, p, QNH_STANDARD);
-  double instantaneous_climb_rate =
-      (new_pressure_altitude - pressure_altitude_) * kSamplesPerSecond;
-  pressure_altitude_ = new_pressure_altitude;
-
-  climb_rate_ = smooth(
-      climb_rate_,
-      instantaneous_climb_rate,
-      vsi_smoothing_factor);
-
-  if (climb_rate_first_sample_) {
-    climb_rate_ = 0.0;
-    instantaneous_climb_rate = 0;
-    climb_rate_first_sample_ = false;
-  }
 
   valid_ = !isnan(alpha_) && !isnan(beta_);
 }

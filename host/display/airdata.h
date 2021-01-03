@@ -29,6 +29,7 @@
 #include "interpolation_table.h"
 #include "../telemetry/airdata_sample.h"
 #include "../telemetry/airdata_reduced_sample.h"
+#include "climb_rate_filter.h"
 
 namespace airball {
 
@@ -118,13 +119,16 @@ private:
   double alpha_;
   double beta_;
   double free_stream_q_;
-  double pressure_altitude_;
-  double altitude_;
-  double climb_rate_;
-  bool climb_rate_first_sample_;
   bool valid_;
+
   Ball smooth_ball_;
   std::vector<Ball> raw_balls_;
+
+  climbrateFilter climb_rate_filter_;
+  double climb_rate_;
+
+  double altitude_;
+  double pressure_altitude_;
 };
 
 } // namespace airball
