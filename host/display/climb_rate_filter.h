@@ -20,6 +20,10 @@ sampling frequency: 20 Hz
 
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define CLIMBRATEFILTER_TAP_NUM 203
 
 typedef struct {
@@ -27,8 +31,12 @@ typedef struct {
   unsigned int last_index;
 } climbrateFilter;
 
-void climbrateFilter_init(climbrateFilter* f);
-void climbrateFilter_put(climbrateFilter* f, double input);
-double climbrateFilter_get(climbrateFilter* f);
+void climbrateFilter_init(climbrateFilter *f);
+void climbrateFilter_put(climbrateFilter *f, double input);
+double climbrateFilter_get(climbrateFilter *f);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // AIRBALL_CLIMBRATEFILTER_H_

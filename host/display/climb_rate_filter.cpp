@@ -1,7 +1,5 @@
 #include "climb_rate_filter.h"
 
-namespace airball {
-
 static double filter_taps[CLIMBRATEFILTER_TAP_NUM] = {
     -0.0052842173665807925,
     -0.0006545010365498382,
@@ -230,5 +228,3 @@ double climbrateFilter_get(climbrateFilter* f) {
   };
   return acc;
 }
-
-}; // namespace airball
