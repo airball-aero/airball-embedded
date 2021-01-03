@@ -2862,9 +2862,7 @@ Please make sure your boards conform to these design rules.</description>
 <contactref element="U3" pad="14"/>
 <via x="28.25" y="32.25" extent="1-16" drill="0.35"/>
 <wire x1="23.6" y1="34" x2="25.71115" y2="34" width="0.1524" layer="1"/>
-<wire x1="25.71115" y1="34" x2="27.26895" y2="32.4422" width="0.1524" layer="1"/>
-<wire x1="28.25" y1="32.25" x2="28.4422" y2="32.4422" width="0.1524" layer="1"/>
-<wire x1="28.4422" y1="32.4422" x2="27.26895" y2="32.4422" width="0.1524" layer="1"/>
+<wire x1="25.71115" y1="34" x2="27.46895" y2="32.2422" width="0.1524" layer="1"/>
 <via x="50" y="27" extent="1-16" drill="0.35"/>
 <wire x1="47.375" y1="26.5" x2="47.4438" y2="26.5688" width="0.1524" layer="16"/>
 <wire x1="47.4438" y1="26.5688" x2="49.541475" y2="26.5688" width="0.1524" layer="16"/>
@@ -2873,6 +2871,8 @@ Please make sure your boards conform to these design rules.</description>
 <wire x1="28.25" y1="32.25" x2="29.15" y2="32.25" width="0.1524" layer="2"/>
 <wire x1="34.4" y1="27" x2="29.15" y2="32.25" width="0.1524" layer="2"/>
 <wire x1="34.4" y1="27" x2="50" y2="27" width="0.1524" layer="2"/>
+<wire x1="28.25" y1="32.25" x2="28.2422" y2="32.2422" width="0.1524" layer="1"/>
+<wire x1="28.2422" y1="32.2422" x2="27.46895" y2="32.2422" width="0.1524" layer="1"/>
 </signal>
 <signal name="G2">
 <contactref element="U2" pad="22"/>
