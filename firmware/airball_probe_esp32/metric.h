@@ -7,6 +7,7 @@ class Metric {
   ~Metric() {}
 
   void add(float x) {
+    lat_ = x;
     tot_ += x;
     if (n_ == 0L) { min_ = max_ = x; }
     if (x < min_) { min_ = x; }
@@ -16,11 +17,12 @@ class Metric {
 
   const char* str() {
     sprintf(buf_,
-	    "n,%ld,min,%f,max,%f,avg,%f",
+	    "n,%ld,min,%f,max,%f,avg,%f,lat,%f",
 	    n_,
 	    min_,
 	    max_,
-	    tot_ / ((float) n_));
+	    tot_ / ((float) n_),
+	    lat_);
     return buf_;
   }
   
@@ -30,6 +32,7 @@ class Metric {
   float tot_;
   float min_;
   float max_;
+  float lat_;
 };
 
 #endif

@@ -102,7 +102,11 @@ def v2_probe_data2raw(alpha, beta, q):
     pRgt = q * sphere_pressure_coefficient_cartesian(
         alpha,
         beta + math.pi / 4)
-    return [p0 - pBtm, pLwr - pUpr, pRgt - pLft]
+    return [
+        0.5 * (p0 - pBtm),
+        0.7 * (pLwr - pUpr),
+        0.7 * (pRgt - pLft),
+    ]
 
 ########################################################################
 
@@ -154,16 +158,9 @@ def load_template():
 # Plot raw calibration data for quality control
 
 def plot_calibration(file_prefix, var_name, nx, ny, linear_data):
-    xx = range(0, nx)
-    yy = range(0, ny)
-    xx, yy = np.meshgrid(xx, yy)
-
-    gridded_data = []
-    for i in range(0, ny):
-        x_row = []
-        for j in range(0, nx):
-            x_row.append(linear_data[i + ny * j])
-        gridded_data.append(x_row)
+    xx, yy = np.meshgrid(range(0, nx), range(0, ny))
+    f = lambda ix, iy: linear_data[iy + ny * ix]
+    zz = np.vectorize(f)(xx, yy)
 
     title = file_prefix + "_" + var_name
         
@@ -172,11 +169,7 @@ def plot_calibration(file_prefix, var_name, nx, ny, linear_data):
     ax.set_xlabel('x index')
     ax.set_ylabel('y index')
     ax.set_zlabel(var_name)
-    ax.plot_surface(
-        xx,
-        yy,
-        gridded_data,
-        rstride=1, cstride=1)
+    ax.plot_surface(xx, yy, zz, rstride=1, cstride=1)
     fake2Dline = matplotlib.lines.Line2D([0],[0], linestyle="none", c='b', marker = 'o')
     ax.legend([fake2Dline], [title], numpoints = 1)
     plt.savefig(title + ".png", dpi=600)

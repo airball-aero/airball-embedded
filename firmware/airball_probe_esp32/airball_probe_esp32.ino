@@ -119,7 +119,7 @@ struct pressures_struct pressures_read() {
   p.dp0 = pressure_read_one(&pressure_dp0);
   p.dpa = pressure_read_one(&pressure_dpa);
   p.dpb = pressure_read_one(&pressure_dpb);
-  
+
   if (pressure_autozero_complete) {
     p.dp0 -= pressure_autozero_offset.dp0;
     p.dpa -= pressure_autozero_offset.dpa;
@@ -153,7 +153,7 @@ Adafruit_BMP3XX barometer;
 
 void barometer_begin() {
   // Initialize the barometer
-  barometer.begin();
+  barometer.begin(0x76);
   barometer.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
   barometer.setPressureOversampling(BMP3_OVERSAMPLING_4X);
   barometer.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
@@ -209,19 +209,30 @@ void airdata_read_and_send() {
 			 p.dpb,
 			 &err);
   if (err != 0) {
-    return;
+    memset(&airdata, 0, sizeof(airdata_triple));
   }
 
   sprintf(data_sentence_buffer,
-	  "$AR,%ld,%ld,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f",
-	  airdata_count++,
-	  millis(),
-	  airdata.alpha,   // alpha TODO(ihab): degrees
-	  airdata.beta,    // beta  TODO(ihab): degrees
+	  "$A,%ld,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f",
+	  airdata_count,
+	  baro,
+	  temp,
+	  p.dp0,
+	  p.dpa,
+	  p.dpb);
+  wifi_send(data_sentence_buffer);
+  
+  sprintf(data_sentence_buffer,
+	  "$AR,%ld,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f",
+	  airdata_count,
+	  -airdata.alpha,  // alpha
+	  -airdata.beta,   // beta
 	  airdata.q,       // q
 	  baro,            // p TODO(ihab): Correction
 	  temp);           // T
   wifi_send(data_sentence_buffer);
+
+  airdata_count++;
 }
 
 
@@ -244,16 +255,19 @@ void battery_begin() {
   battery_sensor.setCapacity(BATTERY_CAPACITY_MAH); 
 }
 
-int battery_measurement_count = 0;
+long battery_measurement_interval_count = 0L;
+long battery_measurement_count = 0L;
 
 void battery_read_and_send() {
-  if (battery_measurement_count++ < BATTERY_MEASUREMENT_INTERVAL) {
+  if (battery_measurement_interval_count++ < BATTERY_MEASUREMENT_INTERVAL) {
     return;
   }
-  battery_measurement_count = 0;
+  battery_measurement_interval_count = 0;
+  battery_measurement_count += 1;
   
   sprintf(data_sentence_buffer,
-	  "$B,%10.6f,%10.6f,%10.6f,%10.6f",
+	  "$B,%ld,%10.6f,%10.6f,%10.6f,%10.6f",
+	  battery_measurement_count,
 	  (float) battery_sensor.voltage(),
 	  (float) battery_sensor.current(),
 	  (float) battery_sensor.capacity(),
@@ -266,6 +280,7 @@ void battery_read_and_send() {
 // Metrics
 
 #define METRICS_REPORTING_INTERVAL 100
+#define ENABLE_METRICS false
 
 void metrics_begin() {}
 
@@ -278,6 +293,9 @@ long metrics_this_loop_start = 0L;
 long metrics_count = 0L;
 
 void metrics_loop_start() {
+  if (!ENABLE_METRICS) {
+    return;
+  }
   long t = micros();
   if (metrics_last_loop_start == 0L) {
     metrics_last_loop_start = t;
@@ -289,6 +307,9 @@ void metrics_loop_start() {
 }
 
 void metrics_loop_end() {
+  if (!ENABLE_METRICS) {
+    return;
+  }
   metrics_looptime.add(micros() - metrics_this_loop_start);
   if (++metrics_count > METRICS_REPORTING_INTERVAL) {
     sprintf(data_sentence_buffer, "$M,looptime,%s", metrics_looptime.str());
@@ -336,8 +357,6 @@ void timer_fired() {
 #define MEASUREMENT_INTERVAL_US 50000 // 50 ms = 20 Hz
 
 void setup() {
-  Serial.begin(115200);
-  
   // Initialize the SPI bus
   SPI.begin();
   
@@ -346,7 +365,7 @@ void setup() {
   Wire.setClock(I2C_BUS_SPEED);
 
   measurements_begin();
-  
+
   // Create semaphore to inform us when the timer has fired
   // timerSemaphore = xSemaphoreCreateBinary();
 
