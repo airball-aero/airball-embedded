@@ -115,10 +115,14 @@ Remove supports from the holes and hexagonal pockets (4 places). Remove supports
 
 ### 2.5  Battery support
 
-Clean up the rim. Drill ⌀ 5/64" x 3/8" deep (2 places). Make 2 parts.
+Clean up the rim where shown. Clean up the rim from the hexagonal pocket and remove support material from it. If one of the surfaces is rough, smooth it out by drawing it gently against sandpaper. Make 4 parts.
 
-<a href="./images/3dp-battery-support.jpg">
-  <img src="./images/3dp-battery-support-icon.jpg">
+<a href="./images/3dp-battery-support-1.jpg">
+  <img src="./images/3dp-battery-support-1-icon.jpg">
+</a>
+
+<a href="./images/3dp-battery-support-2.jpg">
+  <img src="./images/3dp-battery-support-2-icon.jpg">
 </a>
 
 ### 2.6  Barometer shroud
@@ -160,7 +164,7 @@ With the nose resting firmly on a flat surface, carefully drill out the holes in
 </a>
 
 ## 3  Preparing the body tube
-
+ 
 ### 3.1  Finishing
 
 Place sandpaper on a flat surface, press down the tube firmly, and flatten its edge using a circular motion.
@@ -302,6 +306,7 @@ For each of the 2 central holes in the barometer shroud, insert the remaining 2 
 ## 5  Building the rear assembly
 
 TODO(ihab): 7/64" drill rear part or make hole bigger
+
 TODO(ihab): Make the knob hole bigger 
 
 Press the two #4 nuts into the pockets of the rear cover, pulling them into place with their matching screws.
@@ -376,7 +381,7 @@ Place a drop of CA glue on the thread of each of the #4 screws where it enters t
   <img src="./images/rear-assy-13-icon.jpg">
 </a>
 
-Secure the RAM ball to the mounting plate using the supplied 1/4"-20 flat head screw, and hand tighten until the hexagonal portion of the RAM ball meets the hexagonal pocket in proper alignment.
+Secure the RAM ball to the mounting plate using the supplied 1/4"-20 flat head screw, and finger tighten until the hexagonal portion of the RAM ball meets the hexagonal pocket and is in proper alignment.
 
 <a href="./images/rear-assy-14.jpg">
   <img src="./images/rear-assy-14-icon.jpg">
@@ -386,9 +391,99 @@ Secure the RAM ball to the mounting plate using the supplied 1/4"-20 flat head s
   <img src="./images/rear-assy-15-icon.jpg">
 </a>
 
-Tighten the 1/4"-20 screw until the hexagonal portion of the RAM ball is fully seated inside the mounting plage.
+Using a screwdriver, tighten the 1/4"-20 screw until the hexagonal portion of the RAM ball is fully seated inside the mounting plage.
 
 <a href="./images/rear-assy-16.jpg">
   <img src="./images/rear-assy-16-icon.jpg">
+</a>
+
+## 6  Building the body tube assembly
+
+TODO(ihab): Tape needs to be more standardized.
+
+In two of the battery supports, insert one nut in the hexagonal pocket of each.
+
+<a href="./images/body-assy-1.jpg">
+  <img src="./images/body-assy-1-icon.jpg">
+</a>
+
+In one of them, insert two nuts sideways (flat part horizontal) in the slots as shown.
+
+<a href="./images/body-assy-2.jpg">
+  <img src="./images/body-assy-2-icon.jpg">
+</a>
+
+<a href="./images/body-assy-3.jpg">
+  <img src="./images/body-assy-3-icon.jpg">
+</a>
+
+Place the other support on top of the first, and insert two screws, from opposite sides, to hold the two parts together.
+
+<a href="./images/body-assy-4.jpg">
+  <img src="./images/body-assy-4-icon.jpg">
+</a>
+
+Trim a piece of the supplied adhesive tape to fit in the bottom of the resulting assembly.
+
+<a href="./images/body-assy-5.jpg">
+  <img src="./images/body-assy-5-icon.jpg">
+</a>
+
+Repeat this procedure using the other two battery supports.
+
+Expose the adhesive in one of the battery support assemblies and place the battery inside it, pressing down to engage the adhesive. Make sure the wire running down the length of the battery is near the notch in the support, as shown. Leave about the amount of space between the end of the battery and the support as indicated in the photograph.
+
+<a href="./images/body-assy-6.jpg">
+  <img src="./images/body-assy-6-icon.jpg">
+</a>
+
+<a href="./images/body-assy-7.jpg">
+  <img src="./images/body-assy-7-icon.jpg">
+</a>
+
+Place the resulting assembly inside the body tube and secure it with two screws through two of the holes drilled previously, as shown.
+
+<a href="./images/body-assy-8.jpg">
+  <img src="./images/body-assy-8-icon.jpg">
+</a>
+
+Pick up the other battery support assembly, expose its adhesive, line it up carefully with the second pair of holes in the body tube, and then move it upward so that it adheres to the battery and is in the proper position to accept two more screws.
+
+<a href="./images/body-assy-9.jpg">
+  <img src="./images/body-assy-9-icon.jpg">
+</a>
+
+Secure two more screws through the body tube into the second battery support assembly. Note how the wire running down the battery is off to the side, not wedged between the battery and the body tube. Confirm that the battery is securely positioned and will not wobble. If it does wobble, disassemble and add another layer of adhesive tape as padding.
+
+<a href="./images/body-assy-10.jpg">
+  <img src="./images/body-assy-10-icon.jpg">
+</a>
+
+Apply adhesive tape to the curved surface of the antenna support, as shown.
+
+<a href="./images/body-assy-11.jpg">
+  <img src="./images/body-assy-11-icon.jpg">
+</a>
+
+Apply adhesive tape to the surface of the antenna without the wire attached. Do not nick or damage the wire while trimming the adhesive tape!
+
+<a href="./images/body-assy-12.jpg">
+  <img src="./images/body-assy-12-icon.jpg">
+</a>
+
+<a href="./images/body-assy-13.jpg">
+  <img src="./images/body-assy-13-icon.jpg">
+</a>
+
+Expose the adhesive on the antenna and press it on in a centered position on the antenna support.
+
+<a href="./images/body-assy-14.jpg">
+  <img src="./images/body-assy-14-icon.jpg">
+</a>
+
+Expose the adhesive on the antenna support and press it into the interior of the body tube, centered on the line you drew earlier, and centered in a lengthwise position.
+
+<a href="./images/body-assy-15.jpg">
+  <img src="./images/body-assy-15-icon.jpg">
 </a>
 
