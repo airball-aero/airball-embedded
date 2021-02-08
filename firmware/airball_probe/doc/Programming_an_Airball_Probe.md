@@ -8,14 +8,16 @@ Support for the SparkFun Fio v3 must be added to the Arduino IDE, by following t
 
 The following Arduino libraries must also be installed:
 
-* [TI\_TCA9548A](https://github.com/jeremycole/TI_TCA9548A) – Used for the TI TCA9548A I²C multiplexer.
-* [AllSensors\_DLHR](https://github.com/jeremycole/AllSensors_DLHR) – Used for the AllSensors DLHR differential pressure sensors.
-* [AllSensors\_DLV](https://github.com/jeremycole/AllSensors_DLV) – Used for the AllSensors DLV absolute pressure sensor.
-* [Temperature\_LM75\_Derived](https://github.com/jeremycole/Temperature_LM75_Derived) – Used for the on-board TI TMP275 temperature sensor.
-* [OneWire](https://github.com/PaulStoffregen/OneWire) – Used by the DallasTemperature library.
-* [DallasTemperature](https://github.com/milesburton/Arduino-Temperature-Control-Library) – Used for the external Maxim DS18B20 1-Wire temperature sensor for measuring outside air temperature.
-* [Maxim_DS2782](https://github.com/jeremycole/Maxim_DS2782) – Used for the on-board battery management IC.
-* [TimerOne](http://playground.arduino.cc/Code/Timer1) – Used to set up an interrupt to trigger measurement at a specific interval.
+* [TI\_TCA9548A](https://github.com/jeremycole/TI_TCA9548A) – Used for the TI TCA9548A I²C multiplexer. (by Jeremy Cole)
+* [AllSensors\_DLHR](https://github.com/jeremycole/AllSensors_DLHR) – Used for the AllSensors DLHR differential pressure sensors.(by Jeremy Cole)
+* [AllSensors\_DLV](https://github.com/jeremycole/AllSensors_DLV) – Used for the AllSensors DLV absolute pressure sensor.(by Jeremy Cole)
+* [Temperature\_LM75\_Derived](https://github.com/jeremycole/Temperature_LM75_Derived) – Used for the on-board TI TMP275 temperature sensor.(by Jeremy Cole, Liam Cole)
+* [OneWire](https://github.com/PaulStoffregen/OneWire) – Used by the DallasTemperature library. (By Paul Stoffregen & others)
+* [DallasTemperature](https://github.com/milesburton/Arduino-Temperature-Control-Library) – Used for the external Maxim DS18B20 1-Wire temperature sensor for measuring outside air temperature. (by Miles Burton & others)
+* [Maxim_DS2782](https://github.com/jeremycole/Maxim_DS2782) – Used for the on-board battery management IC. (by Jeremy Cole) This is not found in the Library mangager and will have to be downloaded and installed.
+* [TimerOne](http://playground.arduino.cc/Code/Timer1) – Used to set up an interrupt to trigger measurement at a specific interval. (by Jesse Tane & others)
+[BQ27441](https://github.com/sparkfun/SparkFun_BQ27441_Arduino_Library) - SparkFun BQ27441-G1A LiPo Fuel Gauge Arduino Library (by sparkfun)
+[Adafruit_BMP3XX](https://github.com/adafruit/Adafruit_BMP3XX) - Adafruit_BMP3XX - this also requires some of it's own libs so easiest to install via Library manager. (by Adafruit)
 
 The above libraries may be installed using one of the following methods:
 
