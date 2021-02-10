@@ -107,8 +107,15 @@ void Airdata::update(
   const double total_angle = sqrt(alpha_ * alpha_ + beta_ * beta_);
   const double q = dp0 / single_point_sphere_pressure_coefficient(total_angle);
 
-  update(alpha, beta, q, d->get_baro(), d->get_temperature(), qnh,
-         ball_smoothing_factor, vsi_smoothing_factor);
+  update(
+      alpha,
+      beta,
+      q,
+      d->get_baro(),
+      d->get_temperature(),
+      qnh,
+      ball_smoothing_factor,
+      vsi_smoothing_factor);
 }
 
 void Airdata::update(
@@ -116,9 +123,15 @@ void Airdata::update(
     const double qnh,
     const double ball_smoothing_factor,
     const double vsi_smoothing_factor) {
-  update(d->get_alpha(), d->get_beta(), d->get_q(), d->get_baro(),
-         d->get_temperature(), qnh, ball_smoothing_factor,
-         vsi_smoothing_factor);
+  update(
+      degrees_to_radians(d->get_alpha()),
+      degrees_to_radians(d->get_beta()),
+      d->get_q(),
+      d->get_baro(),
+      d->get_temperature(),
+      qnh,
+      ball_smoothing_factor,
+      vsi_smoothing_factor);
 }
 
 void Airdata::update(
