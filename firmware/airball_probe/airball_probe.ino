@@ -374,7 +374,7 @@ void setup() {
 
   // Initialize the barometer
   mux.selectChannel(MUX_CHANNEL_BAROMETER);
-  barometer.begin();
+  barometer.begin_I2C();
   barometer.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
   barometer.setPressureOversampling(BMP3_OVERSAMPLING_4X);
   barometer.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
