@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # coding=utf-8
 
+import operator
+import csv
 import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -8,26 +10,7 @@ import math
 import numpy as np
 import scipy.optimize as spo
 import jinja2
-
-########################################################################
-
-# This is the core formula that computes the pressure at a given point
-# on a sphere as a function of angular offset from the stagnation point.
-# The result is a ratio of the stagnation pressure _q_. The angle is
-# given in radians.
-
-def sphere_pressure_coefficient_polar(angle):
-    def cos_sq(x):
-        y = math.cos(x)
-        return y * y
-    return 1.0 - 9.0 / 4.0 * cos_sq(angle - math.pi / 2.0);
-
-# This formula takes two angles, alpha and beta, and computes the
-# pressure coefficient at the given point using the distance formula.
-
-def sphere_pressure_coefficient_cartesian(alpha, beta):
-    return sphere_pressure_coefficient_polar(
-        math.sqrt(alpha * alpha + beta * beta))
+import sys
 
 ########################################################################
 
@@ -49,100 +32,206 @@ def sphere_pressure_coefficient_cartesian(alpha, beta):
 # of the spherical nose. The raw measurements are:
 #     (dp0, dpA, dpB)
 # where the pressures are defined as:
-#     dp0 = (center hole) - (bottom 90 degree hole)
+#     dp0 = (center hole) - (upper hole)
 #     dpA = (lower hole) - (upper hole)
 #     dpB = (right hole) - (left hole)
 
 ########################################################################
 
-# The following functions takes a triple of airflow parameters
-#     (alpha, beta, q)
-# where alpha and beta are in radians, and q can be in any units but,
-# for the purposes of this module, we always use pascals. They return
-# the expected "raw" measurements from potential flow theory.
-
-# Probe v1 version
-
-def v1_probe_data2raw(alpha, beta, q):
-    p0 = q * sphere_pressure_coefficient_cartesian(
-        alpha,
-        beta)
-    pUpr = q * sphere_pressure_coefficient_cartesian(
-        alpha - math.pi / 4,
-        beta)
-    pLwr = q * sphere_pressure_coefficient_cartesian(
-        alpha + math.pi / 4,
-        beta)
-    pLft = q * sphere_pressure_coefficient_cartesian(
-        alpha,
-        beta - math.pi / 4)
-    pRgt = q * sphere_pressure_coefficient_cartesian(
-        alpha,
-        beta + math.pi / 4)
-    return [p0, pLwr - pUpr, pRgt - pLft]
-
-# Probe v2 version
-
-def v2_probe_data2raw(alpha, beta, q):
-    p0 = q * sphere_pressure_coefficient_cartesian(
-        alpha,
-        beta)
-    pUpr = q * sphere_pressure_coefficient_cartesian(
-        alpha - math.pi / 4,
-        beta)
-    pLwr = q * sphere_pressure_coefficient_cartesian(
-        alpha + math.pi / 4,
-        beta)
-    pBtm = q * sphere_pressure_coefficient_cartesian(
-        alpha + math.pi / 2,
-        beta)
-    pLft = q * sphere_pressure_coefficient_cartesian(
-        alpha,
-        beta - math.pi / 4)
-    pRgt = q * sphere_pressure_coefficient_cartesian(
-        alpha,
-        beta + math.pi / 4)
-    return [
-        0.5 * (p0 - pBtm),
-        0.7 * (pLwr - pUpr),
-        0.7 * (pRgt - pLft),
-    ]
+generate_plots = True
 
 ########################################################################
 
-# The following functions take a triple of raw pressure measurements
-#     (dp0, dpa, dpb)
-# where these pressures can be in any units but, for the purposes of
-# this module, we always use pascals. They return the airdata parameters
-#     (alpha, beta, q)
-# from potential flow theory.
+csvfiles = [
+    '5psf,smooth,fairing.csv',
+    '10psf,smooth,fairing.csv',
+    '15psf,smooth,fairing.csv',
+    '20psf,smooth,fairing.csv',
+]
 
-# Generic case version
+raw_pressures = ['c', 'b', 'u', 'd', 'l', 'r']
 
-def generic_probe_raw2data(dp0, dpa, dpb, data2raw):
+def read_data():
+    d = {
+        'alpha': np.array([]),
+        'beta': np.array([]),
+    }
+    for p in raw_pressures:
+        d[p] = np.array([])
+    for f in csvfiles:
+        with open(f, 'r') as csvfile:
+            for r in csv.reader(csvfile):
+                d['alpha'] = np.append(d['alpha'], int(r[0]))
+                d['beta'] = np.append(d['beta'], int(r[1]))
+                q = float(r[2])
+                for i in range(0, len(raw_pressures)):
+                    d[raw_pressures[i]] = np.append(
+                        d[raw_pressures[i]],
+                        float(r[i + 3]) / q)
+    return d
 
-    ra0 = dpa / dp0
-    rb0 = dpb / dp0
+raw_data = read_data()
 
-    def to_optimize(angles):
-        [dp0, dpa, dpb] = data2raw(angles[0], angles[1], 1.0)
-        return [dpa / dp0 - ra0, dpb / dp0 - rb0]
+########################################################################
 
-    [alpha, beta] = spo.root(to_optimize, [0, 0]).x
-    dp0_over_q = data2raw(alpha, beta, 1.0)[0]
-    q = dp0 / dp0_over_q
+def tuples(data):
+    n = len(data[list(data.keys())[0]])
+    for i in range(0, n):
+        t = {}
+        for k in data:
+            t[k] = data[k][i]
+        yield t
 
-    return [alpha, beta, q]
+def filter(data, f):
+    r = {}
+    for k in data:
+        r[k] = np.array([])
+    for t in tuples(data):
+        if f(t):
+            for k in data:
+                r[k] = np.append(r[k], t[k])
+    return r
+        
+def distance(x, y):
+    return math.sqrt(math.pow(x, 2) + math.pow(y, 2))
 
-# Probe v1 version
+def mirror_neg_beta(data):
+    data = filter(data, lambda t: t['beta'] >= 0)
+    r = {}
+    for k in data:
+        r[k] = np.array([])
+    for t in tuples(data):
+        for k in data:
+            r[k] = np.append(r[k], t[k])
+        if t['beta'] == 0:
+            continue
+        t['beta'] = -1 * t['beta']
+        t['r'] = -1 * t['r']
+        t['l'] = -1 * t['l']
+        for k in data:
+            r[k] = np.append(r[k], t[k])
+    return r
 
-def v1_probe_raw2data(dp0, dpa, dpb):
-    return generic_probe_raw2data(dp0, dpa, dpb, v1_probe_data2raw)
-    
-# Probe v2 version
+raw_data = filter(raw_data, lambda t: t['alpha'] >= -15)
+raw_data = filter(raw_data, lambda t: t['alpha'] <= 25)
+raw_data = filter(raw_data, lambda t: distance(t['alpha'], t['beta']) <= 45)
+raw_data = mirror_neg_beta(raw_data)
 
-def v2_probe_raw2data(dp0, dpa, dpb):
-    return generic_probe_raw2data(dp0, dpa, dpb, v2_probe_data2raw)
+########################################################################
+
+def plot_alphabeta(zlabel, data):
+    if not generate_plots: return
+    fig = plt.figure(figsize=(11, 8.5))
+    ax = plt.axes(projection='3d')
+    ax.set_xlabel('alpha (degrees)')
+    ax.set_ylabel('beta (degrees)')
+    ax.set_zlabel(zlabel)
+    ax.scatter3D(
+        raw_data['alpha'],
+        raw_data['beta'],
+        data)
+    plt.savefig('alpha_beta_to_' + zlabel + '.png', dpi=300)
+
+for p in raw_pressures:
+    plot_alphabeta(p + '_over_q', raw_data[p])
+
+dp0 = raw_data['c'] - raw_data['b']
+dpa_over_dp0 = (raw_data['d'] - raw_data['u']) / dp0
+dpb_over_dp0 = (raw_data['r'] - raw_data['l']) / dp0
+q_over_dp0 = 1 / dp0
+
+plot_alphabeta('q_over_dp0', q_over_dp0)
+plot_alphabeta('dpa_over_dp0', dpa_over_dp0)
+plot_alphabeta('dpb_over_dp0', dpb_over_dp0)
+               
+########################################################################
+
+def plot_scatter(plot_name, z, zlabel):
+    if not generate_plots: return
+    fig = plt.figure(figsize=(11, 8.5))
+    ax = plt.axes(projection='3d')
+    ax.set_xlabel('dpa / dp0')
+    ax.set_ylabel('dpb / dp0')
+    ax.set_zlabel(zlabel)
+    ax.scatter3D(dpa_over_dp0, dpb_over_dp0, z)
+    plt.savefig(plot_name + '.png', dpi=300)
+
+plot_scatter('pressure_ratios_to_alpha',
+             raw_data['alpha'],
+             'alpha (degrees)')
+
+plot_scatter('pressure_ratios_to_beta',
+             raw_data['beta'],
+             'beta (degrees)')
+
+plot_scatter('pressure_ratios_to_q_over_dp0',
+             q_over_dp0,
+             'q / dp0')
+
+########################################################################
+
+def make_fit(x, y, z):
+
+    def generic_fit_function(xvalues, a, b, c, d, e, f, g, h, i, j, k, l):
+        x = xvalues[0]
+        y = xvalues[1]
+        return (a +
+                b * np.power(x, 1) +
+                c * np.power(x, 2) +
+                d * np.power(x, 3) +
+                e * np.power(y, 1) +
+                f * np.power(y, 2) +
+                g * np.power(y, 3) +
+                h * np.power(x, 1) * np.power(y, 1) +
+                i * np.power(x, 2) * np.power(y, 2) +
+                j * np.power(x, 3) * np.power(y, 3) +
+                k * np.sin(x) +
+                l * np.cos(x))
+
+    popt, pcov = spo.curve_fit(
+        generic_fit_function,
+        [x, y],
+        z,
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+
+    def result_function(x, y):
+        return generic_fit_function([x, y], *popt)
+
+    return result_function
+
+model_q_over_dp0 = make_fit(dpa_over_dp0, dpb_over_dp0, q_over_dp0)
+model_alpha = make_fit(dpa_over_dp0, dpb_over_dp0, raw_data['alpha'])
+model_beta = make_fit(dpa_over_dp0, dpb_over_dp0, raw_data['beta'])
+
+def plot_data_model(plot_name, z, zlabel, model):
+    if not generate_plots: return
+    X, Y = np.meshgrid(
+        np.arange(-1, 3, 0.1),
+        np.arange(-4, 4, 0.1))
+    Z = model(X, Y)
+    fig = plt.figure(figsize=(11, 8.5))
+    ax = plt.axes(projection='3d')
+    ax.set_xlabel('dpa / dp0')
+    ax.set_ylabel('dpb / dp0')
+    ax.set_zlabel(zlabel)
+    ax.scatter3D(dpa_over_dp0, dpb_over_dp0, z, color='blue')
+    ax.plot_surface(X, Y, Z, color='yellow')
+    plt.savefig(plot_name + '.png', dpi=300)
+             
+plot_data_model('calibration_alpha',
+                raw_data['alpha'],
+                'alpha',
+                model_alpha)
+
+plot_data_model('calibration_beta',
+                raw_data['beta'],
+                'beta',
+                model_beta)
+
+plot_data_model('calibration_q_over_dp0',
+                q_over_dp0,
+                'q / dp0',
+                model_q_over_dp0)
 
 ########################################################################
 
@@ -158,6 +247,7 @@ def load_template():
 # Plot raw calibration data for quality control
 
 def plot_calibration(file_prefix, var_name, nx, ny, linear_data):
+    if not generate_plots: return
     xx, yy = np.meshgrid(range(0, nx), range(0, ny))
     f = lambda ix, iy: linear_data[iy + ny * ix]
     zz = np.vectorize(f)(xx, yy)
@@ -178,37 +268,36 @@ def plot_calibration(file_prefix, var_name, nx, ny, linear_data):
 
 # Generate a calibration data file for a given probe design
 
-dp_range = 1.40   # The absolute maximum for (dpx/dp0) we expect
-dp_step  = 0.05   # The step of (dpx/dp0) to generate precise data points
-
 def generate_file(fileprefix, raw2data):
-    
+
     data_alpha = []
     data_beta = []
     data_q_over_dp0 = []
 
-    dp_alpha_min = -dp_range
-    dp_alpha_max = dp_range
-    dp_alpha_zero_offset = dp_range
+    dp_step = 0.1
+    
+    dp_alpha_min = -1.0
+    dp_alpha_max = 3.0
+    dp_alpha_zero_offset = 1.0
     n_alpha = int(round((dp_alpha_max - dp_alpha_min) / dp_step) + 1)
     
-    dp_beta_min = 0.0
-    dp_beta_max = dp_range
-    dp_beta_zero_offset = 0.0
+    dp_beta_min = -4.0
+    dp_beta_max = 4.0
+    dp_beta_zero_offset = 4.0
     n_beta = int(round((dp_beta_max - dp_beta_min) / dp_step) + 1)    
 
     for i in range(0, n_alpha):
         dpa = dp_alpha_min + dp_step * i
         for j in range(0, n_beta):
             dpb = dp_beta_min + dp_step * j
-            [alpha, beta, q_over_dp0] = raw2data(1, dpa, dpb)
-            data_alpha.append(math.degrees(alpha));
-            data_beta.append(math.degrees(beta));
+            [alpha, beta, q_over_dp0] = raw2data(dpa, dpb)
+            data_alpha.append(alpha);
+            data_beta.append(beta);
             data_q_over_dp0.append(q_over_dp0)
 
-    plot_calibration(fileprefix, "alpha", n_alpha, n_beta, data_alpha)
-    plot_calibration(fileprefix, "beta", n_alpha, n_beta, data_beta)
-    plot_calibration(fileprefix, "q_over_dp0", n_alpha, n_beta, data_q_over_dp0)    
+    plot_calibration(fileprefix, 'alpha', n_alpha, n_beta, data_alpha)
+    plot_calibration(fileprefix, 'beta', n_alpha, n_beta, data_beta)
+    plot_calibration(fileprefix, 'q_over_dp0', n_alpha, n_beta, data_q_over_dp0)    
             
     outfile = open(fileprefix + '_calibration.h', 'w')
             
@@ -265,5 +354,11 @@ def generate_file(fileprefix, raw2data):
 
 # Generate calibration files for our two known probe designs
 
-generate_file("v1_probe", v1_probe_raw2data)
-generate_file("v2_probe", v2_probe_raw2data)
+def v2_probe_raw2data(dpa_over_dp0, dpb_over_dp0):
+    return [
+        model_alpha(dpa_over_dp0, dpb_over_dp0),
+        model_beta(dpa_over_dp0, dpb_over_dp0),
+        model_q_over_dp0(dpa_over_dp0, dpb_over_dp0),
+    ]
+
+generate_file('v2_probe', v2_probe_raw2data)
