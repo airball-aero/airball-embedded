@@ -3,7 +3,8 @@
 
 class Metric {
  public:
- Metric() : n_(0L), min_(0.0f), max_(0.0f), tot_(0.0f) {}
+  Metric(const char* name, const long interval)
+    : name_(name), interval_(interval), n_(0L), min_(0.0f), max_(0.0f), tot_(0.0f), lat_(0.0f) {}
   ~Metric() {}
 
   void add(float x) {
@@ -15,19 +16,38 @@ class Metric {
     n_++;
   }
 
+  void mark() { mark_ = micros(); }
+
+  void record() {
+    if (mark_ == 0L) { return; }
+    add(micros() - mark_);
+    mark_ = 0L;
+  }
+  
+  bool ready() { return n_ >= interval_; }
+  
   const char* str() {
     sprintf(buf_,
-	    "n,%ld,min,%f,max,%f,avg,%f,lat,%f",
+	    "name,%s,n,%ld,min,%f,max,%f,avg,%f,lat,%f",
+	    name_,
 	    n_,
 	    min_,
 	    max_,
 	    tot_ / ((float) n_),
 	    lat_);
+    n_ = 0L;
+    min_ = 0.0f;
+    max_ = 0.0f;
+    tot_ = 0.0f;
+    lat_ = 0.0f;
     return buf_;
   }
   
  private:
   char buf_[1024];
+  const char* name_;
+  const long interval_;
+  long mark_;
   long n_;
   float tot_;
   float min_;

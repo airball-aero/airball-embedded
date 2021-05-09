@@ -21,11 +21,53 @@
 
 char data_sentence_buffer[1024];
 
+void wifi_send(const char* sentence);
+
+////////////////////////////////////////////////////////////////////////
+//
+// Metrics
+
+#define METRICS_REPORTING_INTERVAL 100
+#define ENABLE_METRICS false
+
+void metrics_begin() {}
+
+Metric metrics_looptime("looptime", METRICS_REPORTING_INTERVAL);
+Metric metrics_loopint("loopint", METRICS_REPORTING_INTERVAL);
+Metric metrics_dp0_time("dp0_time", METRICS_REPORTING_INTERVAL);
+Metric metrics_dpa_time("dpa_time", METRICS_REPORTING_INTERVAL);
+Metric metrics_dpb_time("dpb_time", METRICS_REPORTING_INTERVAL);
+Metric metrics_baro_time("dpb_time", METRICS_REPORTING_INTERVAL);
+Metric metrics_t_time("t_time", METRICS_REPORTING_INTERVAL);
+Metric metrics_battery_time("battery_time", 10);
+Metric metrics_wifi_time("wifi_time", METRICS_REPORTING_INTERVAL);
+
+void metrics_send_one(Metric& metric) {
+  if (metric.ready()) {
+    sprintf(data_sentence_buffer, "$M,%s", metric.str());
+    wifi_send(data_sentence_buffer);
+  }
+}
+
+void metrics_send() {
+  if (!ENABLE_METRICS) {
+    return;
+  }
+  metrics_send_one(metrics_looptime);
+  metrics_send_one(metrics_loopint);
+  metrics_send_one(metrics_dp0_time);
+  metrics_send_one(metrics_dpa_time);
+  metrics_send_one(metrics_dpb_time);
+  metrics_send_one(metrics_t_time);
+  metrics_send_one(metrics_battery_time);
+  metrics_send_one(metrics_wifi_time);
+}
+
 ////////////////////////////////////////////////////////////////////////
 //
 // WiFi base station with sensor readings sent over TCP
 
-#define WIFI_SSID "ProbeOnAStick"
+#define WIFI_SSID "AirballProbe_00000001"
 #define WIFI_PORT 80
 
 WiFiServer wifi_server(WIFI_PORT);
@@ -37,9 +79,11 @@ void wifi_begin() {
 }
 
 void wifi_send(const char* sentence) {
+  metrics_wifi_time.mark();
   while (true) {
     WiFiClient client = wifi_server.available();
     if (client) {
+      client.setNoDelay(true);
       wifi_clients.push_back(client);
     } else {
       break;
@@ -54,6 +98,7 @@ void wifi_send(const char* sentence) {
       wifi_clients.erase(it);
     }
   }
+  metrics_wifi_time.record();
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -115,10 +160,18 @@ void pressures_begin() {
 
 struct pressures_struct pressures_read() {
   pressures p;
-  
+
+  metrics_dp0_time.mark();
   p.dp0 = pressure_read_one(&pressure_dp0);
+  metrics_dp0_time.record();
+
+  metrics_dpa_time.mark();
   p.dpa = pressure_read_one(&pressure_dpa);
+  metrics_dpa_time.record();
+
+  metrics_dpb_time.mark();
   p.dpb = pressure_read_one(&pressure_dpb);
+  metrics_dpb_time.record();
 
   if (pressure_autozero_complete) {
     p.dp0 -= pressure_autozero_offset.dp0;
@@ -138,9 +191,6 @@ struct pressures_struct pressures_read() {
     pressure_autozero_count++;
   }
 
-  // dp0 should physically never be negative, so we clamp it
-  if (p.dp0 < 0) { p.dp0 = 0; }
-  
   return p;
 }
 
@@ -153,17 +203,17 @@ Adafruit_BMP3XX barometer;
 
 void barometer_begin() {
   // Initialize the barometer
-  barometer.begin(0x76);
+  barometer.begin_I2C(0x76, &Wire);
   barometer.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
   barometer.setPressureOversampling(BMP3_OVERSAMPLING_4X);
   barometer.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
 }
 
 float barometer_read() {
-  if (barometer.performReading()) {
-    return barometer.pressure;
-  }
-  return 0.0f;
+  metrics_baro_time.mark();
+  bool success = barometer.performReading();
+  metrics_baro_time.record();
+  return success ? barometer.pressure : 0.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -179,12 +229,17 @@ void thermometer_begin() {
 }
 
 float thermometer_read() {
-  return thermometer.readTempC();
+  metrics_t_time.mark();
+  float t = thermometer.readTempC();
+  metrics_t_time.record();
+  return t;
 }
 
 ////////////////////////////////////////////////////////////////////////
 //
 // Top level airdata function
+
+#define ENABLE_RAW_AIRDATA false
 
 void airdata_begin() {
   pressures_begin();
@@ -212,21 +267,27 @@ void airdata_read_and_send() {
     memset(&airdata, 0, sizeof(airdata_triple));
   }
 
-  sprintf(data_sentence_buffer,
-	  "$A,%ld,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f",
-	  airdata_count,
-	  baro,
-	  temp,
-	  p.dp0,
-	  p.dpa,
-	  p.dpb);
-  wifi_send(data_sentence_buffer);
-  
+  if (ENABLE_RAW_AIRDATA) {
+    sprintf(data_sentence_buffer,
+	    "$A,%ld,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f",
+	    airdata_count,
+	    baro,
+	    temp,
+	    p.dp0,
+	    p.dpa,
+	    p.dpb);
+    wifi_send(data_sentence_buffer);
+  }
+
+  if (airdata.q < 0) {
+    airdata.q = 0;
+  }
+
   sprintf(data_sentence_buffer,
 	  "$AR,%ld,%10.6f,%10.6f,%10.6f,%10.6f,%10.6f",
 	  airdata_count,
-	  -airdata.alpha,  // alpha
-	  -airdata.beta,   // beta
+	  airdata.alpha,   // alpha
+	  airdata.beta,    // beta
 	  airdata.q,       // q
 	  baro,            // p TODO(ihab): Correction
 	  temp);           // T
@@ -234,7 +295,6 @@ void airdata_read_and_send() {
 
   airdata_count++;
 }
-
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -246,6 +306,8 @@ void airdata_read_and_send() {
 
 // How many airdata samples per battery sample?
 #define BATTERY_MEASUREMENT_INTERVAL 50
+
+#define ENABLE_BATTERY_MESSAGES false
 
 // Initialize our sensor
 BQ27441 battery_sensor;
@@ -264,60 +326,20 @@ void battery_read_and_send() {
   }
   battery_measurement_interval_count = 0;
   battery_measurement_count += 1;
-  
-  sprintf(data_sentence_buffer,
-	  "$B,%ld,%10.6f,%10.6f,%10.6f,%10.6f",
-	  battery_measurement_count,
-	  (float) battery_sensor.voltage(),
-	  (float) battery_sensor.current(),
-	  (float) battery_sensor.capacity(),
-	  ((float) battery_sensor.capacity()) / ((float) BATTERY_CAPACITY_MAH));
+
+  if (ENABLE_BATTERY_MESSAGES) {
+    metrics_battery_time.mark();
+    sprintf(data_sentence_buffer,
+	    "$B,%ld,%10.6f,%10.6f,%10.6f,%10.6f",
+	    battery_measurement_count,
+	    (float) battery_sensor.voltage(),
+	    (float) battery_sensor.current(),
+	    (float) battery_sensor.capacity(),
+	    ((float) battery_sensor.capacity()) / ((float) BATTERY_CAPACITY_MAH));
+    metrics_battery_time.record();
+  }
+
   wifi_send(data_sentence_buffer);
-}
-
-////////////////////////////////////////////////////////////////////////
-//
-// Metrics
-
-#define METRICS_REPORTING_INTERVAL 100
-#define ENABLE_METRICS false
-
-void metrics_begin() {}
-
-Metric metrics_looptime;
-Metric metrics_loopint;
-
-long metrics_last_loop_start = 0L;
-long metrics_this_loop_start = 0L;
-
-long metrics_count = 0L;
-
-void metrics_loop_start() {
-  if (!ENABLE_METRICS) {
-    return;
-  }
-  long t = micros();
-  if (metrics_last_loop_start == 0L) {
-    metrics_last_loop_start = t;
-  } else {
-    metrics_loopint.add(t - metrics_last_loop_start);
-    metrics_last_loop_start = t;
-  }
-  metrics_this_loop_start = t;
-}
-
-void metrics_loop_end() {
-  if (!ENABLE_METRICS) {
-    return;
-  }
-  metrics_looptime.add(micros() - metrics_this_loop_start);
-  if (++metrics_count > METRICS_REPORTING_INTERVAL) {
-    sprintf(data_sentence_buffer, "$M,looptime,%s", metrics_looptime.str());
-    wifi_send(data_sentence_buffer);
-    sprintf(data_sentence_buffer, "$M,loopint,%s", metrics_loopint.str());
-    wifi_send(data_sentence_buffer);
-    metrics_count = 0L;
-  }
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -325,10 +347,10 @@ void metrics_loop_end() {
 // Central measurement function
 
 void measurements_begin() {
+  metrics_begin();
   wifi_begin();
   airdata_begin();
   battery_begin();
-  metrics_begin();
 }
 
 void measurements_read_and_send() {
@@ -354,7 +376,8 @@ void timer_fired() {
 #define I2C_BUS_SPEED 400000L // 400 kHz
 
 // How frequently (in uS) should measurements be taken?
-#define MEASUREMENT_INTERVAL_US 50000 // 50 ms = 20 Hz
+
+#define MEASUREMENT_INTERVAL_US 100000 // 100 ms = 10 Hz
 
 void setup() {
   // Initialize the SPI bus
@@ -387,10 +410,17 @@ void loop() {
     timer_start_measurement = false;
   }
   portEXIT_CRITICAL(&timer_mux);
-  
+
   if (measure) {
-    metrics_loop_start();
+    metrics_looptime.mark();
+
+    metrics_loopint.record();
+    metrics_loopint.mark();
+
     measurements_read_and_send();
-    metrics_loop_end();
+
+    metrics_looptime.record();
+
+    metrics_send();
   }
 }
