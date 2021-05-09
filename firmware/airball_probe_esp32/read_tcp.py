@@ -9,7 +9,7 @@ i = 0
 
 while True:
     data = connfile.readline()
-    data = string.strip(str(data))
+    data = str(data).strip()
     print(data)
     if data.startswith('$AR'):
         try:
