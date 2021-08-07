@@ -2,8 +2,7 @@
 
 ## Probe design
 
-The probe is a semi-spherial body with 6 holes in it, as follows. Note
-that we ended up not using the "L" hole, but we acquired data for it.
+The probe is a semi-spherial body with 6 holes in it, as follows.
 
 <img src="probe_hole_nomenclature.png">
 
