@@ -32,7 +32,7 @@ import sys
 # of the spherical nose. The raw measurements are:
 #     (dp0, dpA, dpB)
 # where the pressures are defined as:
-#     dp0 = (center hole) - (upper hole)
+#     dp0 = (center hole) - (bottom hole)
 #     dpA = (lower hole) - (upper hole)
 #     dpB = (right hole) - (left hole)
 
@@ -135,10 +135,17 @@ def plot_alphabeta(zlabel, data):
 for p in raw_pressures:
     plot_alphabeta(p + '_over_q', raw_data[p])
 
-dp0 = raw_data['c'] - raw_data['b']
-dpa_over_dp0 = (raw_data['d'] - raw_data['u']) / dp0
-dpb_over_dp0 = (raw_data['r'] - raw_data['l']) / dp0
-q_over_dp0 = 1 / dp0
+dp0_over_q = raw_data['c'] - raw_data['b']
+dpa_over_q = raw_data['d'] - raw_data['u']
+dpb_over_q = raw_data['r'] - raw_data['l']
+
+dpa_over_dp0 = dpa_over_q / dp0_over_q
+dpb_over_dp0 = dpb_over_q / dp0_over_q
+q_over_dp0 = 1 / dp0_over_q
+
+plot_alphabeta('dp0_over_q', dp0_over_q)
+plot_alphabeta('dpa_over_q', dpa_over_q)
+plot_alphabeta('dpb_over_q', dpb_over_q)
 
 plot_alphabeta('q_over_dp0', q_over_dp0)
 plot_alphabeta('dpa_over_dp0', dpa_over_dp0)
@@ -206,7 +213,7 @@ model_beta = make_fit(dpa_over_dp0, dpb_over_dp0, raw_data['beta'])
 def plot_data_model(plot_name, z, zlabel, model):
     if not generate_plots: return
     X, Y = np.meshgrid(
-        np.arange(-1, 3, 0.1),
+        np.arange(-1, 4, 0.1),
         np.arange(-4, 4, 0.1))
     Z = model(X, Y)
     fig = plt.figure(figsize=(11, 8.5))
