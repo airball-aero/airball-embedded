@@ -59,6 +59,8 @@ These are actual measurements in units of pressure. If we take the ratios, we no
 
 We can use these non-dimensional ratios as indices into calibration curves, and estimate _alpha_, _beta_, and _q_.
 
+Notice how we do not need a source of static pressure since we _subtract_ pressures from one another, and we do not need an independent source of _q_ since we _divide_ pressures by one another.
+
 ## Calibration curve derivation
 
 From the experimental data, we can plot (dp0 / q), (dpA / q), and (dpB / q) versus _alpha_ and _beta_:
@@ -68,8 +70,6 @@ From the experimental data, we can plot (dp0 / q), (dpA / q), and (dpB / q) vers
 <img src="alpha_beta_to_dpb_over_q.png">
 
 We can see that these pressure differences are in the range of +/- 2 times _q_. If we choose a pressure sensor with a range of +/- 1 psi, then we expect to handle _q_ ranging from 0 to 0.5 psi. This corresponds to an indicated airspeed of about 150 kias. In practice, since we will be flying at low _alpha_ and _beta_ when we are going fast, our actual practical aircraft IAS range is going to be larger than this.
-
-Notice how we do not need a source of static pressure since we _subtract_ pressures from one another, and we do not need an independent source of _q_ since we _divide_ pressures by one another.
 
 We can now generate curve fits for _alpha_ and _beta_ as functions of (dpA / dp0) and (dpB / dp0) as follows:
 
