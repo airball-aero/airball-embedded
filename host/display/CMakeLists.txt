@@ -30,7 +30,8 @@ add_library(airball_display
         controller.cpp screen.cpp user_input_source.cpp delay_timer.cpp
         aerodynamics.cpp fake_telemetry_client.cpp interpolation_table.cpp
         system_status.cpp device_keyboard_listener.cpp
-        log_reader_telemetry_client.cpp image_screen.cpp climb_rate_filter.cpp)
+        log_reader_telemetry_client.cpp image_screen.cpp climb_rate_filter.cpp
+        http_server.cpp)
 target_link_libraries(airball_display
         X11 cairo pthread
         airball_telemetry_client
@@ -59,6 +60,11 @@ target_link_libraries(user_input_source_test
 add_executable(device_keyboard_listener_test
         device_keyboard_listener_test_main.cpp)
 target_link_libraries(device_keyboard_listener_test
+        airball_display)
+
+add_executable(http_server_test
+        http_server_test_main.cpp)
+target_link_libraries(http_server_test
         airball_display)
 
 enable_testing()
