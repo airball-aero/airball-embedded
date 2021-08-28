@@ -1,27 +1,3 @@
-/**
- * The MIT License (MIT)
- *
- * Copyright (c) 2017-2018, Ihab A.B. Awad
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
 #include "display.h"
 
 #include <math.h>
@@ -143,21 +119,6 @@ constexpr Color kIASTextColor(0, 0, 0);
 constexpr double kAdjustingTextFontSize = kWidth / 14;
 constexpr double kAdjustingRegionWidth = kAdjustingTextFontSize * 10;
 constexpr double kAdjustingRegionHeight = kAdjustingTextFontSize + 8;
-
-constexpr Stroke kAdjustingWindowStroke(
-    Color(255, 255, 255),
-    1);
-
-constexpr Font kAdjustingTextFont(
-    kFontName,
-    kAdjustingTextFontSize);
-
-constexpr Color kAdjustingTextColor(0, 255, 0);
-
-constexpr Point kAdjustingTopLeft(kWidth/2 - kAdjustingRegionWidth/2, kAirballHeight-kAdjustingRegionHeight-5);
-constexpr Size kAdjustingWindowSize(kAdjustingRegionWidth, kAdjustingRegionHeight);
-constexpr Point kAdjustingParamTopLeft(kWidth/2 - kAdjustingRegionWidth/2 + 5, kAirballHeight-kAdjustingRegionHeight-5);
-constexpr Point kAdjustingValueTopRight(kWidth/2 + kAdjustingRegionWidth/2 - 5, kAirballHeight-kAdjustingRegionHeight-5);
 
 constexpr int kPrintBufSize = 128;
 
@@ -301,9 +262,6 @@ void Display::paint() {
   paintCowCatcher();
   paintBatteryStatus();
   paintLinkStatus();
-  if (settings_->adjusting()) {
-    paintAdjusting();
-  }
   cairo_restore(screen_->cr());
 
   paintVsi();
@@ -994,39 +952,6 @@ void Display::paintBaroSetting(
       TextReferencePoint::CENTER_LEFT_UPPERCASE,
       kBaroFontSmall,
       kBaroTextColor);
-}
-
-void Display::paintAdjusting() {
-  rectangle(
-      screen_->cr(),
-      kAdjustingTopLeft,
-      kAdjustingWindowSize,
-      kBackground);
-  box(
-      screen_->cr(),
-      kAdjustingTopLeft,
-      kAdjustingWindowSize,
-      kAdjustingWindowStroke);
-  text(
-      screen_->cr(),
-      settings_->adjusting_param_name(),
-      kAdjustingParamTopLeft,
-      TextReferencePoint::TOP_LEFT,
-      kAdjustingTextFont,
-      kAdjustingTextColor);
-  char buf[kPrintBufSize];
-  snprintf(
-      buf,
-      kPrintBufSize,
-      "%.3f",
-      settings_->adjusting_param_value());
-  text(
-      screen_->cr(),
-      buf,
-      kAdjustingValueTopRight,
-      TextReferencePoint::TOP_RIGHT,
-      kAdjustingTextFont,
-      kAdjustingTextColor);
 }
 
 void Display::paintNoFlightData() {

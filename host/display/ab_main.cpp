@@ -23,15 +23,15 @@ static po::options_description add_options() {
           "screen type (x11, fb)"
       )
       (
-          "input",
+          "settings_path",
           po::value<std::string>(),
-          "user input source (kbd, gpio)"
+          "path to settings file"
       )
       (
           "telemetry",
           po::value<std::string>(),
           "telemetry source (fake, log, xbee, esp32)"
-      )
+          )
       (
           "telemetry_log_filename",
           po::value<std::string>(),
@@ -82,21 +82,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  std::unique_ptr<airball::UserInputSource> input;
-  {
-    std::string v = vm["input"].as<std::string>();
-    if (v == "kbd") {
-      input = std::unique_ptr<airball::UserInputSource>
-          (airball::UserInputSource::NewKeyboardInputSource());
-    } else if (v == "gpio") {
-      input = std::unique_ptr<airball::UserInputSource>
-          (airball::UserInputSource::NewGpioInputSource(2, 3, 4));
-    } else {
-      std::cout << "Invalid input option " << v << std::endl;
-      std::cout << options << std::endl;
-      return 1;
-    }
-  }
+  std::string settings_path = vm["settings_path"].as<std::string>();
 
   std::unique_ptr<airball::TelemetryClient> telemetry;
   {
@@ -139,6 +125,6 @@ int main(int argc, char **argv) {
     }
   }
 
-  airball::Controller c(screen.get(), input.get(), telemetry.get());
+  airball::Controller c(screen.get(), settings_path, telemetry.get());
   c.run();
 }
