@@ -789,13 +789,13 @@ void Display::paintVsiTicMarks(
           center_right.x() - vsiTickLength_,
           center_right.y()),
       vsiTickStrokeThin_);
-  for (int i = 0; i < sizeof(vsiStepsFpm_) / sizeof(vsiStepsFpm_[0]); i++) {
+  for (auto i = vsiStepsFpm_.begin(); i < vsiStepsFpm_.end(); ++i) {
     double step_x =
         (center_left.y() - top_left.y()) /
-        tan(vsiStepsFpm_[i].fpm * radians_per_fpm);
+        tan(i->fpm * radians_per_fpm);
     Stroke stroke(
         vsiTickStrokeThin_.color(),
-        vsiTickStrokeThin_.width() * vsiStepsFpm_[i].thick);
+        vsiTickStrokeThin_.width() * i->thick);
     line(
         screen_->cr(),
         Point(
