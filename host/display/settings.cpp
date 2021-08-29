@@ -1,213 +1,126 @@
 #include "settings.h"
 
 #include <iostream>
-#include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
 #include <fstream>
 #include <sstream>
 
 namespace airball {
 
-struct Parameter {
+template <class T>
+class Parameter {
+public:
   const char *name;
-  const char *display_name;
-  const char *display_units;
-  const double min;
-  const double max;
-  const double initial;
+  const T initial;
+  T get(const rapidjson::Document& doc) const {
+    if (doc.HasMember(name)) {
+      return get_impl(doc);
+    }
+    return initial;
+  }
+  T get_impl(const rapidjson::Document& doc) const;
 };
 
-constexpr const char* ANGULAR_PARAMETER_DISPLAY_UNITS = "°";
-constexpr double ANGULAR_PARAMETER_ABSMAX = 45.0;
+template<>
+int Parameter<int>::get_impl(const rapidjson::Document& doc) const {
+  return doc[name].GetInt();
+}
 
-constexpr const char* V_PARAMETER_DISPLAY_UNITS = "kt";
-constexpr double V_PARAMETER_MIN = 0;
-constexpr double V_PARAMETER_MAX = 500;
-constexpr double V_PARAMETER_INITIAL = 100;
+template<>
+double Parameter<double>::get_impl(const rapidjson::Document& doc) const {
+  return doc[name].GetDouble();
+}
 
-constexpr Parameter V_FULL_SCALE = {
+template<>
+bool Parameter<bool>::get_impl(const rapidjson::Document& doc) const {
+  return doc[name].GetBool();
+}
+
+constexpr Parameter<double> V_FULL_SCALE = {
     .name="ias_full_scale",
-    .display_name = "IAS FS",
-    .display_units = V_PARAMETER_DISPLAY_UNITS,
-    .min=V_PARAMETER_MIN,
-    .max=V_PARAMETER_MAX,
-    .initial=V_PARAMETER_INITIAL,
+    .initial=100,
 };
 
-constexpr Parameter V_R = {
+constexpr Parameter<double> V_R = {
     .name="v_r",
-    .display_name = "Vr",
-    .display_units = V_PARAMETER_DISPLAY_UNITS,
-    .min=V_PARAMETER_MIN,
-    .max=V_PARAMETER_MAX,
-    .initial=V_PARAMETER_INITIAL,
+    .initial=100,
 };
 
-constexpr Parameter V_FE = {
+constexpr Parameter<double> V_FE = {
     .name="v_fe",
-    .display_name = "Vfe",
-    .display_units = V_PARAMETER_DISPLAY_UNITS,
-    .min=V_PARAMETER_MIN,
-    .max=V_PARAMETER_MAX,
-    .initial=V_PARAMETER_INITIAL,
+    .initial=100,
 };
 
-constexpr Parameter V_NO = {
+constexpr Parameter<double> V_NO = {
     .name="v_no",
-    .display_name = "Vno",
-    .display_units = V_PARAMETER_DISPLAY_UNITS,
-    .min=V_PARAMETER_MIN,
-    .max=V_PARAMETER_MAX,
-    .initial=V_PARAMETER_INITIAL,
+    .initial=100,
 };
 
-constexpr Parameter V_NE = {
+constexpr Parameter<double> V_NE = {
     .name="v_ne",
-    .display_name = "Vne",
-    .display_units = V_PARAMETER_DISPLAY_UNITS,
-    .min=V_PARAMETER_MIN,
-    .max=V_PARAMETER_MAX,
-    .initial=V_PARAMETER_INITIAL,
+    .initial=100,
 };
 
-constexpr Parameter ALPHA_STALL = {
+constexpr Parameter<double> ALPHA_STALL = {
     .name="alpha_stall",
-    .display_name = "α stall",
-    .display_units = ANGULAR_PARAMETER_DISPLAY_UNITS,
-    .min=-ANGULAR_PARAMETER_ABSMAX,
-    .max=ANGULAR_PARAMETER_ABSMAX,
     .initial=15.0,
 };
 
-constexpr Parameter ALPHA_MIN = {
+constexpr Parameter<double> ALPHA_MIN = {
     .name="alpha_min",
-    .display_name = "α min",
-    .display_units = ANGULAR_PARAMETER_DISPLAY_UNITS,
-    .min=-ANGULAR_PARAMETER_ABSMAX,
-    .max=ANGULAR_PARAMETER_ABSMAX,
     .initial=0.0,
 };
 
-constexpr Parameter ALPHA_X = {
+constexpr Parameter<double> ALPHA_X = {
     .name="alpha_x",
-    .display_name = "α X",
-    .display_units = ANGULAR_PARAMETER_DISPLAY_UNITS,
-    .min=-ANGULAR_PARAMETER_ABSMAX,
-    .max=ANGULAR_PARAMETER_ABSMAX,
     .initial=12.0,
 };
 
-constexpr Parameter ALPHA_Y = {
+constexpr Parameter<double> ALPHA_Y = {
     .name="alpha_y",
-    .display_name = "α Y",
-    .display_units = ANGULAR_PARAMETER_DISPLAY_UNITS,
-    .min=-ANGULAR_PARAMETER_ABSMAX,
-    .max=ANGULAR_PARAMETER_ABSMAX,
     .initial=10.0,
 };
 
-constexpr Parameter ALPHA_REF = {
+constexpr Parameter<double> ALPHA_REF = {
     .name="alpha_ref",
-    .display_name = "α ref",
-    .display_units = ANGULAR_PARAMETER_DISPLAY_UNITS,
-    .min=-ANGULAR_PARAMETER_ABSMAX,
-    .max=ANGULAR_PARAMETER_ABSMAX,
     .initial=14.0,
 };
 
-constexpr Parameter BETA_FULL_SCALE = {
+constexpr Parameter<double> BETA_FULL_SCALE = {
     .name="beta_full_scale",
-    .display_name = "β max",
-    .display_units = ANGULAR_PARAMETER_DISPLAY_UNITS,
-    .min=0.0,
-    .max=ANGULAR_PARAMETER_ABSMAX,
     .initial=20.0,
 };
 
-constexpr Parameter BETA_BIAS = {
+constexpr Parameter<double> BETA_BIAS = {
     .name="beta_bias",
-    .display_name = "β bias",
-    .display_units = ANGULAR_PARAMETER_DISPLAY_UNITS,
-    .min=-ANGULAR_PARAMETER_ABSMAX,
-    .max=ANGULAR_PARAMETER_ABSMAX,
     .initial=0.0,
 };
 
-constexpr Parameter BARO_SETTING = {
+constexpr Parameter<double> BARO_SETTING = {
     .name="baro_setting",
-    .display_name = "baro",
-    "in Hg",
-    .min=27.92,
-    .max=31.92,
     .initial=29.92,
 };
 
-constexpr Parameter BALL_SMOOTHING_FACTOR = {
+constexpr Parameter<double> BALL_SMOOTHING_FACTOR = {
     .name="ball_smoothing_factor",
-    .display_name = "SF ball",
-    "",
-    .min=0.0,
-    .max=1.0,
     .initial=1.0,
 };
 
-constexpr Parameter VSI_SMOOTHING_FACTOR = {
+constexpr Parameter<double> VSI_SMOOTHING_FACTOR = {
     .name="vsi_smoothing_factor",
-    .display_name = "SF vsi",
-    "",
-    .min=0.0,
-    .max=1.0,
     .initial=1.0,
 };
-
-constexpr const Parameter* ALL_SETTINGS[]{
-    &V_FULL_SCALE,
-    &V_R,
-    &V_FE,
-    &V_NO,
-    &V_NE,
-    &ALPHA_STALL,
-    &ALPHA_MIN,
-    &ALPHA_X,
-    &ALPHA_Y,
-    &ALPHA_REF,
-    &BETA_FULL_SCALE,
-    &BETA_BIAS,
-    &BARO_SETTING,
-    &BALL_SMOOTHING_FACTOR,
-    &VSI_SMOOTHING_FACTOR,
-};
-
-constexpr const int NUM_ALL_SETTINGS =
-    sizeof(ALL_SETTINGS) / sizeof(Parameter*);
 
 Settings::Settings() {
-  for (int i = 0; i < NUM_ALL_SETTINGS; i++) {
-    values_[ALL_SETTINGS[i]->name] = ALL_SETTINGS[i]->initial;
-  }
+  document_.Parse("{}");
 }
 
 void Settings::load_str(std::string str) {
-  std::cout << "load_str(" << str << ")" << std::endl;
-  rapidjson::Document document;
-  document.Parse("{}");
-  document.Parse(str.c_str());
-  for (int i = 0; i < NUM_ALL_SETTINGS; i++) {
-    const Parameter* p = ALL_SETTINGS[i];
-    if (document.HasMember(p->name)) {
-      double value = document[p->name].GetDouble();
-      std::cout << " value = " << value << std::endl;
-      if (!(value < p->min || value > p->max)) {
-        values_[p->name] = value;
-      }
-    }
-  }
+  document_.Parse("{}");
+  document_.Parse(str.c_str());
 }
 
 void Settings::load(const std::string& path) {
-  std::cout << "load(" << path << ")" << std::endl;
   std::ifstream f;
   f.open(path);
   std::stringstream s;
@@ -216,8 +129,9 @@ void Settings::load(const std::string& path) {
   load_str(s.str());
 }
 
-double Settings::get_value(const Parameter* p) const {
-  return values_.at(p->name);
+template <class T>
+T Settings::get_value(const Parameter<T>* p) const {
+  return p->get(document_);
 }
 
 double Settings::v_full_scale() const {

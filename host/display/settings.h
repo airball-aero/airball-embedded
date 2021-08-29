@@ -2,11 +2,12 @@
 #define AIRBALL_SETTINGS_H
 
 #include <string>
-#include <map>
+#include <rapidjson/rapidjson.h>
+#include <rapidjson/document.h>
 
 namespace airball {
 
-struct Parameter;
+template <class T> class Parameter;
 
 class Settings {
 public:
@@ -97,9 +98,9 @@ private:
 
   void load_str(std::string);
 
-  double get_value(const Parameter* p) const;
+  template <class T> T get_value(const Parameter<T>* p) const;
 
-  std::map<const std::string, double> values_;
+  rapidjson::Document document_;
 };
 
 } // namespace airball

@@ -85,6 +85,8 @@ void Controller::run() {
     Airdata airdata;
     Display display(screen_, &airdata, &settings, &status);
 
+    settings.load(settings_path_);
+
     while (true) {
       std::vector<bool> settings_reads = settings_read.get();
       std::vector<std::unique_ptr<sample>> cycle_data = data.get();
