@@ -65,7 +65,7 @@ public:
   double alpha_ref() const;
 
   /**
-   * @return the display setting, full scale angle of yaw. (Degrees)
+   * @return  full scale angle of yaw. (Degrees)
    */
   double beta_full_scale() const;
 

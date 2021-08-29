@@ -16,13 +16,93 @@ public:
   Display(Screen* screen,
           const Airdata* airdata,
           const Settings* settings,
-          const SystemStatus* status)
-      : screen_(screen), airdata_(airdata), settings_(settings), status_(status)
-      {}
+          const SystemStatus* status);
 
   void paint();
 
 private:
+
+  struct VsiStep {
+    double fpm;
+    double thick;
+  };
+
+  std::string fontName_;
+  double width_ = 272;
+  double height_ = 480;
+  double altimeterHeight_;
+  double airballHeight_;
+  double displayMargin_;
+  double topBottomRegionRatio_;
+  double displayXMid_;
+  double displayRegionYMin_;
+  double displayRegionYMax_;
+  double displayRegionHeight_;
+  double displayRegionWidth_;
+  double displayRegionHalfWidth_;
+  double speedLimitsRosetteHalfAngle_;
+  double trueAirspeedRosetteHalfAngle_;
+  double alphaRefRadius_;
+  double alphaRefGapDegrees_;
+  double lowSpeedThresholdAirballRadius_;
+  double alphaRefTopAngle0_;
+  double alphaRefTopAngle1_;
+  double alphaRefBotAngle0_;
+  double alphaRefBotAngle1_;
+  double totemPoleAlphaUnit_;
+  int numCowCatcherLines_;
+  Color background_;
+  Color airballFill_;
+  double rawAirballsMaxBrightness_;
+  Stroke airballCrosshairsStroke_;
+  double lowSpeedAirballStrokeWidth_;
+  Color tasRingColor_;
+  double tasRingStrokeWidth_;
+  double tasThresholdRatio_;
+  Stroke lowSpeedAirballStroke_;
+  double lowSpeedAirballArcRadius_;
+  Stroke totemPoleStroke_;
+  Stroke cowCatcherStroke_;
+  Stroke vfeStroke_;
+  Stroke vnoStroke_;
+  Stroke vneStroke_;
+  Stroke vBackgroundStroke_;
+  double iASTextFontSize_;
+  Font iASTextFont_;
+  double iASTextMargin_;
+  Color iASTextColor_;
+  int printBufSize_;
+  Stroke noFlightDataStroke_;
+  double statusRegionMargin_;
+  double statusDisplayUnit_;
+  double statusDisplayStrokeWidth_;
+  Stroke statusDisplayStroke_;
+  double statusTextFontSize_;
+  Font statusTextFont_;
+  Color statusTextColor_;
+  Color batteryColorGood_;
+  Color batteryColorWarning_;
+  Color batteryColorBad_;
+  bool statusDisplayNumericalData_;
+  Color linkColor_;
+  double vsiHeight_;
+  double vsiPrecisionFpm_;
+  double vsiMaxFpm_;
+  std::vector<VsiStep> vsiStepsFpm_;
+  double vsiTickLength_;
+  double vsiKneeOffset_;
+  Stroke vsiTickStrokeThin_;
+  Stroke vsiPointerStroke_;
+  Font altimeterFontLarge_;
+  Font altimeterFontSmall_;
+  Color altimeterTextColor_;
+  Color altimeterBackgroundColor_;
+  double altimeterBaselineRatio_;
+  double altimeterNumberGap_;
+  double baroLeftOffset_;
+  Font baroFontSmall_;
+  Color baroTextColor_;
+
   void paintBackground();
   void paintRawAirballs();
   void paintRawAirball(

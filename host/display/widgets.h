@@ -35,24 +35,27 @@ namespace airball {
 
 class Point {
 public:
+  constexpr Point() : Point(0, 0) {}
   constexpr Point(double x, double y) : x_(x), y_(y) {}
   double x() const {return x_;}
   double y() const {return y_;}
 private:
-  const double x_, y_;
+  double x_, y_;
 };
 
 class Size {
 public:
+  constexpr Size() : Size(0, 0) {}
   constexpr Size(double w, double h) : w_(w), h_(h) {}
   double w() const {return w_;}
   double h() const {return h_;}
 private:
-  const double w_, h_;
+  double w_, h_;
 };
 
 class Color {
 public:
+  constexpr Color() : Color(0, 0, 0) {}
   constexpr Color(double r, double g, double b) : r_(r), g_(g), b_(b), a_(1) {}
   constexpr Color(double r, double g, double b, double a) : r_(r), g_(g), b_(b), a_(a) {}
   constexpr Color(int r, int g, int b)
@@ -72,22 +75,24 @@ private:
   static constexpr double hexToRatio(int hex) {
     return (double) hex / (double) 0xff;
   }
-  const double r_, g_, b_, a_;
+  double r_, g_, b_, a_;
 };
 
 class Stroke {
 public:
+  constexpr Stroke() : Stroke(Color(), 0) {}
   constexpr Stroke(Color color, double width) : color_(color), width_(width) {}
   Color color() const {return color_;}
   double width() const {return width_;}
   void apply(cairo_t *cr) const;
 private:
-  const Color color_;
-  const double width_;
+  Color color_;
+  double width_;
 };
 
 class Font {
 public:
+  constexpr Font() : Font(nullptr, 0) {}
   constexpr Font(
       const char* face,
       const double size)
@@ -97,7 +102,7 @@ public:
   void apply(cairo_t* cr) const;
 private:
   const char* face_;
-  const double size_;
+  double size_;
 };
 
 void line(

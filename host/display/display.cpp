@@ -1,218 +1,222 @@
 #include "display.h"
 
 #include <math.h>
-#include <iostream>
 
 #include "units.h"
 #include "widgets.h"
 
 namespace airball {
 
-///////////////////////////////////////////////////////////////////////
+constexpr double kMetersPerFoot = 0.3048;
+constexpr double kSecondsPerMinute = 60;
 
 constexpr double ce_floor(double x) {
   return static_cast<double>(static_cast<int64_t>(x));
 }
 
-constexpr char kFontName[] =
-    "Noto Sans";
+Display::Display(Screen* screen,
+                 const Airdata* airdata,
+                 const Settings* settings,
+                 const SystemStatus* status)
+    : screen_(screen), airdata_(airdata), settings_(settings), status_(status)
+{
+  fontName_ = "Noto Sans";
 
-constexpr double kWidth = 272;
-constexpr double kHeight = 480;
+  width_ = 272;
+  height_ = 480;
 
-constexpr double kAltimeterHeight = 48;
-constexpr double kAirballHeight = kHeight - kAltimeterHeight;
+  altimeterHeight_ = 48;
+  airballHeight_ = height_ - altimeterHeight_;
 
-constexpr double kDisplayMargin = 3;
+  displayMargin_ = 3;
 
-constexpr double kTopBottomRegionRatio = 0.075;
+  topBottomRegionRatio_ = 0.075;
 
-constexpr double kDisplayXMid = ce_floor(kWidth / 2.0);
+  displayXMid_ = ce_floor(width_ / 2.0);
 
-constexpr double kDisplayRegionYMin = ce_floor(kAirballHeight * kTopBottomRegionRatio);
-constexpr double kDisplayRegionYMax = ce_floor(kAirballHeight * (1.0 - kTopBottomRegionRatio));
-constexpr double kDisplayRegionHeight = kDisplayRegionYMax - kDisplayRegionYMin;
+  displayRegionYMin_ = ce_floor(airballHeight_ * topBottomRegionRatio_);
+  displayRegionYMax_ = ce_floor(airballHeight_ * (1.0 - topBottomRegionRatio_));
+  displayRegionHeight_ = displayRegionYMax_ - displayRegionYMin_;
 
-constexpr double kDisplayRegionWidth = kWidth;
-constexpr double kDisplayRegionHalfWidth = kDisplayRegionWidth / 2;
+  displayRegionWidth_ = width_;
+  displayRegionHalfWidth_ = displayRegionWidth_ / 2;
 
-constexpr double kSpeedLimitsRosetteHalfAngle  = (15.0 / 2 / 180 * M_PI);
-constexpr double kTrueAirspeedRosetteHalfAngle = (70.0 / 2 / 180 * M_PI);
+  speedLimitsRosetteHalfAngle_  = (15.0 / 2 / 180 * M_PI);
+  trueAirspeedRosetteHalfAngle_ = (70.0 / 2 / 180 * M_PI);
 
-constexpr double kAlphaRefRadius = 20;
+  alphaRefRadius_ = 20;
 
-constexpr double kAlphaRefGapDegrees = 40;
+  alphaRefGapDegrees_ = 40;
 
-constexpr double kLowSpeedThresholdAirballRadius = 0.1 * (kWidth / 2.0);
+  lowSpeedThresholdAirballRadius_ = 0.1 * (width_ / 2.0);
 
-constexpr double kAlphaRefTopAngle0 = M_PI + (kAlphaRefGapDegrees / 2 / 180 * M_PI);
-constexpr double kAlphaRefTopAngle1 =      - (kAlphaRefGapDegrees / 2 / 180 * M_PI);
+  alphaRefTopAngle0_ = M_PI + (alphaRefGapDegrees_ / 2 / 180 * M_PI);
+  alphaRefTopAngle1_ =      - (alphaRefGapDegrees_ / 2 / 180 * M_PI);
 
-constexpr double kAlphaRefBotAngle0 =        (kAlphaRefGapDegrees / 2 / 180 * M_PI);
-constexpr double kAlphaRefBotAngle1 = M_PI - (kAlphaRefGapDegrees / 2 / 180 * M_PI);
+  alphaRefBotAngle0_ =        (alphaRefGapDegrees_ / 2 / 180 * M_PI);
+  alphaRefBotAngle1_ = M_PI - (alphaRefGapDegrees_ / 2 / 180 * M_PI);
 
-constexpr double kTotemPoleAlphaUnit = 20;
+  totemPoleAlphaUnit_ = 20;
 
-constexpr int kNumCowCatcherLines = 3;
+  numCowCatcherLines_ = 3;
 
-constexpr Color kBackground(0, 0, 0);
+  background_= Color(0, 0, 0);
 
-constexpr Color kAirballFill(255, 255, 255);
+  airballFill_ = Color(255, 255, 255);
 
-constexpr double kRawAirballsMaxBrightness = 0.375;
+  rawAirballsMaxBrightness_ = 0.375;
 
-constexpr Stroke kAirballCrosshairsStroke(
-    Color(128, 128, 128),
-    2);
+  airballCrosshairsStroke_ = Stroke(
+      Color(128, 128, 128),
+      2);
 
-constexpr double kLowSpeedAirballStrokeWidth = 4.0;
+  lowSpeedAirballStrokeWidth_ = 4.0;
 
-constexpr Color kTasRingColor(255, 0, 255);
+  tasRingColor_ = Color(255, 0, 255);
 
-constexpr double kTasRingStrokeWidth = 3.0;
+  tasRingStrokeWidth_ = 3.0;
 
-constexpr double kTasThresholdRatio = 0.25;
+  tasThresholdRatio_ = 0.25;
 
-constexpr Stroke kLowSpeedAirballStroke(
-    Color(255, 255, 255),
-    kLowSpeedAirballStrokeWidth);
+  lowSpeedAirballStroke_ = Stroke(
+      Color(255, 255, 255),
+      lowSpeedAirballStrokeWidth_);
 
-constexpr double kLowSpeedAirballArcRadius =
-    kLowSpeedThresholdAirballRadius - kLowSpeedAirballStrokeWidth / 2.0;
+  lowSpeedAirballArcRadius_ =
+      lowSpeedThresholdAirballRadius_ - lowSpeedAirballStrokeWidth_ / 2.0;
 
-constexpr Stroke kTotemPoleStroke(
-    Color(255, 255, 0),
-    3);
+  totemPoleStroke_ = Stroke(
+      Color(255, 255, 0),
+      3);
 
-constexpr Stroke kCowCatcherStroke(
-    Color(255, 0, 0),
-    3);
+  cowCatcherStroke_ = Stroke(
+      Color(255, 0, 0),
+      3);
 
-constexpr Stroke kVfeStroke(
-    Color(255, 255, 255),
-    3);
+  vfeStroke_ = Stroke(
+      Color(255, 255, 255),
+      3);
 
-constexpr Stroke kVnoStroke(
-    Color(255, 255, 0),
-    3);
+  vnoStroke_ = Stroke(
+      Color(255, 255, 0),
+      3);
 
-constexpr Stroke kVneStroke(
-    Color(255, 0, 0),
-    3);
+  vneStroke_ = Stroke(
+      Color(255, 0, 0),
+      3);
 
-constexpr Stroke kVBackgroundStroke(
-    Color(0, 0, 0),
-    6);
+  vBackgroundStroke_ = Stroke(
+      Color(0, 0, 0),
+      6);
 
-constexpr double kIASTextFontSize =
-    kWidth / 5.0;
+  iASTextFontSize_ =
+      width_ / 5.0;
 
-constexpr Font kIASTextFont(
-    kFontName,
-    kIASTextFontSize);
+  iASTextFont_ = Font(
+      fontName_.c_str(),
+      iASTextFontSize_);
 
-constexpr double kIASTextMargin =
-    2;
+  iASTextMargin_ =
+      2;
 
-constexpr Color kIASTextColor(0, 0, 0);
+  iASTextColor_ = Color(0, 0, 0);
 
-constexpr double kAdjustingTextFontSize = kWidth / 14;
-constexpr double kAdjustingRegionWidth = kAdjustingTextFontSize * 10;
-constexpr double kAdjustingRegionHeight = kAdjustingTextFontSize + 8;
+  printBufSize_ = 128;
 
-constexpr int kPrintBufSize = 128;
+  noFlightDataStroke_ = Stroke(
+      Color(255, 0, 0),
+      3);
 
-constexpr Stroke kNoFlightDataStroke(
-    Color(255, 0, 0),
-    3);
+  statusRegionMargin_ = 5;
 
-constexpr double kStatusRegionMargin = 5;
+  statusDisplayUnit_ = 20;
 
-constexpr double kStatusDisplayUnit = 20;
+  statusDisplayStrokeWidth_ = 2;
 
-constexpr double kStatusDisplayStrokeWidth = 2;
+  statusDisplayStroke_ = Stroke(
+      Color(128, 128, 128),
+      statusDisplayStrokeWidth_);
 
-constexpr Stroke kStatusDisplayStroke(
-    Color(128, 128, 128),
-    kStatusDisplayStrokeWidth);
+  statusTextFontSize_ = 12;
 
-constexpr double kStatusTextFontSize = 12;
+  statusTextFont_ = Font(
+      fontName_.c_str(),
+      statusTextFontSize_);
 
-constexpr Font kStatusTextFont(
-    kFontName,
-    kStatusTextFontSize);
+  statusTextColor_ = Color(200, 200, 200);
 
-constexpr Color kStatusTextColor(200, 200, 200);
+  batteryColorGood_ = Color(0, 180, 0);
 
-constexpr Color kBatteryColorGood(0, 180, 0);
+  batteryColorWarning_ = Color(255, 255, 0);
 
-constexpr Color kBatteryColorWarning(255, 255, 0);
+  batteryColorBad_ = Color(255, 0, 0);
 
-constexpr Color kBatteryColorBad(255, 0, 0);
+  statusDisplayNumericalData_ = false;
 
-const bool kStatusDisplayNumericalData = false;
+  linkColor_ = Color(0, 180, 180);
 
-constexpr Color kLinkColor(0, 180, 180);
+  vsiHeight_ = altimeterHeight_ - 2 * displayMargin_;
 
-constexpr double kVsiHeight = kAltimeterHeight - 2 * kDisplayMargin;
-constexpr double kVsiPrecisionFpm = 100;
-constexpr double kVsiMaxFpm = 2000;
-constexpr struct {
-  double fpm;
-  double thick;
-} kVsiStepsFpm[]{
-    {
-        .fpm = 200,
-        .thick = 1,
-    },
-    {
-        .fpm = 300,
-        .thick = 1,
-    },
-    {
+  vsiPrecisionFpm_ = 100;
+  vsiMaxFpm_ = 2000;
+
+  {
+    double fpm;
+    double thick;
+  }
+  vsiStepsFpm_.push_back(
+      {
+          .fpm = 200,
+          .thick = 1,
+      });
+  vsiStepsFpm_.push_back(
+      {
+      .fpm = 300,
+      .thick = 1,
+      });
+  vsiStepsFpm_.push_back(      {
       .fpm = 400,
       .thick = 1,
-    },
-    {
+      });
+  vsiStepsFpm_.push_back({
       .fpm = 500,
       .thick = 1.5,
-    },
-    {
-        .fpm = 1000,
-        .thick = 2,
-    },
-    {
+      });
+  vsiStepsFpm_.push_back(      {
+      .fpm = 1000,
+      .thick = 2,
+      });
+  vsiStepsFpm_.push_back(      {
       .fpm = 1500,
       .thick = 1.5,
-    },
-};
-constexpr double kVsiTickLength = 7;
-constexpr double kVsiKneeOffset = 3;
-constexpr Stroke kVsiTickStrokeThin(
-    Color(255, 255, 255),
-    2);
-constexpr Stroke kVsiPointerStroke(
-    Color(255, 0, 255),
-    4);
-constexpr Font kAltimeterFontLarge(
-    kFontName,
-    kWidth / 8);
-constexpr Font kAltimeterFontSmall(
-    kFontName,
-    kWidth / 12);
-constexpr Color kAltimeterTextColor(255, 255, 255);
-constexpr Color kAltimeterBackgroundColor(64, 64, 64);
-constexpr double kAltimeterBaselineRatio = 0.75;
-constexpr double kAltimeterNumberGap = 7;
+      });
 
-constexpr double kBaroLeftOffset =
-    kWidth / 12;
-constexpr Font kBaroFontSmall(
-    kFontName,
-    kWidth / 20);
-constexpr Color kBaroTextColor(255, 255, 255);
+  vsiTickLength_ = 7;
+  vsiKneeOffset_ = 3;
+  vsiTickStrokeThin_ = Stroke(
+      Color(255, 255, 255),
+      2);
+  vsiPointerStroke_ = Stroke(
+      Color(255, 0, 255),
+      4);
+  altimeterFontLarge_ = Font(
+      fontName_.c_str(),
+      width_ / 8);
+  altimeterFontSmall_ = Font(
+      fontName_.c_str(),
+      width_ / 12);
+  altimeterTextColor_= Color(255, 255, 255);
+  altimeterBackgroundColor_ = Color(64, 64, 64);
+  altimeterBaselineRatio_ = 0.75;
+  altimeterNumberGap_ = 7;
 
-///////////////////////////////////////////////////////////////////////
+  baroLeftOffset_ =
+      width_ / 12;
+  baroFontSmall_ = Font(
+      fontName_.c_str(),
+      width_ / 20);
+  baroTextColor_ = Color(255, 255, 255);
+}
 
 double Display::alpha_to_y(const double alpha) {
   return alpha_degrees_to_y(radians_to_degrees(alpha));
@@ -221,7 +225,7 @@ double Display::alpha_to_y(const double alpha) {
 double Display::alpha_degrees_to_y(const double alpha_degrees) {
   double ratio = (alpha_degrees - settings_->alpha_min())
                  / (settings_->alpha_stall() - settings_->alpha_min());
-  return kDisplayRegionYMin + ratio * kDisplayRegionHeight;
+  return displayRegionYMin_ + ratio * displayRegionHeight_;
 }
 
 double Display::beta_to_x(const double beta) {
@@ -230,27 +234,27 @@ double Display::beta_to_x(const double beta) {
 
 double Display::beta_degrees_to_x(const double beta_degrees) {
   double ratio = (beta_degrees + settings_->beta_bias()) / settings_->beta_full_scale();
-  return kDisplayRegionHalfWidth * (1.0 + ratio);
+  return displayRegionHalfWidth_ * (1.0 + ratio);
 }
 
 double Display::airspeed_to_radius(const double airspeed) {
   return airspeed_knots_to_radius(meters_per_second_to_knots(airspeed));
 }
 
-double Display::airspeed_knots_to_radius(const double airspeed_knots) {
-  double ratio = airspeed_knots / settings_->v_full_scale();
-  return ratio * kWidth / 2;
+double Display::airspeed_knots_to_radius(const double airspeed_nots_) {
+  double ratio = airspeed_nots_ / settings_->v_full_scale();
+  return ratio * width_ / 2;
 }
 
 void Display::paint() {
   cairo_push_group(screen_->cr());
-  cairo_translate(screen_->cr(), 0, kWidth);
+  cairo_translate(screen_->cr(), 0, width_);
   cairo_rotate(screen_->cr(), -M_PI / 2);
 
   paintBackground();
 
   cairo_save(screen_->cr());
-  cairo_rectangle(screen_->cr(), 0, 0, kWidth, kAirballHeight);
+  cairo_rectangle(screen_->cr(), 0, 0, width_, airballHeight_);
   cairo_clip(screen_->cr());
   if (status_->flight_data_up()) {
     paintRawAirballs();
@@ -275,8 +279,8 @@ void Display::paintBackground() {
   rectangle(
       screen_->cr(),
       Point(0, 0),
-      Size(kWidth, kHeight),
-      kBackground);
+      Size(width_, height_),
+      background_);
 }
 
 void Display::paintRawAirballs() {
@@ -284,7 +288,7 @@ void Display::paintRawAirballs() {
     uint bright_index = airdata_->raw_balls().size() - i;
     double bright =
         ((double) bright_index) / ((double) airdata_->raw_balls().size()) *
-        kRawAirballsMaxBrightness;
+        rawAirballsMaxBrightness_;
     Point center(
         beta_to_x(airdata_->raw_balls()[i].beta()),
         alpha_to_y((airdata_->raw_balls()[i].alpha())));
@@ -301,17 +305,17 @@ void Display::paintRawAirball(
       screen_->cr(),
       center,
       radius,
-      kAirballFill.with_brightness(bright));
+      airballFill_.with_brightness(bright));
 }
 
 void Display::paintSmoothAirball() {
   Point center(beta_to_x(airdata_->smooth_ball().beta()), alpha_to_y((airdata_->smooth_ball().alpha())));
   double radius = airspeed_to_radius(airdata_->smooth_ball().ias());
-  if (radius < kLowSpeedThresholdAirballRadius) {
+  if (radius < lowSpeedThresholdAirballRadius_) {
     paintAirballLowAirspeed(center);
   } else {
     paintAirballAirspeed(center, radius);
-    if ((radius * 2) > (kIASTextFontSize * 1.5)) {
+    if ((radius * 2) > (iASTextFontSize_ * 1.5)) {
       paintAirballAirspeedText(center, airdata_->smooth_ball().ias());
     }
     paintAirballTrueAirspeed(center);
@@ -323,10 +327,10 @@ void Display::paintAirballLowAirspeed(const Point& center) {
   arc(
       screen_->cr(),
       center,
-      kLowSpeedAirballArcRadius,
+      lowSpeedAirballArcRadius_,
       0,
       2.0 * M_PI,
-      kLowSpeedAirballStroke);
+      lowSpeedAirballStroke_);
 }
 
 void Display::paintAirballAirspeed(const Point& center, const double radius) {
@@ -334,44 +338,44 @@ void Display::paintAirballAirspeed(const Point& center, const double radius) {
       screen_->cr(),
       center,
       radius,
-      kAirballFill);
+      airballFill_);
   line(
       screen_->cr(),
       Point(center.x(), center.y() - radius),
       Point(center.x(), center.y() + radius),
-      kAirballCrosshairsStroke);
+      airballCrosshairsStroke_);
   line(
       screen_->cr(),
       Point(center.x() - radius, center.y()),
       Point(center.x() + radius, center.y()),
-      kAirballCrosshairsStroke);
+      airballCrosshairsStroke_);
 }
 
 void Display::paintAirballAirspeedText(const Point& center, const double ias) {
-  char buf[kPrintBufSize];
-  double ias_knots = meters_per_second_to_knots(ias);
+  char buf[printBufSize_];
+  double ias_nots_ = meters_per_second_to_knots(ias);
   snprintf(
       buf,
-      kPrintBufSize,
+      printBufSize_,
       "%.0f",
-      ias_knots);
-  Size sz = text_size(screen_->cr(), buf, kIASTextFont);
+      ias_nots_);
+  Size sz = text_size(screen_->cr(), buf, iASTextFont_);
   rectangle(
       screen_->cr(),
       Point(
-          center.x() - sz.w() / 2 - kIASTextMargin,
-          center.y() - sz.h() / 2 - kIASTextMargin),
+          center.x() - sz.w() / 2 - iASTextMargin_,
+          center.y() - sz.h() / 2 - iASTextMargin_),
       Size(
-          sz.w() + 2 * kIASTextMargin,
-          sz.h() + 2 * kIASTextMargin),
-      kAirballFill);
+          sz.w() + 2 * iASTextMargin_,
+          sz.h() + 2 * iASTextMargin_),
+      airballFill_);
   text(
       screen_->cr(),
       buf,
       center,
       TextReferencePoint::CENTER_MID_UPPERCASE,
-      kIASTextFont,
-      kIASTextColor);
+      iASTextFont_,
+      iASTextColor_);
 }
 
 void Display::paintAirballAirspeedLimits(const Point& center) {
@@ -390,72 +394,72 @@ void Display::paintAirballAirspeedLimitsRotate(const Point& center) {
           center.x() - r,
           center.y()),
       Point(
-          center.x() - r - kTotemPoleAlphaUnit,
-          center.y() + kTotemPoleAlphaUnit),
-      kAirballCrosshairsStroke);
+          center.x() - r - totemPoleAlphaUnit_,
+          center.y() + totemPoleAlphaUnit_),
+      airballCrosshairsStroke_);
   line(
       screen_->cr(),
       Point(
           center.x() - r,
           center.y()),
       Point(
-          center.x() - r - kTotemPoleAlphaUnit,
-          center.y() - kTotemPoleAlphaUnit),
-      kAirballCrosshairsStroke);
+          center.x() - r - totemPoleAlphaUnit_,
+          center.y() - totemPoleAlphaUnit_),
+      airballCrosshairsStroke_);
   line(
       screen_->cr(),
       Point(
           center.x() + r,
           center.y()),
       Point(
-          center.x() + r + kTotemPoleAlphaUnit,
-          center.y() + kTotemPoleAlphaUnit),
-      kAirballCrosshairsStroke);
+          center.x() + r + totemPoleAlphaUnit_,
+          center.y() + totemPoleAlphaUnit_),
+      airballCrosshairsStroke_);
   line(
       screen_->cr(),
       Point(
           center.x() + r,
           center.y()),
       Point(
-          center.x() + r + kTotemPoleAlphaUnit,
-          center.y() - kTotemPoleAlphaUnit),
-      kAirballCrosshairsStroke);
+          center.x() + r + totemPoleAlphaUnit_,
+          center.y() - totemPoleAlphaUnit_),
+      airballCrosshairsStroke_);
   line(
       screen_->cr(),
       Point(
           center.x(),
           center.y() + r),
       Point(
-          center.x() + kTotemPoleAlphaUnit,
-          center.y() + r + kTotemPoleAlphaUnit),
-      kAirballCrosshairsStroke);
+          center.x() + totemPoleAlphaUnit_,
+          center.y() + r + totemPoleAlphaUnit_),
+      airballCrosshairsStroke_);
   line(
       screen_->cr(),
       Point(
           center.x(),
           center.y() + r),
       Point(
-          center.x() - kTotemPoleAlphaUnit,
-          center.y() + r + kTotemPoleAlphaUnit),
-      kAirballCrosshairsStroke);
+          center.x() - totemPoleAlphaUnit_,
+          center.y() + r + totemPoleAlphaUnit_),
+      airballCrosshairsStroke_);
   line(
       screen_->cr(),
       Point(
           center.x(),
           center.y() - r),
       Point(
-          center.x() + kTotemPoleAlphaUnit,
-          center.y() - r - kTotemPoleAlphaUnit),
-      kAirballCrosshairsStroke);
+          center.x() + totemPoleAlphaUnit_,
+          center.y() - r - totemPoleAlphaUnit_),
+      airballCrosshairsStroke_);
   line(
       screen_->cr(),
       Point(
           center.x(),
           center.y() - r),
       Point(
-          center.x() - kTotemPoleAlphaUnit,
-          center.y() - r - kTotemPoleAlphaUnit),
-      kAirballCrosshairsStroke);
+          center.x() - totemPoleAlphaUnit_,
+          center.y() - r - totemPoleAlphaUnit_),
+      airballCrosshairsStroke_);
 }
 
 void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
@@ -464,75 +468,75 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
       center,
       airspeed_knots_to_radius(settings_->v_fe()),
       4,
-      kSpeedLimitsRosetteHalfAngle,
+      speedLimitsRosetteHalfAngle_,
       M_PI_4,
-      kVBackgroundStroke);
+      vBackgroundStroke_);
   rosette(
       screen_->cr(),
       center,
       airspeed_knots_to_radius(settings_->v_fe()),
       4,
-      kSpeedLimitsRosetteHalfAngle,
+      speedLimitsRosetteHalfAngle_,
       M_PI_4,
-      kVfeStroke);
+      vfeStroke_);
   rosette(
       screen_->cr(),
       center,
       airspeed_knots_to_radius(settings_->v_no()),
       4,
-      kSpeedLimitsRosetteHalfAngle,
+      speedLimitsRosetteHalfAngle_,
       M_PI_4,
-      kVBackgroundStroke);
+      vBackgroundStroke_);
   rosette(
       screen_->cr(),
       center,
       airspeed_knots_to_radius(settings_->v_no()),
       4,
-      kSpeedLimitsRosetteHalfAngle,
+      speedLimitsRosetteHalfAngle_,
       M_PI_4,
-      kVnoStroke);
+      vnoStroke_);
   rosette(
       screen_->cr(),
       center,
       airspeed_knots_to_radius(settings_->v_ne()),
       4,
-      kSpeedLimitsRosetteHalfAngle,
+      speedLimitsRosetteHalfAngle_,
       M_PI_4,
-      kVBackgroundStroke);
+      vBackgroundStroke_);
   rosette(
       screen_->cr(),
       center,
       airspeed_knots_to_radius(settings_->v_ne()),
       4,
-      kSpeedLimitsRosetteHalfAngle,
+      speedLimitsRosetteHalfAngle_,
       M_PI_4,
-      kVneStroke);
+      vneStroke_);
 }
 
 void Display::paintAirballTrueAirspeed(const Point& center) {
-  double tas_stroke_alpha = 0;
+  double tas_stroe_alpha_ = 0;
   if (airdata_->smooth_ball().tas() <
       airdata_->smooth_ball().ias() || airdata_->smooth_ball().ias() == 0) {
-    tas_stroke_alpha = 0;
+    tas_stroe_alpha_ = 0;
   } else {
     double ias_squared =
         airdata_->smooth_ball().ias() * airdata_->smooth_ball().ias();
     double tas_squared =
         airdata_->smooth_ball().tas() * airdata_->smooth_ball().tas();
     double ratio = (tas_squared - ias_squared) / ias_squared;
-    tas_stroke_alpha = (ratio > kTasThresholdRatio)
-                       ? 1.0 : (ratio / kTasThresholdRatio);
+    tas_stroe_alpha_ = (ratio > tasThresholdRatio_)
+                       ? 1.0 : (ratio / tasThresholdRatio_);
   }
   rosette(
       screen_->cr(),
       center,
       airspeed_to_radius(airdata_->smooth_ball().tas()),
       4,
-      kTrueAirspeedRosetteHalfAngle,
+      trueAirspeedRosetteHalfAngle_,
       0,
       Stroke(
-          kTasRingColor.with_alpha(tas_stroke_alpha),
-          kTasRingStrokeWidth));
+          tasRingColor_.with_alpha(tas_stroe_alpha_),
+          tasRingStrokeWidth_));
 }
 
 void Display::paintTotemPole() {
@@ -544,162 +548,162 @@ void Display::paintTotemPole() {
 void Display::paintTotemPoleLine() {
   line(
       screen_->cr(),
-      Point(kDisplayXMid, 0),
-      Point(kDisplayXMid, alpha_degrees_to_y(settings_->alpha_ref()) - kAlphaRefRadius),
-      kTotemPoleStroke);
+      Point(displayXMid_, 0),
+      Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref()) - alphaRefRadius_),
+      totemPoleStroke_);
   line(
       screen_->cr(),
-      Point(kDisplayXMid, alpha_degrees_to_y(settings_->alpha_ref()) + kAlphaRefRadius),
-      Point(kDisplayXMid, kDisplayRegionYMax),
-      kTotemPoleStroke);
+      Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref()) + alphaRefRadius_),
+      Point(displayXMid_, displayRegionYMax_),
+      totemPoleStroke_);
   arc(
       screen_->cr(),
-      Point(kDisplayXMid, alpha_degrees_to_y(settings_->alpha_ref())),
-      kAlphaRefRadius,
-      kAlphaRefTopAngle0,
-      kAlphaRefTopAngle1,
-      kTotemPoleStroke);
+      Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref())),
+      alphaRefRadius_,
+      alphaRefTopAngle0_,
+      alphaRefTopAngle1_,
+      totemPoleStroke_);
   arc(
       screen_->cr(),
-      Point(kDisplayXMid, alpha_degrees_to_y(settings_->alpha_ref())),
-      kAlphaRefRadius,
-      kAlphaRefBotAngle0,
-      kAlphaRefBotAngle1,
-      kTotemPoleStroke);
+      Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref())),
+      alphaRefRadius_,
+      alphaRefBotAngle0_,
+      alphaRefBotAngle1_,
+      totemPoleStroke_);
 }
 
 void Display::paintTotemPoleAlphaX() {
   line(
       screen_->cr(),
       Point(
-          kDisplayXMid - 3 * kTotemPoleAlphaUnit,
+          displayXMid_ - 3 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_x())),
       Point(
-          kDisplayXMid - 2 * kTotemPoleAlphaUnit,
+          displayXMid_ - 2 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_x())),
-      kTotemPoleStroke);
+      totemPoleStroke_);
   line(
       screen_->cr(),
       Point(
-          kDisplayXMid - 2 * kTotemPoleAlphaUnit,
+          displayXMid_ - 2 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_x())),
       Point(
-          kDisplayXMid - 3 * kTotemPoleAlphaUnit,
-          alpha_degrees_to_y(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
-      kTotemPoleStroke);
+          displayXMid_ - 3 * totemPoleAlphaUnit_,
+          alpha_degrees_to_y(settings_->alpha_x()) - totemPoleAlphaUnit_) ,
+      totemPoleStroke_);
   line(
       screen_->cr(),
       Point(
-          kDisplayXMid + 3 * kTotemPoleAlphaUnit,
+          displayXMid_ + 3 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_x())),
       Point(
-          kDisplayXMid + 2 * kTotemPoleAlphaUnit,
+          displayXMid_ + 2 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_x())),
-      kTotemPoleStroke);
+      totemPoleStroke_);
   line(
       screen_->cr(),
       Point(
-          kDisplayXMid + 2 * kTotemPoleAlphaUnit,
+          displayXMid_ + 2 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_x())),
       Point(
-          kDisplayXMid + 3 * kTotemPoleAlphaUnit,
-          alpha_degrees_to_y(settings_->alpha_x()) - kTotemPoleAlphaUnit) ,
-      kTotemPoleStroke);
+          displayXMid_ + 3 * totemPoleAlphaUnit_,
+          alpha_degrees_to_y(settings_->alpha_x()) - totemPoleAlphaUnit_) ,
+      totemPoleStroke_);
 }
 
 void Display::paintTotemPoleAlphaY() {
   line(
       screen_->cr(),
       Point(
-          kDisplayXMid - 4 * kTotemPoleAlphaUnit,
+          displayXMid_ - 4 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_y())),
       Point(
-          kDisplayXMid - 5 * kTotemPoleAlphaUnit,
+          displayXMid_ - 5 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_y())),
-      kTotemPoleStroke);
+      totemPoleStroke_);
   line(
       screen_->cr(),
       Point(
-          kDisplayXMid - 5 * kTotemPoleAlphaUnit,
+          displayXMid_ - 5 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_y())),
       Point(
-          kDisplayXMid - 6 * kTotemPoleAlphaUnit,
-          alpha_degrees_to_y(settings_->alpha_y()) - kTotemPoleAlphaUnit),
-      kTotemPoleStroke);
+          displayXMid_ - 6 * totemPoleAlphaUnit_,
+          alpha_degrees_to_y(settings_->alpha_y()) - totemPoleAlphaUnit_),
+      totemPoleStroke_);
   line(
       screen_->cr(),
       Point(
-          kDisplayXMid + 4 * kTotemPoleAlphaUnit,
+          displayXMid_ + 4 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_y())),
       Point(
-          kDisplayXMid + 5 * kTotemPoleAlphaUnit,
+          displayXMid_ + 5 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_y())),
-      kTotemPoleStroke);
+      totemPoleStroke_);
   line(
       screen_->cr(),
       Point(
-          kDisplayXMid + 5 * kTotemPoleAlphaUnit,
+          displayXMid_ + 5 * totemPoleAlphaUnit_,
           alpha_degrees_to_y(settings_->alpha_y())),
       Point(
-          kDisplayXMid + 6 * kTotemPoleAlphaUnit,
-          alpha_degrees_to_y(settings_->alpha_y()) - kTotemPoleAlphaUnit),
-      kTotemPoleStroke);
+          displayXMid_ + 6 * totemPoleAlphaUnit_,
+          alpha_degrees_to_y(settings_->alpha_y()) - totemPoleAlphaUnit_),
+      totemPoleStroke_);
 }
 
 void Display::paintCowCatcher() {
   double xStep =
-      (kDisplayRegionWidth - (2 * kDisplayMargin)) /
-      (2 * kNumCowCatcherLines);
-  for (int i = 0; i < kNumCowCatcherLines; i++) {
+      (displayRegionWidth_ - (2 * displayMargin_)) /
+      (2 * numCowCatcherLines_);
+  for (int i = 0; i < numCowCatcherLines_; i++) {
     line(
         screen_->cr(),
         Point(
-            kDisplayXMid + i * xStep,
-            kDisplayRegionYMax),
+            displayXMid_ + i * xStep,
+            displayRegionYMax_),
         Point(
-            kDisplayXMid + (i + 1) * xStep,
-            kAirballHeight),
-        kCowCatcherStroke);
+            displayXMid_ + (i + 1) * xStep,
+            airballHeight_),
+        cowCatcherStroke_);
     line(
         screen_->cr(),
         Point(
-            kDisplayXMid - i * xStep,
-            kDisplayRegionYMax),
+            displayXMid_ - i * xStep,
+            displayRegionYMax_),
         Point(
-            kDisplayXMid - (i + 1) * xStep,
-            kAirballHeight),
-        kCowCatcherStroke);
+            displayXMid_ - (i + 1) * xStep,
+            airballHeight_),
+        cowCatcherStroke_);
   }
   line(
       screen_->cr(),
       Point(
-          kDisplayXMid - (kNumCowCatcherLines - 1) * xStep,
-          kDisplayRegionYMax),
+          displayXMid_ - (numCowCatcherLines_ - 1) * xStep,
+          displayRegionYMax_),
       Point(
-          kDisplayXMid + (kNumCowCatcherLines - 1) * xStep,
-          kDisplayRegionYMax),
-      kCowCatcherStroke);
+          displayXMid_ + (numCowCatcherLines_ - 1) * xStep,
+          displayRegionYMax_),
+      cowCatcherStroke_);
 }
 
 void Display::paintVsi() {
-  double radians_per_fpm = (M_PI / 2.0) / kVsiMaxFpm;
-  double vsi_width = kVsiHeight / 2 / tan(kVsiPrecisionFpm * radians_per_fpm);
-  double vsi_x_left = (kWidth - vsi_width) / 2;
+  double radians_per_fpm = (M_PI / 2.0) / vsiMaxFpm_;
+  double vsi_width = vsiHeight_ / 2 / tan(vsiPrecisionFpm_ * radians_per_fpm);
+  double vsi_x_left = (width_ - vsi_width) / 2;
   Point top_left(
       vsi_x_left,
-      kAirballHeight + kDisplayMargin);
+      airballHeight_ + displayMargin_);
   Point top_right(
       vsi_x_left + vsi_width,
       top_left.y());
   Point bottom_left(
       top_left.x(),
-      top_left.y() + kVsiHeight);
+      top_left.y() + vsiHeight_);
   Point bottom_right(
       top_right.x(),
       bottom_left.y());
   Point center_left(
       top_left.x(),
-      top_left.y() + kVsiHeight / 2);
+      top_left.y() + vsiHeight_ / 2);
   Point center_right(
       top_right.x(),
       center_left.y());
@@ -708,8 +712,8 @@ void Display::paintVsi() {
       top_left,
       Size(
           vsi_width,
-          kVsiHeight),
-      kAltimeterBackgroundColor);
+          vsiHeight_),
+      altimeterBackgroundColor_);
   paintVsiTicMarks(
       top_left,
       top_right,
@@ -755,43 +759,43 @@ void Display::paintVsiTicMarks(
       top_right,
       Point(
           top_right.x(),
-          top_right.y() + kVsiTickLength),
-      kVsiTickStrokeThin);
+          top_right.y() + vsiTickLength_),
+      vsiTickStrokeThin_);
   line(
       screen_->cr(),
       top_right,
       Point(
-          top_right.x() - kVsiTickLength,
+          top_right.x() - vsiTickLength_,
           top_right.y()),
-      kVsiTickStrokeThin);
+      vsiTickStrokeThin_);
   line(
       screen_->cr(),
       bottom_right,
       Point(
           bottom_right.x(),
-          bottom_right.y() - kVsiTickLength),
-      kVsiTickStrokeThin);
+          bottom_right.y() - vsiTickLength_),
+      vsiTickStrokeThin_);
   line(
       screen_->cr(),
       bottom_right,
       Point(
-          bottom_right.x() - kVsiTickLength,
+          bottom_right.x() - vsiTickLength_,
           bottom_right.y()),
-      kVsiTickStrokeThin);
+      vsiTickStrokeThin_);
   line(
       screen_->cr(),
       center_right,
       Point(
-          center_right.x() - kVsiTickLength,
+          center_right.x() - vsiTickLength_,
           center_right.y()),
-      kVsiTickStrokeThin);
-  for (int i = 0; i < sizeof(kVsiStepsFpm) / sizeof(kVsiStepsFpm[0]); i++) {
+      vsiTickStrokeThin_);
+  for (int i = 0; i < sizeof(vsiStepsFpm_) / sizeof(vsiStepsFpm_[0]); i++) {
     double step_x =
         (center_left.y() - top_left.y()) /
-        tan(kVsiStepsFpm[i].fpm * radians_per_fpm);
+        tan(vsiStepsFpm_[i].fpm * radians_per_fpm);
     Stroke stroke(
-        kVsiTickStrokeThin.color(),
-        kVsiTickStrokeThin.width() * kVsiStepsFpm[i].thick);
+        vsiTickStrokeThin_.color(),
+        vsiTickStrokeThin_.width() * vsiStepsFpm_[i].thick);
     line(
         screen_->cr(),
         Point(
@@ -799,13 +803,13 @@ void Display::paintVsiTicMarks(
             top_left.y()),
         Point(
             step_x,
-            top_left.y() + kVsiTickLength),
+            top_left.y() + vsiTickLength_),
         stroke);
     line(
         screen_->cr(),
         Point(
             step_x,
-            bottom_left.y() - kVsiTickLength),
+            bottom_left.y() - vsiTickLength_),
         Point(
             step_x,
             bottom_left.y()),
@@ -823,32 +827,32 @@ void Display::paintVsiPointer(
     double radians_per_fpm) {
   double climb_rate =
       airdata_->climb_rate() / kMetersPerFoot * kSecondsPerMinute;
-  climb_rate = fmin(climb_rate, kVsiMaxFpm);
-  climb_rate = fmax(climb_rate, -kVsiMaxFpm);
+  climb_rate = fmin(climb_rate, vsiMaxFpm_);
+  climb_rate = fmax(climb_rate, -vsiMaxFpm_);
   double angle = climb_rate * radians_per_fpm;
-  if (fabs(climb_rate) <= kVsiPrecisionFpm) {
+  if (fabs(climb_rate) <= vsiPrecisionFpm_) {
     line(
         screen_->cr(),
         center_left,
         Point(
             center_right.x(),
             center_left.y() - (center_right.x() - center_left.x()) * sin(angle)),
-        kVsiPointerStroke);
+        vsiPointerStroke_);
   } else {
     double dx = (center_left.y() - top_left.y()) / tan(angle);
-    Point knee(
+    Point nee_(
         center_left.x() + fabs(dx),
         dx < 0 ? bottom_left.y() : top_left.y());
     line(
         screen_->cr(),
         center_left,
-        knee,
-        kVsiPointerStroke);
+        nee_,
+        vsiPointerStroke_);
     Point a(
-        knee.x(),
+        nee_.x(),
         dx < 0
-            ? knee.y() - kVsiKneeOffset
-            : knee.y() + kVsiKneeOffset);
+            ? nee_.y() - vsiKneeOffset_
+            : nee_.y() + vsiKneeOffset_);
     Point b(
         center_right.x(),
         a.y());
@@ -856,7 +860,7 @@ void Display::paintVsiPointer(
         screen_->cr(),
         a,
         b,
-        kVsiPointerStroke);
+        vsiPointerStroke_);
   }
 }
 
@@ -872,36 +876,36 @@ void Display::paintAltitude(
   int last_three_digits = (abs(altitude) - (thousands * 1000)) / 10 * 10;
   Point baseline(
       center_left.x() + (center_right.x() - center_left.x())
-                        * kAltimeterBaselineRatio,
+                        * altimeterBaselineRatio_,
       center_left.y());
-  char buf[kPrintBufSize];
+  char buf[printBufSize_];
   // Print the thousands string
   if (thousands == 0) {
     if (altitude < 0) {
       // Print just a negative sign
       snprintf(
           buf,
-          kPrintBufSize,
+          printBufSize_,
           "-");
     } else {
       // Leave the thousands blank
       snprintf(
           buf,
-          kPrintBufSize,
+          printBufSize_,
           "");
     }
   } else {
     if (altitude < 0) {
       snprintf(
           buf,
-          kPrintBufSize,
+          printBufSize_,
           "-%d",
           thousands);
     } else {
       // Leave the thousands blank
       snprintf(
           buf,
-          kPrintBufSize,
+          printBufSize_,
           "%d",
           thousands);
     }
@@ -910,14 +914,14 @@ void Display::paintAltitude(
       screen_->cr(),
       buf,
       Point(
-          baseline.x() - kAltimeterNumberGap,
+          baseline.x() - altimeterNumberGap_,
           baseline.y()),
       TextReferencePoint::CENTER_RIGHT_UPPERCASE,
-      kAltimeterFontLarge,
-      kAltimeterTextColor);
+      altimeterFontLarge_,
+      altimeterTextColor_);
   snprintf(
       buf,
-      kPrintBufSize,
+      printBufSize_,
       "%03d",
       last_three_digits);
   text(
@@ -925,8 +929,8 @@ void Display::paintAltitude(
       buf,
       baseline,
       TextReferencePoint::CENTER_LEFT_UPPERCASE,
-      kAltimeterFontSmall,
-      kAltimeterTextColor);
+      altimeterFontSmall_,
+      altimeterTextColor_);
 }
 
 void Display::paintBaroSetting(
@@ -937,12 +941,12 @@ void Display::paintBaroSetting(
     Point bottom_left,
     Point bottom_right) {
   Point baseline(
-      center_left.x() + kBaroLeftOffset,
+      center_left.x() + baroLeftOffset_,
       center_left.y());
-  char buf[kPrintBufSize];
+  char buf[printBufSize_];
   snprintf(
       buf,
-      kPrintBufSize,
+      printBufSize_,
       "%04.2f",
       settings_->baro_setting());
   text(
@@ -950,21 +954,21 @@ void Display::paintBaroSetting(
       buf,
       baseline,
       TextReferencePoint::CENTER_LEFT_UPPERCASE,
-      kBaroFontSmall,
-      kBaroTextColor);
+      baroFontSmall_,
+      baroTextColor_);
 }
 
 void Display::paintNoFlightData() {
   line(
       screen_->cr(),
       Point(0, 0),
-      Point(kWidth, kDisplayRegionYMax),
-      kNoFlightDataStroke);
+      Point(width_, displayRegionYMax_),
+      noFlightDataStroke_);
   line(
       screen_->cr(),
-      Point(kWidth, 0),
-      Point(0, kDisplayRegionYMax),
-      kNoFlightDataStroke);
+      Point(width_, 0),
+      Point(0, displayRegionYMax_),
+      noFlightDataStroke_);
 }
 
 void Display::paintBatteryStatus() {
@@ -972,30 +976,30 @@ void Display::paintBatteryStatus() {
     return;
 
   Point top_left(
-      kWidth - kStatusRegionMargin - 2 * kStatusDisplayUnit,
-      kStatusRegionMargin);
+      width_ - statusRegionMargin_ - 2 * statusDisplayUnit_,
+      statusRegionMargin_);
   Point top_left_inside(
-      top_left.x() + kStatusDisplayStrokeWidth/2,
-      top_left.y() + kStatusDisplayStrokeWidth/2);
+      top_left.x() + statusDisplayStrokeWidth_/2,
+      top_left.y() + statusDisplayStrokeWidth_/2);
   Size size(
-      2 * kStatusDisplayUnit,
-      kStatusDisplayUnit);
+      2 * statusDisplayUnit_,
+      statusDisplayUnit_);
   rectangle(
       screen_->cr(),
       top_left,
       size,
-      kBackground);
+      background_);
   const double barHeight =
-      kStatusDisplayUnit - kStatusDisplayStrokeWidth/2;
+      statusDisplayUnit_ - statusDisplayStrokeWidth_/2;
   const double barWidth =
       status_->battery_health() *
-      (2.0 * (kStatusDisplayUnit - kStatusDisplayStrokeWidth/2));;
+      (2.0 * (statusDisplayUnit_ - statusDisplayStrokeWidth_/2));;
   const Color barColor =
       status_->battery_health() < 0.5
       ? status_->battery_health() < 0.25
-        ? kBatteryColorBad
-        : kBatteryColorWarning
-      : kBatteryColorGood;
+        ? batteryColorBad_
+        : batteryColorWarning_
+      : batteryColorGood_;
   rectangle(
       screen_->cr(),
       top_left_inside,
@@ -1005,7 +1009,7 @@ void Display::paintBatteryStatus() {
       screen_->cr(),
       top_left,
       size,
-      kStatusDisplayStroke);
+      statusDisplayStroke_);
 
   if (status_->battery_charging()) {
     text(
@@ -1017,10 +1021,10 @@ void Display::paintBatteryStatus() {
         Color(255, 255, 0));
   }
 
-  if (kStatusDisplayNumericalData || status_->battery_charging()) {
+  if (statusDisplayNumericalData_ || status_->battery_charging()) {
     Point top_left_below(
         top_left.x(),
-        top_left.y() + kStatusDisplayUnit + kStatusDisplayStrokeWidth);
+        top_left.y() + statusDisplayUnit_ + statusDisplayStrokeWidth_);
     const int buf_size = 20;
     char buf[buf_size];
     snprintf(
@@ -1033,8 +1037,8 @@ void Display::paintBatteryStatus() {
         buf,
         top_left_below,
         TextReferencePoint::TOP_LEFT,
-        kStatusTextFont,
-        kStatusTextColor);
+        statusTextFont_,
+        statusTextColor_);
     snprintf(
         buf,
         buf_size,
@@ -1045,8 +1049,8 @@ void Display::paintBatteryStatus() {
         buf,
         Point(top_left_below.x(), top_left_below.y()+15),
         TextReferencePoint ::TOP_LEFT,
-        kStatusTextFont,
-        kStatusTextColor);
+        statusTextFont_,
+        statusTextColor_);
   }
 }
 
@@ -1055,11 +1059,11 @@ void Display::paintLinkStatus() {
     return;
 
   Point bottom_left(
-      kWidth - 2 * kStatusRegionMargin - 4 * kStatusDisplayUnit,
-      kStatusRegionMargin + kStatusDisplayUnit);
+      width_ - 2 * statusRegionMargin_ - 4 * statusDisplayUnit_,
+      statusRegionMargin_ + statusDisplayUnit_);
   Point top_right(
-      kWidth - 2 * kStatusRegionMargin - 2 * kStatusDisplayUnit,
-      kStatusRegionMargin);
+      width_ - 2 * statusRegionMargin_ - 2 * statusDisplayUnit_,
+      statusRegionMargin_);
   Point bottom_right(
       top_right.x(),
       bottom_left.y());
@@ -1085,12 +1089,12 @@ void Display::paintLinkStatus() {
       screen_->cr(),
       3,
       corners_fill,
-      kLinkColor);
+      linkColor_);
   polygon(
       screen_->cr(),
       3,
       corners,
-      kStatusDisplayStroke);
+      statusDisplayStroke_);
 }
 
 } // namespace airball
