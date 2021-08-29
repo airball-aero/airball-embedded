@@ -19,14 +19,21 @@ Display::Display(Screen* screen,
                  const Settings* settings,
                  const SystemStatus* status)
     : screen_(screen), airdata_(airdata), settings_(settings), status_(status)
-{
+{}
+
+void Display::layout() {
   fontName_ = "Noto Sans";
 
-  width_ = 272;
-  height_ = 480;
+  width_ = settings_->screen_width();
+  height_ = settings_->screen_height();
 
-  altimeterHeight_ = 48;
-  airballHeight_ = height_ - altimeterHeight_;
+  if (settings_->show_altimeter()) {
+    altimeterHeight_ = 48;
+    airballHeight_ = height_ - altimeterHeight_;
+  } else {
+    altimeterHeight_ = 0;
+    airballHeight_ = height_;
+  }
 
   displayMargin_ = 3;
 
@@ -160,10 +167,7 @@ Display::Display(Screen* screen,
   vsiPrecisionFpm_ = 100;
   vsiMaxFpm_ = 2000;
 
-  {
-    double fpm;
-    double thick;
-  }
+  vsiStepsFpm_.clear();
   vsiStepsFpm_.push_back(
       {
           .fpm = 200,
@@ -247,6 +251,8 @@ double Display::airspeed_knots_to_radius(const double airspeed_nots_) {
 }
 
 void Display::paint() {
+  layout();
+
   cairo_push_group(screen_->cr());
   cairo_translate(screen_->cr(), 0, width_);
   cairo_rotate(screen_->cr(), -M_PI / 2);
@@ -264,11 +270,17 @@ void Display::paint() {
   }
   paintTotemPole();
   paintCowCatcher();
-  paintBatteryStatus();
-  paintLinkStatus();
+  if (settings_->show_probe_battery_status()) {
+    paintBatteryStatus();
+  }
+  if (settings_->show_link_status()) {
+    paintLinkStatus();
+  }
   cairo_restore(screen_->cr());
 
-  paintVsi();
+  if (settings_->show_altimeter()) {
+    paintVsi();
+  }
 
   cairo_pop_group_to_source(screen_->cr());
   cairo_paint(screen_->cr());

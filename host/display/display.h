@@ -103,6 +103,7 @@ private:
   Font baroFontSmall_;
   Color baroTextColor_;
 
+  void layout();
   void paintBackground();
   void paintRawAirballs();
   void paintRawAirball(

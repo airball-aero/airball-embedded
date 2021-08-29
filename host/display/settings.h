@@ -90,6 +90,31 @@ public:
   double vsi_smoothing_factor() const;
 
   /**
+   * @return the screen width.
+   */
+  int screen_width() const;
+
+  /**
+   * @return the screen height.
+   */
+  int screen_height() const;
+
+  /**
+   * @return whether to display the altimeter.
+   */
+  bool show_altimeter() const;
+
+  /**
+   * @return whether to display the wireless link status.
+   */
+  bool show_link_status() const;
+
+  /**
+   * @return whether to display the probe battery status.
+   */
+  bool show_probe_battery_status() const;
+
+  /**
    * Load settings from a specified file path.
    */
    void load(const std::string &path);

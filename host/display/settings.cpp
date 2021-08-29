@@ -7,32 +7,34 @@
 
 namespace airball {
 
-template <class T>
+template<class T>
 class Parameter {
 public:
   const char *name;
   const T initial;
-  T get(const rapidjson::Document& doc) const {
+
+  T get(const rapidjson::Document &doc) const {
     if (doc.HasMember(name)) {
       return get_impl(doc);
     }
     return initial;
   }
-  T get_impl(const rapidjson::Document& doc) const;
+
+  T get_impl(const rapidjson::Document &doc) const;
 };
 
 template<>
-int Parameter<int>::get_impl(const rapidjson::Document& doc) const {
+int Parameter<int>::get_impl(const rapidjson::Document &doc) const {
   return doc[name].GetInt();
 }
 
 template<>
-double Parameter<double>::get_impl(const rapidjson::Document& doc) const {
+double Parameter<double>::get_impl(const rapidjson::Document &doc) const {
   return doc[name].GetDouble();
 }
 
 template<>
-bool Parameter<bool>::get_impl(const rapidjson::Document& doc) const {
+bool Parameter<bool>::get_impl(const rapidjson::Document &doc) const {
   return doc[name].GetBool();
 }
 
@@ -111,6 +113,31 @@ constexpr Parameter<double> VSI_SMOOTHING_FACTOR = {
     .initial=1.0,
 };
 
+constexpr Parameter<int> SCREEN_WIDTH = {
+    .name="screen_width",
+    .initial=272,
+};
+
+constexpr Parameter<int> SCREEN_HEIGHT = {
+    .name="screen_height",
+    .initial=480,
+};
+
+constexpr Parameter<int> SHOW_ALTIMETER = {
+    .name="show_altimeter",
+    .initial=true,
+};
+
+constexpr Parameter<int> SHOW_LINK_STATUS = {
+    .name="show_link_status",
+    .initial=true,
+};
+
+constexpr Parameter<int> SHOW_PROBE_BATTERY_STATUS = {
+    .name="show_probe_battery_status",
+    .initial=true,
+};
+
 Settings::Settings() {
   document_.Parse("{}");
 }
@@ -120,7 +147,7 @@ void Settings::load_str(std::string str) {
   document_.Parse(str.c_str());
 }
 
-void Settings::load(const std::string& path) {
+void Settings::load(const std::string &path) {
   std::ifstream f;
   f.open(path);
   std::stringstream s;
@@ -129,8 +156,8 @@ void Settings::load(const std::string& path) {
   load_str(s.str());
 }
 
-template <class T>
-T Settings::get_value(const Parameter<T>* p) const {
+template<class T>
+T Settings::get_value(const Parameter<T> *p) const {
   return p->get(document_);
 }
 
@@ -192,6 +219,26 @@ double Settings::ball_smoothing_factor() const {
 
 double Settings::vsi_smoothing_factor() const {
   return get_value(&VSI_SMOOTHING_FACTOR);
+}
+
+int Settings::screen_width() const {
+  return get_value(&SCREEN_WIDTH);
+}
+
+int Settings::screen_height() const {
+  return get_value(&SCREEN_HEIGHT);
+}
+
+bool Settings::show_altimeter() const {
+  return get_value(&SHOW_ALTIMETER);
+}
+
+bool Settings::show_link_status() const {
+  return get_value(&SHOW_LINK_STATUS);
+}
+
+bool Settings::show_probe_battery_status() const {
+  return get_value(&SHOW_PROBE_BATTERY_STATUS);
 }
 
 } // namespace airball
