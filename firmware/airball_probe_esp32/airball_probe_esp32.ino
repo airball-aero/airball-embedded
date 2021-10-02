@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "calibration_surface.h"
-#include "v2_probe_calibration.h"
+#include "probe_calibration.h"
 #include "pressures_to_airdata.h"
 #include "metric.h"
 
@@ -256,9 +256,9 @@ void airdata_read_and_send() {
   
   int err = 0;
   airdata_triple airdata =
-    pressures_to_airdata(&v2_probe_alpha,
-			 &v2_probe_beta,
-			 &v2_probe_q_over_dp0,
+    pressures_to_airdata(&probe_alpha,
+			 &probe_beta,
+			 &probe_q_over_dp0,
 			 p.dp0,
 			 p.dpa,
 			 p.dpb,

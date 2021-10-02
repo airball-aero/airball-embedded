@@ -1,4 +1,5 @@
 #include "pressures_to_airdata.h"
+#include <math.h>
 
 struct airdata_triple_struct pressures_to_airdata(const calibration_surface* cs_alpha,
 						  const calibration_surface* cs_beta,
@@ -11,15 +12,17 @@ struct airdata_triple_struct pressures_to_airdata(const calibration_surface* cs_
 
   float rpa = dpa / dp0;
   float rpb = dpb / dp0;
-  float signb;
+  float rpb_pos = math.abs(rpb);
+  float signb = rpb < 0 ? -1.0 : 1.0;
   
-  r.alpha = interpolate(cs_alpha, rpa, rpb, err);
+  r.alpha = interpolate(cs_alpha, rpa, rpb_pos, err);
   if (*err != 0) { return r; }
   
-  r.beta = interpolate(cs_beta, rpa, rpb, err);
+  r.beta = interpolate(cs_beta, rpa, rpb_pos, err);
   if (*err != 0) { return r; }
-
-  float q_over_dp0 = interpolate(cs_q_over_dp0, rpa, rpb, err);  
+  r.beta = r.beta * signb;
+  
+  float q_over_dp0 = interpolate(cs_q_over_dp0, rpa, rpb_pos, err);  
   if (*err != 0) { return r; }
   r.q = dp0 * q_over_dp0;
 
