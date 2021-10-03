@@ -182,7 +182,7 @@ plot_scatter(ratios_pos, '1_over_dp0')
 
 def make_fit(x, y, z):
 
-    def generic_fit_function(xvalues, a, b, c, d, e, f, g, h, i, j, k, l):
+    def generic_fit_function(xvalues, a, b, c, d, e, f, g, h, i, j):
         x = xvalues[0]
         y = xvalues[1]
         return (a +
@@ -194,15 +194,13 @@ def make_fit(x, y, z):
                 g * np.power(y, 3) +
                 h * np.power(x, 1) * np.power(y, 1) +
                 i * np.power(x, 2) * np.power(y, 2) +
-                j * np.power(x, 3) * np.power(y, 3) +
-                k * np.sin(x) +
-                l * np.cos(x))
+                j * np.power(x, 3) * np.power(y, 3))
 
     popt, pcov = spo.curve_fit(
         generic_fit_function,
         [x, y],
         z,
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
     def result_function(x, y):
         return generic_fit_function([x, y], *popt)
