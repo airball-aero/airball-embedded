@@ -180,30 +180,46 @@ plot_scatter(ratios_pos, '1_over_dp0')
 
 ########################################################################
 
-def make_fit(x, y, z):
+def generic_fit(xvalues, *p):
+    x = xvalues[0]
+    y = xvalues[1]
+    return (p[0] +
+            p[1] * np.power(x, 1) +
+            p[2] * np.power(x, 2) +
+            p[3] * np.power(x, 3) +
+            p[4] * np.power(y, 1) +
+            p[5] * np.power(y, 2) +
+            p[6] * np.power(y, 3) +
+            p[7] * np.power(x, 1) * np.power(y, 1) +
+            p[8] * np.power(x, 2) * np.power(y, 2) +
+            p[9] * np.power(x, 3) * np.power(y, 3))
+generic_fit.n = 10
 
-    def generic_fit_function(xvalues, a, b, c, d, e, f, g, h, i, j):
-        x = xvalues[0]
-        y = xvalues[1]
-        return (a +
-                b * np.power(x, 1) +
-                c * np.power(x, 2) +
-                d * np.power(x, 3) +
-                e * np.power(y, 1) +
-                f * np.power(y, 2) +
-                g * np.power(y, 3) +
-                h * np.power(x, 1) * np.power(y, 1) +
-                i * np.power(x, 2) * np.power(y, 2) +
-                j * np.power(x, 3) * np.power(y, 3))
+def goes_through_y_axis(xvalues, *p):
+    x = xvalues[0]
+    y = xvalues[1]
+    return (p[0] * np.power(x, 1) +
+            p[1] * np.power(x, 2) +
+            p[2] * np.power(x, 3) +
+            p[3] * np.power(x, 1) * np.power(y, 1) +
+            p[4] * np.power(x, 1) * np.power(y, 2) +
+            p[5] * np.power(x, 1) * np.power(y, 3))
+goes_through_y_axis.n = 6
+
+def goes_through_x_axis(xvalues, *p):
+    return goes_through_y_axis([xvalues[1], xvalues[0]], *p)
+goes_through_x_axis.n = goes_through_y_axis.n
+
+def make_fit(fn, x, y, z):
 
     popt, pcov = spo.curve_fit(
-        generic_fit_function,
+        fn,
         [x, y],
         z,
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+        [1 for i in range(0, fn.n)])
 
     def result_function(x, y):
-        return generic_fit_function([x, y], *popt)
+        return fn([x, y], *popt)
 
     return result_function
 
@@ -211,14 +227,17 @@ def make_fit(x, y, z):
 
 model = {
     '1_over_dp0': make_fit(
+        generic_fit,
         ratios_pos['dpa_over_dp0'],
         ratios_pos['dpb_over_dp0'],
         ratios_pos['1_over_dp0']),
     'alpha': make_fit(
+        goes_through_y_axis,
         ratios_pos['dpa_over_dp0'],
         ratios_pos['dpb_over_dp0'],
         ratios_pos['alpha']),
     'beta': make_fit(
+        goes_through_x_axis,
         ratios_pos['dpa_over_dp0'],
         ratios_pos['dpb_over_dp0'],
         ratios_pos['beta'])
