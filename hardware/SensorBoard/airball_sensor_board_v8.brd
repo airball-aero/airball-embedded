@@ -216,7 +216,7 @@
 <wire x1="49.53" y1="28.575" x2="57.15" y2="28.575" width="0.127" layer="21"/>
 <wire x1="57.15" y1="28.575" x2="57.15" y2="32.385" width="0.127" layer="21"/>
 <wire x1="57.15" y1="32.385" x2="49.53" y2="32.385" width="0.127" layer="21"/>
-<circle x="53.34" y="30.48" radius="4.490125" width="0.1778" layer="21"/>
+<circle x="53.34" y="30.48" radius="4.1275" width="0.1778" layer="21"/>
 </plain>
 <libraries>
 <library name="battery-management-temp">
