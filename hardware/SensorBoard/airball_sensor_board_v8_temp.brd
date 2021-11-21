@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="25" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="5" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="16" fill="1" visible="no" active="no"/>
@@ -182,6 +182,7 @@
 <wire x1="19.05" y1="5.08" x2="19.05" y2="1.27" width="0.0762" layer="20"/>
 <wire x1="17.78" y1="6.35" x2="0" y2="6.35" width="0.0762" layer="20"/>
 <wire x1="0" y1="0" x2="0" y2="6.35" width="0.0762" layer="20"/>
+<rectangle x1="9.525" y1="0" x2="12.7" y2="6.35" layer="21"/>
 </plain>
 <libraries>
 <library name="SparkFun-Capacitors">
@@ -1762,19 +1763,19 @@ These are the free and generally easy to produce 2-layer PCB design rules. You c
 </pass>
 </autorouter>
 <elements>
-<element name="C1" library="SparkFun-Capacitors" package="0603" value="4.7uF" x="14.605" y="3.175" smashed="yes" rot="R90">
-<attribute name="NAME" x="14.351" y="5.334" size="0.6096" layer="25" font="vector" ratio="20" rot="R90" align="bottom-center"/>
-<attribute name="PROD_ID" value="CAP-08280" x="24.765" y="22.225" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="VALUE" x="12.954" y="4.572" size="0.6096" layer="27" font="vector" ratio="20" rot="R90" align="top-center"/>
+<element name="C1" library="SparkFun-Capacitors" package="0603" value="4.7uF" x="15.24" y="3.175" smashed="yes" rot="MR90">
+<attribute name="NAME" x="15.494" y="5.334" size="0.6096" layer="26" font="vector" ratio="20" rot="MR90" align="bottom-center"/>
+<attribute name="PROD_ID" value="CAP-08280" x="5.08" y="22.225" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="VALUE" x="16.891" y="4.572" size="0.6096" layer="28" font="vector" ratio="20" rot="MR90" align="top-center"/>
 </element>
 <element name="J2" library="SparkFun-Connectors" package="JST04_1MM_VERT" value="Vertical Qwiic Connector" x="4.318" y="0.889" smashed="yes">
 <attribute name="NAME" x="4.334" y="5.45533125" size="0.6096" layer="25"/>
 <attribute name="PROD_ID" value="CONN-14483" x="27.178" y="-1.651" size="1.778" layer="27" display="off"/>
 </element>
-<element name="U1" library="SparkFun-Sensors" package="SOT563" value="TMP102" x="17.145" y="3.175" smashed="yes">
-<attribute name="NAME" x="18.415" y="1.143" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center"/>
-<attribute name="PROD_ID" value="IC-09303" x="32.385" y="-6.985" size="1.778" layer="27" display="off"/>
-<attribute name="VALUE" x="17.145" y="1.016" size="0.6096" layer="27" font="vector" ratio="20" align="top-center"/>
+<element name="U1" library="SparkFun-Sensors" package="SOT563" value="TMP102" x="17.145" y="3.175" smashed="yes" rot="MR0">
+<attribute name="NAME" x="15.875" y="1.143" size="0.6096" layer="26" font="vector" ratio="20" rot="MR0" align="bottom-center"/>
+<attribute name="PROD_ID" value="IC-09303" x="1.905" y="-6.985" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="VALUE" x="17.145" y="1.016" size="0.6096" layer="28" font="vector" ratio="20" rot="MR0" align="top-center"/>
 </element>
 </elements>
 <signals>
@@ -1782,21 +1783,19 @@ These are the free and generally easy to produce 2-layer PCB design rules. You c
 <contactref element="U1" pad="5"/>
 <contactref element="C1" pad="1"/>
 <contactref element="J2" pad="2"/>
-<wire x1="17.921415625" y1="3.178303125" x2="17.526" y2="3.178303125" width="0.254" layer="1"/>
-<wire x1="17.526" y1="3.178303125" x2="17.145" y2="2.797303125" width="0.254" layer="1"/>
-<wire x1="17.145" y1="2.797303125" x2="17.145" y2="2.032" width="0.254" layer="1"/>
-<wire x1="17.145" y1="2.032" x2="14.898" y2="2.032" width="0.254" layer="1"/>
-<wire x1="14.898" y1="2.032" x2="14.605" y2="2.325" width="0.2032" layer="1"/>
+<wire x1="15.533" y1="2.032" x2="15.24" y2="2.325" width="0.2032" layer="16"/>
 <via x="3.302" y="3.937" extent="1-16" drill="0.35"/>
 <wire x1="3.84" y1="1.664" x2="3.84" y2="3.399" width="0.4064" layer="1"/>
 <wire x1="3.84" y1="3.399" x2="3.302" y2="3.937" width="0.4064" layer="1"/>
-<wire x1="3.2776" y1="3.48425625" x2="4.47585625" y2="2.286" width="0.4064" layer="16"/>
-<wire x1="4.47585625" y1="2.286" x2="13.462" y2="2.286" width="0.4064" layer="16"/>
 <wire x1="3.302" y1="3.937" x2="3.2776" y2="3.9126" width="0.4064" layer="16"/>
 <wire x1="3.2776" y1="3.9126" x2="3.2776" y2="3.48425625" width="0.4064" layer="16"/>
-<via x="13.462" y="2.286" extent="1-16" drill="0.35"/>
-<wire x1="13.462" y1="2.286" x2="13.501" y2="2.325" width="0.4064" layer="1"/>
-<wire x1="13.501" y1="2.325" x2="14.605" y2="2.325" width="0.4064" layer="1"/>
+<wire x1="15.201" y1="2.286" x2="15.24" y2="2.325" width="0.4064" layer="16"/>
+<wire x1="4.47585625" y1="2.286" x2="15.201" y2="2.286" width="0.4064" layer="16"/>
+<wire x1="3.2776" y1="3.48425625" x2="4.47585625" y2="2.286" width="0.4064" layer="16"/>
+<wire x1="16.368584375" y1="3.178303125" x2="16.3159" y2="3.12561875" width="0.254" layer="16"/>
+<wire x1="16.3159" y1="3.12561875" x2="15.72306875" y2="3.12561875" width="0.254" layer="16"/>
+<wire x1="15.24" y1="2.64255" x2="15.24" y2="2.325" width="0.254" layer="16"/>
+<wire x1="15.72306875" y1="3.12561875" x2="15.24" y2="2.64255" width="0.254" layer="16"/>
 </signal>
 <signal name="GND">
 <contactref element="U1" pad="2"/>
@@ -1814,31 +1813,31 @@ These are the free and generally easy to produce 2-layer PCB design rules. You c
 <vertex x="19.05" y="0"/>
 <vertex x="0" y="0"/>
 </polygon>
+<via x="10.16" y="1.27" extent="1-16" drill="0.35"/>
+<via x="10.16" y="3.81" extent="1-16" drill="0.35"/>
+<via x="4.445" y="5.08" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="SDA">
 <contactref element="U1" pad="6"/>
 <contactref element="J2" pad="3"/>
-<via x="17.907" y="5.08" extent="1-16" drill="0.35"/>
-<wire x1="17.907" y1="5.08" x2="16.129" y2="3.302" width="0.1524" layer="16"/>
-<wire x1="16.129" y1="3.302" x2="4.953" y2="3.302" width="0.1524" layer="16"/>
-<wire x1="4.953" y1="3.302" x2="4.826" y2="3.302" width="0.1524" layer="16"/>
-<via x="4.953" y="3.302" extent="1-16" drill="0.35"/>
-<wire x1="4.953" y1="3.302" x2="4.953" y2="1.777" width="0.1778" layer="1"/>
+<via x="4.953" y="3.175" extent="1-16" drill="0.35"/>
+<wire x1="4.953" y1="3.175" x2="4.953" y2="1.777" width="0.1778" layer="1"/>
 <wire x1="4.953" y1="1.777" x2="4.84" y2="1.664" width="0.1778" layer="1"/>
-<wire x1="17.907" y1="5.08" x2="17.907" y2="3.687384375" width="0.1778" layer="1"/>
-<wire x1="17.907" y1="3.687384375" x2="17.921415625" y2="3.67296875" width="0.1778" layer="1"/>
+<wire x1="4.953" y1="3.175" x2="7.2372" y2="5.4592" width="0.1778" layer="16"/>
+<wire x1="16.368584375" y1="4.840415625" x2="16.368584375" y2="3.67296875" width="0.1778" layer="16"/>
+<wire x1="7.2372" y1="5.4592" x2="15.7498" y2="5.4592" width="0.1778" layer="16"/>
+<wire x1="15.7498" y1="5.4592" x2="16.368584375" y2="4.840415625" width="0.1778" layer="16"/>
 </signal>
 <signal name="SCL">
 <contactref element="J2" pad="4"/>
 <contactref element="U1" pad="1"/>
-<via x="16.383" y="5.08" extent="1-16" drill="0.35"/>
-<wire x1="16.383" y1="5.08" x2="15.494" y2="4.191" width="0.1524" layer="16"/>
-<wire x1="15.494" y1="4.191" x2="5.842" y2="4.191" width="0.1524" layer="16"/>
-<via x="5.842" y="4.191" extent="1-16" drill="0.35"/>
-<wire x1="5.842" y1="4.191" x2="5.842" y2="1.666" width="0.1778" layer="1"/>
-<wire x1="5.842" y1="1.666" x2="5.84" y2="1.664" width="0.1778" layer="1"/>
-<wire x1="16.383" y1="5.08" x2="16.383" y2="3.71096875" width="0.1778" layer="1"/>
-<wire x1="16.383" y1="3.71096875" x2="16.345" y2="3.67296875" width="0.1778" layer="1"/>
+<via x="5.842" y="5.08" extent="1-16" drill="0.35"/>
+<wire x1="5.84" y1="1.664" x2="5.842" y2="1.666" width="0.1778" layer="1"/>
+<wire x1="5.842" y1="5.08" x2="5.842" y2="1.666" width="0.1778" layer="1"/>
+<wire x1="5.842" y1="5.08" x2="6.604" y2="5.842" width="0.1778" layer="16"/>
+<wire x1="6.604" y1="5.842" x2="16.764" y2="5.842" width="0.1778" layer="16"/>
+<wire x1="16.764" y1="5.842" x2="17.945" y2="4.661" width="0.1778" layer="16"/>
+<wire x1="17.945" y1="4.661" x2="17.945" y2="3.67296875" width="0.1778" layer="16"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
