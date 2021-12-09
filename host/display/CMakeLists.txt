@@ -31,11 +31,17 @@ add_library(airball_display
         aerodynamics.cpp fake_telemetry_client.cpp interpolation_table.cpp
         system_status.cpp device_keyboard_listener.cpp
         log_reader_telemetry_client.cpp image_screen.cpp climb_rate_filter.cpp
-        http_server.cpp file_write_watch.cpp)
+        http_server.cpp file_write_watch.cpp sound_mixer.cpp sound_layer.cpp
+		sine_layer.cpp sine_envelope_layer.cpp)
 target_link_libraries(airball_display
-        X11 cairo pthread
+        X11 cairo pthread portaudio
         airball_telemetry_client
         ${Boost_LIBRARIES})
+
+add_executable(sound_mixer
+        sound_mixer_main.cpp)
+target_link_libraries(sound_mixer
+        airball_display)
 
 add_executable(ab
         ab_main.cpp)

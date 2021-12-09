@@ -43,6 +43,9 @@ software uses X11 for rendering:
 sudo apt-get install libcairo2-dev libasio-dev
 ```
 
+You also need to install [Portaudio](http://www.portaudio.com/) from source
+(there is no convenient Debian package).
+
 ### Clone this repository ###
 
 First you'll need to get this repository on your machine:
