@@ -13,13 +13,12 @@ sine_envelope_layer::sine_envelope_layer(size_t period)
   }
 }
 
-void sine_envelope_layer::apply(float* left, float* right, size_t len, size_t pos) const {
+void sine_envelope_layer::apply(float* buf, size_t frames, size_t pos) const {
   const float* t = table_.get();
-  for (size_t i = 0; i < len; i++) {
+  for (size_t i = 0; i < frames; i++) {
     pos %= period();
-    *left++ *= *t;
-    *right++ *= *t;
-    t++;
+    *buf++ *= t[pos]; // left
+    *buf++ *= t[pos]; // right
     pos++;
   }
 }

@@ -12,7 +12,7 @@ public:
 
   size_t period() const;
 
-  virtual void apply(float* left, float* right, size_t len, size_t pos) const = 0;
+  virtual void apply(float* buf, size_t frames, size_t pos) const = 0;
 
 private:
   const size_t period_;

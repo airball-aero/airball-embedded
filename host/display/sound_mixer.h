@@ -2,7 +2,13 @@
 #define AIRBALL_DISPLAY_SOUND_MIXER_H
 
 #include <vector>
-#include "portaudio.h"
+#include <condition_variable>
+#define ALSA_PCM_NEW_HW_PARAMS_API
+#include <alsa/asoundlib.h>
+#include <memory>
+#include <mutex>
+#include <thread>
+
 #include "sound_layer.h"
 
 namespace airball {
@@ -15,27 +21,23 @@ public:
   void set_layer(int idx, const sound_layer* layer);
 
   bool start();
-  void stop();
 
-  static const int kSampleRate = 44100;
-  
+  static const unsigned int kSampleRate = 44100;
+  static const snd_pcm_uframes_t kFramesPerPeriod = 96;
+
 private:
-  PaStream *stream_;
-  size_t pos_;
+  void loop();
+
+  sound_mixer(const sound_mixer&) = delete;
+  sound_mixer& operator=(const sound_mixer&) = delete;
+
+  std::mutex mut_;
+  std::condition_variable start_;
+  bool done_;
   std::vector<const sound_layer*> layers_;
-
-  static int pa_callback(const void *input_buffer,
-                         void *output_buffer,
-                         unsigned long frames_per_buffer,
-                         const PaStreamCallbackTimeInfo* time_info,
-                         PaStreamCallbackFlags status_flags,
-                         void *user_data);
-
-  int provide_samples(const void *input_buffer,
-                      void *output_buffer,
-                      unsigned long frames_per_buffer,
-                      const PaStreamCallbackTimeInfo* time_info,
-                      PaStreamCallbackFlags status_flags);
+  snd_pcm_t* handle_;
+  snd_pcm_uframes_t actual_frames_per_period_;
+  std::thread server_;
 };
 
 } // namespace airball

@@ -1,107 +1,109 @@
+#include "sound_mixer.h"
+
 #include <cmath>
 #include <iostream>
-#include "sound_mixer.h"
+#include <thread>
 
 namespace airball {
 
-sound_mixer::sound_mixer(int nlayers)
-    : stream_(nullptr), pos_(0), layers_(nlayers) {
+sound_mixer::sound_mixer(int nlayers) :
+    layers_(nlayers),
+    done_(false),
+    handle_(nullptr),
+    actual_frames_per_period_(0),
+    server_([&]() { loop(); }) {
   for (int i = 0; i < nlayers; i++) {
     layers_[i] = nullptr;
   }
 }
 
-void sound_mixer::set_layer(int idx, const sound_layer* layer) {
+void sound_mixer::loop() {
+  std::unique_lock<std::mutex> start_lock(mut_);
+  start_.wait(start_lock);
+  start_lock.unlock();
+
+  snd_pcm_uframes_t pos = 0;
+  std::unique_ptr<float> buf(new float[actual_frames_per_period_ * 2]);
+
+  while (true) {
+    {
+      std::lock_guard<std::mutex> loop_lock(mut_);
+      if (done_) {
+        break;
+      }
+      for (auto& layer : layers_) {
+        if (layer != nullptr) {
+          layer->apply(buf.get(), actual_frames_per_period_, pos);
+        }
+      }
+
+      pos += actual_frames_per_period_;
+      size_t max_period = 0;
+      for (auto& layer : layers_) {
+        if (layer != nullptr) {
+          max_period = std::max(max_period, layer->period());
+        }
+      }
+      pos %= max_period;
+    }
+
+    int n = snd_pcm_writei(handle_, buf.get(), actual_frames_per_period_);
+    if (n < 0) {
+      std:: cout << snd_strerror(n) << " " << std::flush;
+    }
+  }
+}
+
+void sound_mixer::set_layer(int idx, const sound_layer *layer) {
   if (!(idx < layers_.size())) {
     return;
   }
-  // TODO: synchronize!!
+  std::lock_guard<std::mutex> guard(mut_);
   layers_[idx] = layer;
 }
 
 bool sound_mixer::start() {
-  if (Pa_Initialize() != paNoError) {
+  if (snd_pcm_open(&handle_, "default", SND_PCM_STREAM_PLAYBACK, 0) < 0) {
     return false;
   }
 
-  PaStreamParameters output_parameters;
+  snd_pcm_hw_params_t *params;
+  snd_pcm_hw_params_alloca(&params);
+  snd_pcm_hw_params_any(handle_, params);
 
-  output_parameters.device = Pa_GetDefaultOutputDevice();
-  if (output_parameters.device == paNoDevice) {
+  snd_pcm_hw_params_set_access(handle_, params,
+                               SND_PCM_ACCESS_RW_INTERLEAVED);
+  snd_pcm_hw_params_set_format(handle_, params, SND_PCM_FORMAT_FLOAT_LE);
+  snd_pcm_hw_params_set_channels(handle_, params, 2);
+
+  auto sample_rate = (unsigned int) kSampleRate;
+  snd_pcm_hw_params_set_rate_near(handle_, params, &sample_rate, nullptr);
+  auto frames_per_period = (snd_pcm_uframes_t) kFramesPerPeriod;
+  snd_pcm_hw_params_set_period_size_near(handle_, params, &frames_per_period, nullptr);
+  snd_pcm_hw_params_set_buffer_size(handle_, params, actual_frames_per_period_);
+
+  if (snd_pcm_hw_params(handle_, params) < 0) {
     return false;
   }
 
-  output_parameters.channelCount = 2;
-  output_parameters.sampleFormat = paFloat32 | paNonInterleaved; 
-  output_parameters.suggestedLatency =
-    Pa_GetDeviceInfo(output_parameters.device)->defaultLowOutputLatency;
-  output_parameters.hostApiSpecificStreamInfo = nullptr;
+  int rc = snd_pcm_hw_params_get_period_size(params, &actual_frames_per_period_, nullptr);
 
-  PaError err = Pa_OpenStream(
-      &stream_,
-      nullptr,
-      &output_parameters,
-      kSampleRate,
-      paFramesPerBufferUnspecified,
-      paClipOff,
-      &sound_mixer::pa_callback,
-      this);
-
-  if (err != paNoError) {
-    stop();
+  if (rc < 0) {
     return false;
   }
 
-  if (Pa_StartStream(stream_) != paNoError) {
-    stop();
-    return false;
-  }
+  start_.notify_one();
 
   return true;
 }
 
-void sound_mixer::stop() {
-  if (stream_ != nullptr) {
-    Pa_CloseStream(stream_);
-    stream_ = nullptr;
-    pos_ = 0;
-  }
-}
-
 sound_mixer::~sound_mixer() {
-  stop();
-}
-
-int sound_mixer::pa_callback(const void *input_buffer,
-                             void *output_buffer,
-                             unsigned long frames_per_buffer,
-                             const PaStreamCallbackTimeInfo* time_info,
-                             PaStreamCallbackFlags status_flags,
-                             void *user_data) {
-  return ((sound_mixer*) user_data)->provide_samples(input_buffer,
-                                                     output_buffer,
-                                                     frames_per_buffer,
-                                                     time_info,
-                                                     status_flags);
-}
-
-int sound_mixer::provide_samples(const void *input_buffer,
-                                 void *output_buffer,
-                                 unsigned long frames_per_buffer,
-                                 const PaStreamCallbackTimeInfo* time_info,
-                                 PaStreamCallbackFlags status_flags) {
-  auto buffers = (float**) output_buffer;
-  for (auto& layer : layers_) {
-    layer->apply(buffers[0], buffers[1], frames_per_buffer, pos_);
+  {
+    std::lock_guard<std::mutex> lock(mut_);
+    start_.notify_one();
+    done_ = true;
   }
-  pos_ += frames_per_buffer;
-  size_t max_period = 0;
-  for (auto& layer : layers_) {
-    max_period = std::max(max_period, layer->period());
-  }
-  pos_ %= max_period;
-
-  return paContinue;
+  server_.join();
 }
 
 } // namespace airball

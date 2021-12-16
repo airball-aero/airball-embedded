@@ -34,7 +34,7 @@ add_library(airball_display
         http_server.cpp file_write_watch.cpp sound_mixer.cpp sound_layer.cpp
 		sine_layer.cpp sine_envelope_layer.cpp)
 target_link_libraries(airball_display
-        X11 cairo pthread portaudio
+        X11 cairo pthread asound
         airball_telemetry_client
         ${Boost_LIBRARIES})
 

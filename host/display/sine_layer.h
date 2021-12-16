@@ -11,7 +11,7 @@ public:
   explicit sine_layer(size_t period);
   ~sine_layer() override = default;
 
-  void apply(float* left, float* right, size_t len, size_t pos) const override;
+  void apply(float* buf, size_t frames, size_t pos) const override;
 
 private:
   const std::unique_ptr<float> table_;
