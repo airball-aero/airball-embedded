@@ -6,15 +6,16 @@
 namespace  airball {
 
 sine_layer::sine_layer(size_t period)
-    : sound_layer(period), table_(new float[period]) {
-  float* t = table_.get();
+    : sound_layer(period), table_(new int16_t[period]) {
+  int16_t* t = table_.get();
   for (size_t k = 0; k < period; k++) {
-    *t++ = (float) sin( ((double) k / (double) period) * M_PI * 2.0);
+    double ratio = sin(((double) k / (double) period) * M_PI * 2.0);
+    *t++ = (int16_t) (ratio * INT16_MAX);
   }
 }
 
-void sine_layer::apply(float* buf, size_t frames, size_t pos) const {
-  const float* t = table_.get();
+void sine_layer::apply(int16_t* buf, size_t frames, size_t pos) const {
+  const int16_t* t = table_.get();
   for (size_t i = 0; i < frames; i++) {
     pos %= period();
     *buf++ = t[pos]; // left

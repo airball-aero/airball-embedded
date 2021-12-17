@@ -11,10 +11,10 @@ public:
   explicit sine_envelope_layer(size_t period);
   ~sine_envelope_layer() override = default;
 
-  void apply(float* buf, size_t frames, size_t pos) const override;
+  void apply(int16_t* buf, size_t frames, size_t pos) const override;
 
 private:
-  const std::unique_ptr<float> table_;
+  const std::unique_ptr<double> table_;
 };
 
 } // namespace airball

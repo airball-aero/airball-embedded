@@ -10,7 +10,7 @@ sound_mixer::sound_mixer(int nlayers) :
     layers_(nlayers),
     done_(false),
     handle_(nullptr),
-    actual_frames_per_period_(0),
+    actual_frames_per_period_(kFramesPerPeriod),
     server_([&]() { loop(); }) {
   for (int i = 0; i < nlayers; i++) {
     layers_[i] = nullptr;
@@ -23,7 +23,7 @@ void sound_mixer::loop() {
   start_lock.unlock();
 
   snd_pcm_uframes_t pos = 0;
-  std::unique_ptr<float> buf(new float[actual_frames_per_period_ * 2]);
+  std::unique_ptr<int16_t> buf(new int16_t[actual_frames_per_period_ * 2]);
 
   while (true) {
     {
@@ -63,7 +63,10 @@ void sound_mixer::set_layer(int idx, const sound_layer *layer) {
 }
 
 bool sound_mixer::start() {
-  if (snd_pcm_open(&handle_, "default", SND_PCM_STREAM_PLAYBACK, 0) < 0) {
+  int rc = 0;
+
+  if ((rc = snd_pcm_open(&handle_, "hw:1", SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
+    std::cout << "snd_pcm_open " << snd_strerror(rc) << std::endl;        
     return false;
   }
 
@@ -73,22 +76,21 @@ bool sound_mixer::start() {
 
   snd_pcm_hw_params_set_access(handle_, params,
                                SND_PCM_ACCESS_RW_INTERLEAVED);
-  snd_pcm_hw_params_set_format(handle_, params, SND_PCM_FORMAT_FLOAT_LE);
+  snd_pcm_hw_params_set_format(handle_, params, SND_PCM_FORMAT_S16_LE);
   snd_pcm_hw_params_set_channels(handle_, params, 2);
 
   auto sample_rate = (unsigned int) kSampleRate;
   snd_pcm_hw_params_set_rate_near(handle_, params, &sample_rate, nullptr);
-  auto frames_per_period = (snd_pcm_uframes_t) kFramesPerPeriod;
-  snd_pcm_hw_params_set_period_size_near(handle_, params, &frames_per_period, nullptr);
-  snd_pcm_hw_params_set_buffer_size(handle_, params, actual_frames_per_period_);
+  snd_pcm_hw_params_set_period_size_near(handle_, params, &actual_frames_per_period_, nullptr);
+  snd_pcm_hw_params_set_buffer_size(handle_, params, actual_frames_per_period_ * 3);
 
-  if (snd_pcm_hw_params(handle_, params) < 0) {
+  if ((rc = snd_pcm_hw_params(handle_, params)) < 0) {
+    std::cout << "snd_pcm_hw_params " << snd_strerror(rc) << std::endl;    
     return false;
   }
 
-  int rc = snd_pcm_hw_params_get_period_size(params, &actual_frames_per_period_, nullptr);
-
-  if (rc < 0) {
+  if ((rc = snd_pcm_hw_params_get_period_size(params, &actual_frames_per_period_, nullptr)) < 0) {
+    std::cout << "snd_pcm_hw_params_get_period_size " << snd_strerror(rc) << std::endl;
     return false;
   }
 
