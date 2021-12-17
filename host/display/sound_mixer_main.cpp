@@ -5,14 +5,16 @@
 #include "sound_mixer.h"
 #include "sine_layer.h"
 #include "sine_envelope_layer.h"
+#include "pwm_layer.h"
 
 int main(int argc, char**argv) {
-  airball::sound_mixer m(2);
+  airball::sound_mixer m(3);
 
   airball::sine_layer lo(/* 30 */ 100);
   airball::sine_layer hi(102);
 
   m.set_layer(1, new airball::sine_envelope_layer(44100 * 3));
+  m.set_layer(2, new airball::pwm_layer(4000, 2000, 50));
 
   if (!m.start()) {
     std::cout << "Error" << std::endl;
