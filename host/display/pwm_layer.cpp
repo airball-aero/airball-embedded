@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <iostream>
 #include "pwm_layer.h"
 
 namespace airball {
@@ -38,4 +37,4 @@ void pwm_layer::apply(int16_t* buf, size_t frames, size_t pos) const {
   }
 }
 
-}; // namespace airball
+} // namespace airball

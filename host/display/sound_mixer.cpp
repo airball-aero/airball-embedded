@@ -65,7 +65,7 @@ void sound_mixer::set_layer(int idx, const sound_layer *layer) {
 bool sound_mixer::start() {
   int rc = 0;
 
-  if ((rc = snd_pcm_open(&handle_, "default", SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
+  if ((rc = snd_pcm_open(&handle_, "hw:0", SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
     std::cout << "snd_pcm_open " << snd_strerror(rc) << std::endl;        
     return false;
   }
