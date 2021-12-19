@@ -11,7 +11,13 @@ public:
   explicit sine_envelope_layer(snd_pcm_uframes_t period);
   ~sine_envelope_layer() override = default;
 
-  void apply(int16_t* buf, snd_pcm_uframes_t frames, snd_pcm_uframes_t pos) const override;
+  snd_pcm_uframes_t period() const;
+
+  void apply(int16_t* buf, snd_pcm_uframes_t frames) override;
+
+private:
+  const snd_pcm_uframes_t period_;
+  snd_pcm_uframes_t pos_;
 };
 
 } // namespace airball

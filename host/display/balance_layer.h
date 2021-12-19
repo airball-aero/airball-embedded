@@ -10,7 +10,7 @@ public:
   explicit balance_layer(double left_gain, double right_gain);
   ~balance_layer() override = default;
 
-  void apply(int16_t* buf, snd_pcm_uframes_t frames, snd_pcm_uframes_t pos) const override;
+  void apply(int16_t* buf, snd_pcm_uframes_t frames) override;
 
 private:
   const double left_gain_;

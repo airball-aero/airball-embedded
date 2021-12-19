@@ -6,25 +6,19 @@
 
 namespace airball {
 
-sound_mixer::sound_mixer(std::string device_name, unsigned int nlayers) :
-    device_name_(device_name),
-    layers_(nlayers),
-    done_(false),
-    handle_(nullptr),
-    actual_rate_(kDesiredRate),
-    actual_period_size_(kDesiredPeriodSize),
-    server_([&]() { loop(); }) {
-  for (int i = 0; i < nlayers; i++) {
-    layers_[i] = nullptr;
-  }
-}
+sound_mixer::sound_mixer(std::string device_name)
+    : device_name_(device_name),
+      done_(false),
+      handle_(nullptr),
+      actual_rate_(kDesiredRate),
+      actual_period_size_(kDesiredPeriodSize),
+      server_([&]() { loop(); }) {}
 
 void sound_mixer::loop() {
   std::unique_lock<std::mutex> start_lock(mut_);
   start_.wait(start_lock);
   start_lock.unlock();
 
-  snd_pcm_uframes_t pos = 0;
   const snd_pcm_uframes_t buffer_size = actual_period_size_ * 2 /* channels */;
 
   std::unique_ptr<int16_t> buf(new int16_t[buffer_size]);
@@ -40,19 +34,8 @@ void sound_mixer::loop() {
 
       for (auto& layer : layers_) {
         if (layer != nullptr) {
-          layer->apply(buf.get(), actual_period_size_, pos);
+          layer->apply(buf.get(), actual_period_size_);
         }
-      }
-
-      pos += actual_period_size_;
-      snd_pcm_uframes_t max_period = 0;
-      for (auto& layer : layers_) {
-        if (layer != nullptr) {
-          max_period = std::max(max_period, layer->period());
-        }
-      }
-      if (max_period > 0) {
-        pos %= max_period;
       }
     }
 
@@ -63,12 +46,9 @@ void sound_mixer::loop() {
   }
 }
 
-void sound_mixer::set_layer(unsigned int idx, const sound_layer *layer) {
-  if (!(idx < layers_.size())) {
-    return;
-  }
-  std::lock_guard<std::mutex> guard(mut_);
-  layers_[idx] = layer;
+void sound_mixer::set_layers(std::vector<sound_layer *> layers) {
+  std::lock_guard<std::mutex> mod_lock(mut_);
+  layers_ = layers;
 }
 
 bool sound_mixer::start() {

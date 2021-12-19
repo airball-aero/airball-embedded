@@ -14,39 +14,37 @@ int main(int argc, char**argv) {
     return -1;
   }
 
-  airball::sound_mixer m(argv[1], 4);
+  airball::sound_mixer m(argv[1]);
 
   if (!m.start()) {
     std::cout << "Error" << std::endl;
     return -1;
   }
 
-  airball::sine_layer lo(m.frequency_to_period(432));
-  airball::sine_layer hi(m.frequency_to_period(440));
-
-  airball::balance_layer left(1.0, 0.25);
-  airball::balance_layer right(0.25, 1.0);
-
-  m.set_layer(
-      1,
-      new airball::sine_envelope_layer(
-          m.seconds_to_frames(3)));
-  m.set_layer(
-      2,
-      new airball::pwm_layer(
-          m.seconds_to_frames(0.1),
-          m.seconds_to_frames(0.05),
-          m.seconds_to_frames(0.01)));
-
   std::cout << "actual_rate = " << m.actual_rate() << std::endl;
   std::cout << "actual_period_size = " << m.actual_period_size() << std::endl;
+
+  airball::sine_layer tone(m.frequency_to_period(432));
+  airball::balance_layer bounce(1.0, 1.0);
+  airball::sine_envelope_layer wawa(m.seconds_to_frames(3));
+  airball::pwm_layer dit(
+      m.seconds_to_frames(0.1),
+      m.seconds_to_frames(0.05),
+      m.seconds_to_frames(0.01));
+
+  std::vector<airball::sound_layer*> layers;
+  layers.push_back(&tone);
+  layers.push_back(&bounce);
+  layers.push_back(&wawa);
+  layers.push_back(&dit);
+
+  m.set_layers(layers);
 
   bool k = false;
 
   for (int i = 0; i < 50; i++) {
-    m.set_layer(0, k ? &hi : &lo);
-    // m.set_layer(3, k ? &right : &left);
-    std::cout << "did set_layer() " << k << std::endl;
+    tone.set_period(k ? m.frequency_to_period(440) : m.frequency_to_period(432));
+    std::cout << "did loop at " << k << std::endl;
     k = !k;
     std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(500));
   }

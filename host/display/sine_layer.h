@@ -11,7 +11,21 @@ public:
   explicit sine_layer(snd_pcm_uframes_t period);
   ~sine_layer() override = default;
 
-  void apply(int16_t* buf, snd_pcm_uframes_t frames, snd_pcm_uframes_t pos) const override;
+  void set_period(snd_pcm_uframes_t period);
+
+  snd_pcm_uframes_t period() const;
+
+  void apply(int16_t* buf, snd_pcm_uframes_t frames) override;
+
+private:
+  void set_frame(int16_t* frame, snd_pcm_uframes_t i) const;
+
+  snd_pcm_uframes_t period_;
+  snd_pcm_uframes_t pos_;
+
+  std::mutex mut_;
+  bool changing_;
+  snd_pcm_uframes_t next_period_;
 };
 
 } // namespace airball

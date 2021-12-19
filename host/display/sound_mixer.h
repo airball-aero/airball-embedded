@@ -15,10 +15,10 @@ namespace airball {
 
 class sound_mixer {
 public:
-  explicit sound_mixer(std::string device_name, unsigned int nlayers);
+  explicit sound_mixer(std::string device_name);
   ~sound_mixer();
 
-  void set_layer(unsigned int idx, const sound_layer* layer);
+  void set_layers(std::vector<sound_layer*> layers);
 
   bool start();
 
@@ -40,14 +40,17 @@ private:
   sound_mixer& operator=(const sound_mixer&) = delete;
 
   const std::string device_name_;
+  std::vector<sound_layer*> layers_;
+
   std::mutex mut_;
   std::condition_variable start_;
   bool done_;
-  std::vector<const sound_layer*> layers_;
+
+  std::thread server_;
+
   snd_pcm_t* handle_;
   unsigned int actual_rate_;
   snd_pcm_uframes_t actual_period_size_;
-  std::thread server_;
 };
 
 } // namespace airball
