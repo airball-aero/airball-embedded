@@ -15,28 +15,38 @@ namespace airball {
 
 class sound_mixer {
 public:
-  explicit sound_mixer(int nlayers);
+  explicit sound_mixer(std::string device_name, unsigned int nlayers);
   ~sound_mixer();
 
-  void set_layer(int idx, const sound_layer* layer);
+  void set_layer(unsigned int idx, const sound_layer* layer);
 
   bool start();
 
-  static const unsigned int kSampleRate = 44100;
-  static const snd_pcm_uframes_t kFramesPerPeriod = 96;
+  unsigned int actual_rate();
+
+  snd_pcm_uframes_t actual_period_size();
+
+  snd_pcm_uframes_t seconds_to_frames(double seconds);
+
+  snd_pcm_uframes_t frequency_to_period(double cycles_per_second);
 
 private:
+  static const unsigned int kDesiredRate = 44100;
+  static const snd_pcm_uframes_t kDesiredPeriodSize = 96;
+
   void loop();
 
   sound_mixer(const sound_mixer&) = delete;
   sound_mixer& operator=(const sound_mixer&) = delete;
 
+  const std::string device_name_;
   std::mutex mut_;
   std::condition_variable start_;
   bool done_;
   std::vector<const sound_layer*> layers_;
   snd_pcm_t* handle_;
-  snd_pcm_uframes_t actual_frames_per_period_;
+  unsigned int actual_rate_;
+  snd_pcm_uframes_t actual_period_size_;
   std::thread server_;
 };
 

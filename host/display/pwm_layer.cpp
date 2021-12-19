@@ -3,12 +3,12 @@
 
 namespace airball {
 
-pwm_layer::pwm_layer(size_t period, size_t on_period, size_t fade_period)
+pwm_layer::pwm_layer(snd_pcm_uframes_t period, snd_pcm_uframes_t on_period, snd_pcm_uframes_t fade_period)
     : sound_layer(period),
       on_period_(std::min(on_period, period)),
       fade_period_(std::min(fade_period, (period - on_period) / 2)) {}
 
-double pwm_layer::factor(size_t k) const {
+double pwm_layer::factor(snd_pcm_uframes_t k) const {
   k %= period();
   if (k < on_period_) {
     // Initial "on" period
@@ -26,7 +26,7 @@ double pwm_layer::factor(size_t k) const {
   return (double) (k - (period() - fade_period_)) / (double) fade_period_;
 }
 
-void pwm_layer::apply(int16_t* buf, size_t frames, size_t pos) const {
+void pwm_layer::apply(int16_t* buf, snd_pcm_uframes_t frames, snd_pcm_uframes_t pos) const {
   for (size_t i = 0; i < frames; i++) {
     double f = factor(pos);
     for (int j = 0; j < 2; j++) {

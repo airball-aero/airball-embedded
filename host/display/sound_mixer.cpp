@@ -6,11 +6,13 @@
 
 namespace airball {
 
-sound_mixer::sound_mixer(int nlayers) :
+sound_mixer::sound_mixer(std::string device_name, unsigned int nlayers) :
+    device_name_(device_name),
     layers_(nlayers),
     done_(false),
     handle_(nullptr),
-    actual_frames_per_period_(kFramesPerPeriod),
+    actual_rate_(kDesiredRate),
+    actual_period_size_(kDesiredPeriodSize),
     server_([&]() { loop(); }) {
   for (int i = 0; i < nlayers; i++) {
     layers_[i] = nullptr;
@@ -23,7 +25,9 @@ void sound_mixer::loop() {
   start_lock.unlock();
 
   snd_pcm_uframes_t pos = 0;
-  std::unique_ptr<int16_t> buf(new int16_t[actual_frames_per_period_ * 2]);
+  const snd_pcm_uframes_t buffer_size = actual_period_size_ * 2 /* channels */;
+
+  std::unique_ptr<int16_t> buf(new int16_t[buffer_size]);
 
   while (true) {
     {
@@ -31,30 +35,35 @@ void sound_mixer::loop() {
       if (done_) {
         break;
       }
+
+      memset(buf.get(), 0, sizeof(int16_t) * buffer_size);
+
       for (auto& layer : layers_) {
         if (layer != nullptr) {
-          layer->apply(buf.get(), actual_frames_per_period_, pos);
+          layer->apply(buf.get(), actual_period_size_, pos);
         }
       }
 
-      pos += actual_frames_per_period_;
-      size_t max_period = 0;
+      pos += actual_period_size_;
+      snd_pcm_uframes_t max_period = 0;
       for (auto& layer : layers_) {
         if (layer != nullptr) {
           max_period = std::max(max_period, layer->period());
         }
       }
-      pos %= max_period;
+      if (max_period > 0) {
+        pos %= max_period;
+      }
     }
 
-    int n = snd_pcm_writei(handle_, buf.get(), actual_frames_per_period_);
+    int n = snd_pcm_writei(handle_, buf.get(), actual_period_size_);
     if (n < 0) {
-      std:: cout << snd_strerror(n) << " " << std::flush;
+      std:: cerr << snd_strerror(n) << " " << std::flush;
     }
   }
 }
 
-void sound_mixer::set_layer(int idx, const sound_layer *layer) {
+void sound_mixer::set_layer(unsigned int idx, const sound_layer *layer) {
   if (!(idx < layers_.size())) {
     return;
   }
@@ -65,8 +74,8 @@ void sound_mixer::set_layer(int idx, const sound_layer *layer) {
 bool sound_mixer::start() {
   int rc = 0;
 
-  if ((rc = snd_pcm_open(&handle_, "hw:0", SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
-    std::cout << "snd_pcm_open " << snd_strerror(rc) << std::endl;        
+  if ((rc = snd_pcm_open(&handle_, device_name_.c_str(), SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
+    std::cerr << "snd_pcm_open " << snd_strerror(rc) << std::endl;
     return false;
   }
 
@@ -79,24 +88,44 @@ bool sound_mixer::start() {
   snd_pcm_hw_params_set_format(handle_, params, SND_PCM_FORMAT_S16_LE);
   snd_pcm_hw_params_set_channels(handle_, params, 2);
 
-  auto sample_rate = (unsigned int) kSampleRate;
-  snd_pcm_hw_params_set_rate_near(handle_, params, &sample_rate, nullptr);
-  snd_pcm_hw_params_set_period_size_near(handle_, params, &actual_frames_per_period_, nullptr);
-  snd_pcm_hw_params_set_buffer_size(handle_, params, actual_frames_per_period_ * 3);
+  snd_pcm_hw_params_set_rate_near(handle_, params, &actual_rate_, nullptr);
+  snd_pcm_hw_params_set_period_size_near(handle_, params, &actual_period_size_, nullptr);
+  snd_pcm_hw_params_set_buffer_size(handle_, params, actual_period_size_ * 3);
 
   if ((rc = snd_pcm_hw_params(handle_, params)) < 0) {
-    std::cout << "snd_pcm_hw_params " << snd_strerror(rc) << std::endl;    
+    std::cerr << "snd_pcm_hw_params " << snd_strerror(rc) << std::endl;
     return false;
   }
 
-  if ((rc = snd_pcm_hw_params_get_period_size(params, &actual_frames_per_period_, nullptr)) < 0) {
-    std::cout << "snd_pcm_hw_params_get_period_size " << snd_strerror(rc) << std::endl;
+  if ((rc = snd_pcm_hw_params_get_rate(params, &actual_rate_, nullptr)) < 0) {
+    std::cerr << "snd_pcm_hw_params_get_rate " << snd_strerror(rc) << std::endl;
+    return false;
+  }
+
+  if ((rc = snd_pcm_hw_params_get_period_size(params, &actual_period_size_, nullptr)) < 0) {
+    std::cerr << "snd_pcm_hw_params_get_period_size " << snd_strerror(rc) << std::endl;
     return false;
   }
 
   start_.notify_one();
 
   return true;
+}
+
+unsigned int sound_mixer::actual_rate() {
+  return actual_rate_;
+}
+
+snd_pcm_uframes_t sound_mixer::actual_period_size() {
+  return actual_period_size_;
+}
+
+snd_pcm_uframes_t sound_mixer::seconds_to_frames(double seconds) {
+  return (snd_pcm_uframes_t) (seconds * ((double) actual_rate_));
+}
+
+snd_pcm_uframes_t sound_mixer::frequency_to_period(double cycles_per_second) {
+  return seconds_to_frames(1.0 / cycles_per_second);
 }
 
 sound_mixer::~sound_mixer() {

@@ -8,10 +8,10 @@ namespace airball {
 
 class sine_layer : public sound_layer {
 public:
-  explicit sine_layer(size_t period);
+  explicit sine_layer(snd_pcm_uframes_t period);
   ~sine_layer() override = default;
 
-  void apply(int16_t* buf, size_t frames, size_t pos) const override;
+  void apply(int16_t* buf, snd_pcm_uframes_t frames, snd_pcm_uframes_t pos) const override;
 
 private:
   const std::unique_ptr<int16_t> table_;
