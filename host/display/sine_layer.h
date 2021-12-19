@@ -12,9 +12,6 @@ public:
   ~sine_layer() override = default;
 
   void apply(int16_t* buf, snd_pcm_uframes_t frames, snd_pcm_uframes_t pos) const override;
-
-private:
-  const std::unique_ptr<int16_t> table_;
 };
 
 } // namespace airball

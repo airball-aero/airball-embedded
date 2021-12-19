@@ -6,19 +6,16 @@
 namespace  airball {
 
 sine_envelope_layer::sine_envelope_layer(snd_pcm_uframes_t period)
-    : sound_layer(period), table_(new double[period]) {
-  double* t = table_.get();
-  for (size_t k = 0; k < period; k++) {
-    *t++ = (1.0f + (float) sin( ((double) k / (double) period) * M_PI * 2.0)) / 2.0f;
-  }
-}
+    : sound_layer(period) {}
 
 void sine_envelope_layer::apply(int16_t* buf, snd_pcm_uframes_t frames, snd_pcm_uframes_t pos) const {
-  const double* t = table_.get();
   for (size_t i = 0; i < frames; i++) {
     pos %= period();
-    *buf++ = (int16_t) (((double) *buf) * t[pos]); // left
-    *buf++ = (int16_t) (((double) *buf) * t[pos]); // right
+    double ratio = (1.0 + (double) sin( ((double) pos / (double) period()) * M_PI * 2.0)) / 2.0;
+    *buf = (int16_t) (((double) *buf) * ratio); // left
+    buf++;
+    *buf = (int16_t) (((double) *buf) * ratio); // right
+    buf++;
     pos++;
   }
 }
