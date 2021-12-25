@@ -13,12 +13,13 @@ sine_layer::sine_layer(snd_pcm_uframes_t period)
       next_period_(0) {}
 
 void sine_layer::set_period(snd_pcm_uframes_t period) {
-  std::lock_guard<std::mutex> lock(mut_);
+  std::lock_guard<std::mutex> lock(mu_);
   changing_ = true;
   next_period_ = period;
 }
 
-snd_pcm_uframes_t sine_layer::period() const {
+snd_pcm_uframes_t sine_layer::period() {
+  std::lock_guard<std::mutex> lock(mu_);
   return period_;
 }
 
@@ -28,7 +29,7 @@ void sine_layer::set_frame(int16_t* frame, snd_pcm_uframes_t i) const {
 }
 
 void sine_layer::apply(int16_t* buf, snd_pcm_uframes_t frames) {
-  std::lock_guard<std::mutex> lock(mut_);
+  std::lock_guard<std::mutex> lock(mu_);
   for (snd_pcm_uframes_t i = 0; i < frames; i++) {
     if (((i + pos_) % period_) == 0 && changing_) {
       period_ = next_period_;

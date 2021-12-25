@@ -1,46 +1,70 @@
 #include <algorithm>
+#include <mutex>
 #include "pwm_layer.h"
 
 namespace airball {
 
-pwm_layer::pwm_layer(snd_pcm_uframes_t period, snd_pcm_uframes_t on_period, snd_pcm_uframes_t fade_period)
-    : period_(period),
-      on_period_(std::min(on_period, period)),
-      fade_period_(std::min(fade_period, (period - on_period) / 2)),
-      pos_(0) {}
-
-snd_pcm_uframes_t pwm_layer::period() const {
-  return period_;
+pwm_layer::pwm_layer(
+    snd_pcm_uframes_t period,
+    snd_pcm_uframes_t on_period,
+    snd_pcm_uframes_t fade_period) {
+  pos_ = 0;
+  params_ = make_adjusted_parameters(period, on_period, fade_period);
+  changing_ = false;
 }
 
 double pwm_layer::factor(snd_pcm_uframes_t k) const {
-  k %= period_;
-  if (k < on_period_) {
+  k = k % params_.period;
+  if (k < params_.on_period) {
     // Initial "on" period
     return 1.0;
   }
-  if (k < (on_period_ + fade_period_)) {
+  if (k < (params_.on_period + params_.fade_period)) {
     // Fade out
-    return (double) ((on_period_ + fade_period_) - k) / (double) fade_period_;
+    return (double) ((params_.on_period + params_.fade_period) - k) / (double) params_.fade_period;
   }
-  if (k < (period_ - fade_period_)) {
+  if (k < (params_.period - params_.fade_period)) {
     // Next "off" period
     return 0.0;
   }
   // Fade in
-  return (double) (k - (period_ - fade_period_)) / (double) fade_period_;
+  return (double) (k - (params_.period - params_.fade_period)) / (double) params_.fade_period;
+}
+
+void pwm_layer::set_parameters(
+    snd_pcm_uframes_t period,
+    snd_pcm_uframes_t on_period,
+    snd_pcm_uframes_t fade_period) {
+  std::lock_guard<std::mutex> lock(mu_);
+  new_params_ = make_adjusted_parameters(period, on_period, fade_period);
+  changing_ = true;
+}
+
+pwm_layer::parameters pwm_layer::make_adjusted_parameters(
+    snd_pcm_uframes_t period,
+    snd_pcm_uframes_t on_period,
+    snd_pcm_uframes_t fade_period) {
+  return {
+      .period = period,
+      .on_period = std::min(on_period, period),
+      .fade_period = std::min(fade_period, (period - on_period) / 2),
+  };
 }
 
 void pwm_layer::apply(int16_t* buf, snd_pcm_uframes_t frames) {
-  for (size_t i = 0; i < frames; i++) {
-    double f = factor(pos_ % period_);
-    for (int j = 0; j < 2; j++) {
-      *buf = (int16_t) ((double) *buf * f);
-      buf++;
+  std::lock_guard<std::mutex> lock(mu_);
+  for (snd_pcm_uframes_t i = 0; i < frames; i++) {
+    if (((pos_ + i) % params_.period) == 0 && changing_) {
+      params_ = new_params_;
+      changing_ = false;
+      pos_ = -i;
     }
-    pos_++;
+    double f = factor(pos_ + i);
+    for (int j = 0; j < 2; j++) {
+      buf[2 * i + j] = (int16_t) ((double) buf[2 * i + j] * f);
+    }
   }
-  pos_ %= period_;
+  pos_ = (pos_ + frames) % params_.period;
 }
 
 } // namespace airball

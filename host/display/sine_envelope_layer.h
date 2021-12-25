@@ -6,6 +6,9 @@
 
 namespace airball {
 
+// A sine_envelope_layer applies a sinusoidally varying gain envelope from 0
+// to 1 to the signal currently in the output buffer. Its period is fixed for
+// its entire lifetime.
 class sine_envelope_layer : public sound_layer {
 public:
   explicit sine_envelope_layer(snd_pcm_uframes_t period);
