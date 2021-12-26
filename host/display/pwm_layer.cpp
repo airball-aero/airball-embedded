@@ -16,19 +16,11 @@ pwm_layer::pwm_layer(
 double pwm_layer::factor(snd_pcm_uframes_t k) const {
   k = k % params_.period;
   if (k < params_.on_period) {
-    // Initial "on" period
     return 1.0;
   }
-  if (k < (params_.on_period + params_.fade_period)) {
-    // Fade out
-    return (double) ((params_.on_period + params_.fade_period) - k) / (double) params_.fade_period;
-  }
-  if (k < (params_.period - params_.fade_period)) {
-    // Next "off" period
-    return 0.0;
-  }
-  // Fade in
-  return (double) (k - (params_.period - params_.fade_period)) / (double) params_.fade_period;
+  double fade_out_value = 1.0 - (double) (k - params_.on_period) / (double) params_.fade_period;
+  double fade_in_value = 1.0 - (double) (params_.period - k) / (double) params_.fade_period;
+  return std::max(0.0, std::max(fade_in_value, fade_out_value));
 }
 
 void pwm_layer::set_parameters(
@@ -47,7 +39,7 @@ pwm_layer::parameters pwm_layer::make_adjusted_parameters(
   return {
       .period = period,
       .on_period = std::min(on_period, period),
-      .fade_period = std::min(fade_period, (period - on_period) / 2),
+      .fade_period = fade_period,
   };
 }
 
