@@ -1,6 +1,8 @@
 #ifndef AIRBALL_DISPLAY_PWM_LAYER_H
 #define AIRBALL_DISPLAY_PWM_LAYER_H
 
+#include <mutex>
+
 #include "sound_layer.h"
 
 namespace airball {

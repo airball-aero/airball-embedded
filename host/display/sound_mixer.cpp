@@ -108,6 +108,13 @@ snd_pcm_uframes_t sound_mixer::frequency_to_period(double cycles_per_second) {
   return seconds_to_frames(1.0 / cycles_per_second);
 }
 
+snd_pcm_uframes_t sound_mixer::octaves_to_period(
+    double base_cycles_per_second,
+    double octaves) {
+  return frequency_to_period(
+      base_cycles_per_second * std::pow(2, octaves));
+}
+
 sound_mixer::~sound_mixer() {
   {
     std::lock_guard<std::mutex> lock(mut_);

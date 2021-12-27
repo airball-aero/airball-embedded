@@ -30,9 +30,12 @@ public:
 
   snd_pcm_uframes_t frequency_to_period(double cycles_per_second);
 
+  snd_pcm_uframes_t octaves_to_period(double base_cycles_per_second,
+                                      double octaves);
+
 private:
   static const unsigned int kDesiredRate = 44100;
-  static const snd_pcm_uframes_t kDesiredPeriodSize = 96;
+  static const snd_pcm_uframes_t kDesiredPeriodSize = 256;
 
   void loop();
 

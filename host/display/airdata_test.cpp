@@ -68,8 +68,8 @@ TEST(Airdata, simple_zero_condition) {
           0.0,
           0.0).get(),
       1013.25);
-  EXPECT_NEAR(0.0, ad.alpha(), 0.001);
-  EXPECT_NEAR(0.0, ad.beta(), 0.001);
+  EXPECT_NEAR(0.0, ad.smooth_ball().alpha(), 0.001);
+  EXPECT_NEAR(0.0, ad.smooth_ball().beta(), 0.001);
 }
 
 TEST(Airdata, ias_test) {
@@ -83,7 +83,7 @@ TEST(Airdata, ias_test) {
           0.0,
           0.0).get(),
       1013.25);
-  EXPECT_NEAR(100, ad.ias(), 0.02);
+  EXPECT_NEAR(100, ad.smooth_ball().ias(), 0.02);
 }
 
 TEST(Airdata, tas_test) {
@@ -100,7 +100,7 @@ TEST(Airdata, tas_test) {
           0.0,
           0.0).get(),
       1013.25);
-  EXPECT_NEAR(100, ad.tas(), 0.02);
+  EXPECT_NEAR(100, ad.smooth_ball().tas(), 0.02);
 }
 
 // To a very rough approximation, for small deflections, we know that the
@@ -119,8 +119,8 @@ TEST(Airdata, alpha_test) {
           10,
           0).get(),
       1013.25);
-  EXPECT_NEAR(-0.02, ad.alpha(), 0.01);
-  EXPECT_NEAR(0, ad.beta(), 0.01);
+  EXPECT_NEAR(-0.02, ad.smooth_ball().alpha(), 0.01);
+  EXPECT_NEAR(0, ad.smooth_ball().beta(), 0.01);
 }
 
 TEST(Airdata, beta_test) {
@@ -134,8 +134,8 @@ TEST(Airdata, beta_test) {
           0,
           10).get(),
       1013.25);
-  EXPECT_NEAR(0, ad.alpha(), 0.01);
-  EXPECT_NEAR(0.02, ad.beta(), 0.01);
+  EXPECT_NEAR(0, ad.smooth_ball().alpha(), 0.01);
+  EXPECT_NEAR(0.02, ad.smooth_ball().beta(), 0.01);
 }
 
 TEST(Airdata, alpha_beta_test) {
@@ -149,8 +149,8 @@ TEST(Airdata, alpha_beta_test) {
           612.5,
           612.5).get(),
       1013.25);
-  EXPECT_NEAR(-0.0222, ad.alpha(), 0.01);
-  EXPECT_NEAR(0.0222, ad.beta(), 0.01);
+  EXPECT_NEAR(-0.0222, ad.smooth_ball().alpha(), 0.01);
+  EXPECT_NEAR(0.0222, ad.smooth_ball().beta(), 0.01);
 }
 
 TEST(Airdata, ias_deflected_test) {

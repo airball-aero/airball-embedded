@@ -39,7 +39,11 @@ pwm_layer::parameters pwm_layer::make_adjusted_parameters(
   return {
       .period = period,
       .on_period = std::min(on_period, period),
-      .fade_period = fade_period,
+      .fade_period = std::min(
+          fade_period,
+          std::min(
+              (period - on_period) / 2,
+              on_period)),
   };
 }
 

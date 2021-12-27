@@ -391,7 +391,7 @@ void Display::paintAirballAirspeedText(const Point& center, const double ias) {
 }
 
 void Display::paintAirballAirspeedLimits(const Point& center) {
-  if (meters_per_second_to_knots(airdata_->ias()) < settings_->v_r()) {
+  if (meters_per_second_to_knots(airdata_->smooth_ball().ias()) < settings_->v_r()) {
     paintAirballAirspeedLimitsRotate(center);
   } else {
     paintAirballAirspeedLimitsNormal(center);

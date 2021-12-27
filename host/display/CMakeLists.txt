@@ -32,16 +32,27 @@ add_library(airball_display
         system_status.cpp device_keyboard_listener.cpp
         log_reader_telemetry_client.cpp image_screen.cpp climb_rate_filter.cpp
         http_server.cpp file_write_watch.cpp sound_mixer.cpp sound_layer.cpp
-		sine_layer.cpp sine_envelope_layer.cpp pwm_layer.cpp balance_layer.cpp)
+		sine_layer.cpp sine_envelope_layer.cpp pwm_layer.cpp balance_layer.cpp
+		sound_scheme.cpp windrush_scheme.cpp)
 target_link_libraries(airball_display
         X11 cairo pthread asound
         airball_telemetry_client
         ${Boost_LIBRARIES})
 
 add_executable(sound_mixer
-        sound_mixer_main.cpp)
+		sound_mixer_main.cpp)
 target_link_libraries(sound_mixer
-        airball_display)
+		airball_display)
+
+add_executable(sound_scheme
+		sound_scheme_main.cpp)
+target_link_libraries(sound_scheme
+		airball_display)
+
+add_executable(pwm_layer
+		pwm_layer_main.cpp)
+target_link_libraries(pwm_layer
+		airball_display)
 
 add_executable(ab
         ab_main.cpp)
