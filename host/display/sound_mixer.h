@@ -34,9 +34,6 @@ public:
                                       double octaves);
 
 private:
-  static const unsigned int kDesiredRate = 44100;
-  static const snd_pcm_uframes_t kDesiredPeriodSize = 256;
-
   void loop();
 
   sound_mixer(const sound_mixer&) = delete;

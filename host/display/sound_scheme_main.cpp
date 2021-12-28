@@ -1,12 +1,16 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include <cmath>
+#include <boost/format.hpp>
+#include <termios.h>
 
+#include "flyonspeed_scheme.h"
 #include "windrush_scheme.h"
 #include "isettings.h"
 #include "iairdata.h"
-#include "settings.h"
+
+constexpr double kAlphaBetaStep = 0.01;
+constexpr int kDisplayHalfSize = 20;
 
 class TestSettings : public airball::ISettings {
 public:
@@ -64,6 +68,22 @@ private:
   std::vector<Ball> balls_;
 };
 
+void print_alpha_beta(double alpha, double beta) {
+  std::cout << boost::format("%05.02d") % alpha;
+  int k = beta * kDisplayHalfSize;
+  std::cout << "    " << "|";
+  for (int i = -kDisplayHalfSize; i <= kDisplayHalfSize; i++) {
+    if (i == k) {
+      std::cout << "*";
+    } else if (i == 0) {
+      std::cout << ".";
+    } else {
+      std::cout << " ";
+    }
+  }
+  std::cout << "|" << std::endl;
+}
+
 int main(int argc, char**argv) {
   if (argc < 2) {
     std::cerr << "Usage: " << argv[0] << " <device-name> <scheme-name>" << std::endl;
@@ -71,9 +91,10 @@ int main(int argc, char**argv) {
   }
 
   TestSettings settings;
-  settings.alpha_stall_ = 1.0;
   settings.alpha_min_ = 0.0;
-  settings.alpha_ref_ = 0.5;
+  settings.alpha_y_ = 0.5;
+  settings.alpha_ref_ = 0.75;
+  settings.alpha_stall_ = 1.0;
   settings.beta_full_scale_ = 1.0;
 
   TestAirdata airdata;
@@ -82,7 +103,12 @@ int main(int argc, char**argv) {
   std::string scheme_name(argv[2]);
   std::unique_ptr<airball::sound_scheme> scheme;
 
-  if (scheme_name == "windrush") {
+  if (scheme_name == "flyonspeed") {
+    scheme.reset(new airball::flyonspeed_scheme(
+        device_name,
+        &settings,
+        &airdata));
+  } else if (scheme_name == "windrush") {
     scheme.reset(new airball::windrush_scheme(
         device_name,
         &settings,
@@ -97,21 +123,60 @@ int main(int argc, char**argv) {
     return -1;
   }
 
-  const int num_divisions_alpha = 10;
-  const int num_divisions_beta = 50;
-  double beta_dir = 1.0;
+  auto set_alpha_beta = [&](double alpha, double beta) {
+    print_alpha_beta(alpha, beta);
+    airdata.set_ball(airball::IAirdata::Ball(alpha, beta, 0.0, 0.0));
+    scheme->update();
+    std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(10));
+  };
 
-  for (int i = 0; i <= num_divisions_alpha; i++) {
-    double alpha = (double) i / (double) num_divisions_alpha;
-    for (int j = -num_divisions_beta; j <= num_divisions_beta; j++) {
-      double beta = (double) j * beta_dir / (double) num_divisions_beta;
-      std::cout << "(alpha, beta) = (" << alpha << ", " << beta << ")" << std::endl;
-      airdata.set_ball(airball::IAirdata::Ball(alpha, beta, 0.0, 0.0));
-      scheme->update();
-      std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(10));
+  double alpha = 0.0;
+  double beta = 0.0;
+
+  set_alpha_beta(alpha, beta);
+
+  struct termios old_settings;
+  tcgetattr(STDIN_FILENO, &old_settings);
+  struct termios new_settings = old_settings;
+  new_settings.c_lflag &= (~ICANON & ~ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &new_settings);
+
+  for (bool running = true; running; ) {
+    char d = 0;
+    if (!read(STDIN_FILENO, &d, 1)) {
+      break;
     }
-    beta_dir *= -1.0;
+    bool set = true;
+    switch (d) {
+      case 'u':
+        alpha += kAlphaBetaStep;
+        break;
+      case 'd':
+        alpha -= kAlphaBetaStep;
+        break;
+      case 'r':
+        beta += kAlphaBetaStep;
+        break;
+      case 'l':
+        beta -= kAlphaBetaStep;
+        break;
+      case 'c':
+        beta = 0;
+        break;
+      case 'x':
+        running = false;
+        set = false;
+        break;
+      default:
+        set = false;
+        break;
+    }
+    if (set) {
+      set_alpha_beta(alpha, beta);
+    }
   }
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
 
   return 0;
 }

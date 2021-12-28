@@ -18,7 +18,7 @@ public:
 
   void set_gains(double left_gain, double right_gain);
 
-  void set_ramp_period(double ramp_period);
+  void set_ramp_period(snd_pcm_uframes_t ramp_period);
 
 private:
   struct gains {

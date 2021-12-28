@@ -6,6 +6,9 @@
 
 namespace airball {
 
+constexpr unsigned int kDesiredRate = 44100;
+constexpr snd_pcm_uframes_t kDesiredPeriodSize = 512;
+
 sound_mixer::sound_mixer(std::string device_name)
     : device_name_(device_name),
       done_(false),
