@@ -36,6 +36,11 @@ public:
   virtual double alpha_stall() const = 0;
 
   /**
+   * @return the stall warning angle of attack. (Degrees)
+   */
+  virtual double alpha_stall_warning() const = 0;
+
+  /**
    * @return the display setting, minimum angle of attack shown. (Degrees)
    */
   virtual double alpha_min() const = 0;

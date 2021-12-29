@@ -66,7 +66,12 @@ constexpr Parameter<double> V_NE = {
 constexpr Parameter<double> ALPHA_STALL = {
     .name="alpha_stall",
     .initial=15.0,
-};
+    };
+
+constexpr Parameter<double> ALPHA_STALL_WARNING = {
+    .name="alpha_stall_warning",
+    .initial=14.0,
+    };
 
 constexpr Parameter<double> ALPHA_MIN = {
     .name="alpha_min",
@@ -183,6 +188,10 @@ double Settings::v_ne() const {
 
 double Settings::alpha_stall() const {
   return get_value(&ALPHA_STALL);
+}
+
+double Settings::alpha_stall_warning() const {
+  return get_value(&ALPHA_STALL_WARNING);
 }
 
 double Settings::alpha_min() const {

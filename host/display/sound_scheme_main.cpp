@@ -20,6 +20,7 @@ public:
   double v_no() const override { return v_no_; }
   double v_ne() const override { return v_ne_; }
   double alpha_stall() const override { return alpha_stall_; }
+  double alpha_stall_warning() const override { return alpha_stall_warning_; }
   double alpha_min() const override { return alpha_min_; }
   double alpha_x() const override { return alpha_x_; }
   double alpha_y() const override { return alpha_y_; }
@@ -42,6 +43,7 @@ public:
   double v_no_ = 0;
   double v_ne_ = 0;
   double alpha_stall_ = 0;
+  double alpha_stall_warning_ = 0;
   double alpha_min_ = 0;
   double alpha_x_ = 0;
   double alpha_y_ = 0;
@@ -69,9 +71,8 @@ private:
 };
 
 void print_alpha_beta(double alpha, double beta) {
-  std::cout << boost::format("%05.02d") % alpha;
   int k = beta * kDisplayHalfSize;
-  std::cout << "    " << "|";
+  std::cout << "|";
   for (int i = -kDisplayHalfSize; i <= kDisplayHalfSize; i++) {
     if (i == k) {
       std::cout << "*";
@@ -81,7 +82,9 @@ void print_alpha_beta(double alpha, double beta) {
       std::cout << " ";
     }
   }
-  std::cout << "|" << std::endl;
+  std::cout << "|";
+  std::cout << " alpha = " << boost::format("%05.02d") % alpha;
+  std::cout << std::endl;
 }
 
 int main(int argc, char**argv) {
@@ -95,6 +98,7 @@ int main(int argc, char**argv) {
   settings.alpha_y_ = 0.5;
   settings.alpha_ref_ = 0.75;
   settings.alpha_stall_ = 1.0;
+  settings.alpha_stall_warning_ = 0.95;
   settings.beta_full_scale_ = 1.0;
 
   TestAirdata airdata;

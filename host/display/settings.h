@@ -21,6 +21,7 @@ public:
   double v_no() const override;
   double v_ne() const override;
   double alpha_stall() const override;
+  double alpha_stall_warning() const override;
   double alpha_min() const override;
   double alpha_x() const override;
   double alpha_y() const override;
