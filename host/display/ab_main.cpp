@@ -28,10 +28,15 @@ static po::options_description add_options() {
           "path to settings file"
       )
       (
+          "audio_device",
+          po::value<std::string>(),
+          "audio device (e.g. default, hw:0, ...)"
+      )
+      (
           "telemetry",
           po::value<std::string>(),
           "telemetry source (fake, log, xbee, esp32)"
-          )
+      )
       (
           "telemetry_log_filename",
           po::value<std::string>(),
@@ -84,6 +89,8 @@ int main(int argc, char **argv) {
 
   std::string settings_path = vm["settings_path"].as<std::string>();
 
+  std::string audio_device = vm["audio_device"].as<std::string>();
+
   std::unique_ptr<airball::TelemetryClient> telemetry;
   {
     std::string v = vm["telemetry"].as<std::string>();
@@ -125,6 +132,10 @@ int main(int argc, char **argv) {
     }
   }
 
-  airball::Controller c(screen.get(), settings_path, telemetry.get());
+  airball::Controller c(
+      screen.get(),
+      settings_path,
+      audio_device,
+      telemetry.get());
   c.run();
 }

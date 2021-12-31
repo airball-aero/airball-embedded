@@ -1,5 +1,6 @@
 #include <iostream>
-#include "windrush_scheme.h"
+#include "stallfence_scheme.h"
+#include "units.h"
 
 namespace airball {
 
@@ -15,7 +16,7 @@ constexpr double kPwmFrequencyAlphaMax = 10; //hertz
 
 constexpr double kBetaAmplificationFactor = 6.0;
 
-windrush_scheme::windrush_scheme(
+stallfence_scheme::stallfence_scheme(
     std::string device_name,
     ISettings* settings,
     IAirdata* airdata)
@@ -30,18 +31,21 @@ windrush_scheme::windrush_scheme(
   });
 }
 
-void windrush_scheme::update() {
+void stallfence_scheme::update() {
   IAirdata::Ball ball = airdata().smooth_ball();
+
+  const double alpha = radians_to_degrees(ball.alpha());
+  const double beta = radians_to_degrees(ball.beta());
 
   // Calculate non-dimensional ratios for alpha and beta
   double alpha_ratio =
-      (ball.alpha() - settings().alpha_min()) /
+      (alpha - settings().alpha_min()) /
       (settings().alpha_stall() - settings().alpha_min());
   double beta_ratio =
-      (ball.beta() + settings().beta_bias()) / settings().beta_full_scale();
-  if (ball.alpha() > settings().alpha_ref()) {
+      (beta + settings().beta_bias()) / settings().beta_full_scale();
+  if (alpha > settings().alpha_ref()) {
     beta_ratio *= kBetaAmplificationFactor *
-        ((ball.alpha() - settings().alpha_ref()) /
+        ((alpha - settings().alpha_ref()) /
         (settings().alpha_stall() - settings().alpha_ref()));
   }
   beta_ratio = std::min(1.0, std::max(-1.0, beta_ratio));
@@ -80,20 +84,26 @@ void windrush_scheme::update() {
 
   // Calculate and set balance and combined volume based on alpha and beta
   balance_.set_ramp_period(ramp_period);
-  if (ball.alpha() < settings().alpha_ref()) {
+  if (alpha < settings().alpha_ref()) {
     balance_.set_gains(
+        settings().audio_volume() *
         std::max(0.0, -beta_ratio * 0.5),
+        settings().audio_volume() *
         std::max(0.0, beta_ratio * 0.5));
-  } else if (ball.alpha() < settings().alpha_stall()) {
+  } else if (alpha < settings().alpha_stall()) {
     double alpha_high_range_ratio =
-        (ball.alpha() - settings().alpha_ref()) /
+        (alpha - settings().alpha_ref()) /
         (settings().alpha_stall() - settings().alpha_ref());
     balance_.set_gains(
+        settings().audio_volume() *
         std::min(1.0, (-beta_ratio * 0.5 + alpha_high_range_ratio) / 2.0),
+        settings().audio_volume() *
         std::min(1.0, (beta_ratio * 0.5 + alpha_high_range_ratio) / 2.0));
   } else {
     balance_.set_gains(
+        settings().audio_volume() *
         std::min(1.0, (-beta_ratio + 1) / 2.0),
+        settings().audio_volume() *
         std::min(1.0, (beta_ratio + 1) / 2.0));
   }
 }

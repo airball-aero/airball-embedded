@@ -36,6 +36,8 @@ public:
   bool show_altimeter() const override;
   bool show_link_status() const override;
   bool show_probe_battery_status() const override;
+  std::string sound_scheme() const override;
+  double audio_volume() const override;
 
   /**
    * Load settings from a specified file path.

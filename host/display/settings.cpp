@@ -38,6 +38,11 @@ bool Parameter<bool>::get_impl(const rapidjson::Document &doc) const {
   return doc[name].GetBool();
 }
 
+template<>
+std::string Parameter<std::string>::get_impl(const rapidjson::Document &doc) const {
+  return doc[name].GetString();
+}
+
 constexpr Parameter<double> V_FULL_SCALE = {
     .name="ias_full_scale",
     .initial=100,
@@ -141,6 +146,16 @@ constexpr Parameter<int> SHOW_LINK_STATUS = {
 constexpr Parameter<int> SHOW_PROBE_BATTERY_STATUS = {
     .name="show_probe_battery_status",
     .initial=true,
+};
+
+const Parameter<std::string> SOUND_SCHEME = {
+    .name="sound_scheme",
+    .initial="flyonspeed",
+};
+
+const Parameter<double> AUDIO_VOLUME = {
+    .name="audio_volume",
+    .initial=1.0,
 };
 
 Settings::Settings() {
@@ -248,6 +263,14 @@ bool Settings::show_link_status() const {
 
 bool Settings::show_probe_battery_status() const {
   return get_value(&SHOW_PROBE_BATTERY_STATUS);
+}
+
+std::string Settings::sound_scheme() const {
+  return get_value(&SOUND_SCHEME);
+}
+
+double Settings::audio_volume() const {
+  return get_value(&AUDIO_VOLUME);
 }
 
 } // namespace airball

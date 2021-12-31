@@ -5,9 +5,10 @@
 #include <termios.h>
 
 #include "flyonspeed_scheme.h"
-#include "windrush_scheme.h"
+#include "stallfence_scheme.h"
 #include "isettings.h"
 #include "iairdata.h"
+#include "units.h"
 
 constexpr double kAlphaBetaStep = 0.01;
 constexpr int kDisplayHalfSize = 20;
@@ -36,6 +37,8 @@ public:
   bool show_altimeter() const override { return false; }
   bool show_link_status() const override { return false; }
   bool show_probe_battery_status() const override { return false; }
+  std::string sound_scheme() const override { return ""; }
+  double audio_volume() const override { return 1.0; }
 
   double v_full_scale_ = 0;
   double v_r_ = 0;
@@ -112,8 +115,8 @@ int main(int argc, char**argv) {
         device_name,
         &settings,
         &airdata));
-  } else if (scheme_name == "windrush") {
-    scheme.reset(new airball::windrush_scheme(
+  } else if (scheme_name == "stallfence") {
+    scheme.reset(new airball::stallfence_scheme(
         device_name,
         &settings,
         &airdata));
@@ -129,7 +132,11 @@ int main(int argc, char**argv) {
 
   auto set_alpha_beta = [&](double alpha, double beta) {
     print_alpha_beta(alpha, beta);
-    airdata.set_ball(airball::IAirdata::Ball(alpha, beta, 0.0, 0.0));
+    airdata.set_ball(airball::IAirdata::Ball(
+        degrees_to_radians(alpha),
+        degrees_to_radians(beta),
+        0.0,
+        0.0));
     scheme->update();
     std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(10));
   };

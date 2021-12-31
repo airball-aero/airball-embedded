@@ -110,6 +110,15 @@ public:
    */
   virtual bool show_probe_battery_status() const = 0;
 
+  /**
+   * @return the name of the sound scheme to use.
+   */
+  virtual std::string sound_scheme() const = 0;
+
+  /**
+   * @return the desired audio volume, from 0.0 (none) to 1.0 (full).
+   */
+  virtual double audio_volume() const = 0;
 };
 
 } // namespace airball

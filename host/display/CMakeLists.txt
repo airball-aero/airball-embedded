@@ -1,25 +1,3 @@
-# The MIT License (MIT)
-#
-# Copyright (c) 2017-2018, Ihab A.B. Awad
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-
 find_package(Boost REQUIRED program_options iostreams system)
 include_directories(${BOOST_INCLUDE_DIRS})
 message("boost lib: ${Boost_LIBRARIES}")
@@ -33,7 +11,7 @@ add_library(airball_display
         log_reader_telemetry_client.cpp image_screen.cpp climb_rate_filter.cpp
         http_server.cpp file_write_watch.cpp sound_mixer.cpp sound_layer.cpp
 		sine_layer.cpp sine_envelope_layer.cpp pwm_layer.cpp balance_layer.cpp
-		sound_scheme.cpp windrush_scheme.cpp flyonspeed_scheme.cpp)
+		sound_scheme.cpp stallfence_scheme.cpp flyonspeed_scheme.cpp)
 target_link_libraries(airball_display
         X11 cairo pthread asound
         airball_telemetry_client
@@ -58,11 +36,6 @@ add_executable(ab
         ab_main.cpp)
 target_link_libraries(ab
         airball_display)
-
-add_executable(ab_device
-        ab_device_main.cpp)
-target_link_libraries(ab_device
-        airball_display airball_telemetry_client)
 
 add_executable(replay
         replay_main.cpp)

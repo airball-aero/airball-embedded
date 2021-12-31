@@ -7,6 +7,9 @@
 #include "units.h"
 #include "../telemetry/airdata_reduced_sample.h"
 #include "file_write_watch.h"
+#include "sound_scheme.h"
+#include "stallfence_scheme.h"
+#include "flyonspeed_scheme.h"
 
 #include <iostream>
 #include <thread>
@@ -18,6 +21,9 @@ namespace airball {
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kPaintDelay(33);
+
+const static std::string kStallfenceScheme = "stallfence";
+const static std::string kFlyonspeedScheme = "flyonspeed";
 
 template <class T>
 class InputQueue {
@@ -53,8 +59,12 @@ std::ostream& operator<<(
 
 Controller::Controller(Screen* screen,
                        const std::string& settings_path,
+                       const std::string& audio_device,
                        TelemetryClient* telemetry)
-    : screen_(screen), settings_path_(settings_path), telemetry_(telemetry) {}
+    : screen_(screen),
+      settings_path_(settings_path),
+      audio_device_(audio_device),
+      telemetry_(telemetry) {}
 
 void Controller::run() {
   InputQueue<std::unique_ptr<sample>> data;
@@ -87,6 +97,26 @@ void Controller::run() {
 
     settings.load(settings_path_);
 
+    std::unique_ptr<sound_scheme> sound_scheme;
+    if (settings.sound_scheme() == kStallfenceScheme) {
+      sound_scheme.reset(new stallfence_scheme(audio_device_,
+                                               &settings,
+                                               &airdata));
+    } else if (settings.sound_scheme() == kFlyonspeedScheme) {
+      sound_scheme.reset(new flyonspeed_scheme(audio_device_,
+                                               &settings,
+                                               &airdata));
+    } else {
+      std::cerr << "Unrecognized sound scheme "
+                << settings.sound_scheme() << std::endl;
+      std::exit(-1);
+    }
+
+    if (!sound_scheme->start()) {
+      std::cerr << "Sound scheme failed to start" << std::endl;
+      std::exit(-1);
+    }
+
     while (true) {
       std::vector<bool> settings_reads = settings_read.get();
       std::vector<std::unique_ptr<sample>> cycle_data = data.get();
@@ -118,6 +148,7 @@ void Controller::run() {
         }
       }
 
+      sound_scheme->update();
       display.paint();
 
       // TODO(ihab): Build an interrupt triggered paint loop rather than merely

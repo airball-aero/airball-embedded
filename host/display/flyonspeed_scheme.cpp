@@ -1,4 +1,5 @@
 #include "flyonspeed_scheme.h"
+#include "units.h"
 
 namespace airball {
 
@@ -49,21 +50,22 @@ enum speed_regime {
 
 speed_regime calculate_regime(
     const ISettings& settings,
-    const IAirdata::Ball& ball) {
+    const double alpha,
+    const double beta) {
   const double alpha_ref_tolerance =
       kAlphaRefToleranceFactor *
       (settings.alpha_stall() - settings.alpha_ref());
 
-  if (ball.alpha() < settings.alpha_y()) {
+  if (alpha < settings.alpha_y()) {
     return CRUISE;
   }
-  if (ball.alpha() < settings.alpha_ref() - alpha_ref_tolerance) {
+  if (alpha < settings.alpha_ref() - alpha_ref_tolerance) {
     return FAST;
   }
-  if (ball.alpha() < settings.alpha_ref() + alpha_ref_tolerance) {
+  if (alpha < settings.alpha_ref() + alpha_ref_tolerance) {
     return ONSPEED;
   }
-  if (ball.alpha() < settings.alpha_stall_warning()) {
+  if (alpha < settings.alpha_stall_warning()) {
     return SLOW;
   }
   return STALL_WARNING;
@@ -78,7 +80,10 @@ double interpolate(
 
 void flyonspeed_scheme::update() {
   const IAirdata::Ball ball = airdata().smooth_ball();
-  const speed_regime regime = calculate_regime(settings(), ball);
+  const double alpha = radians_to_degrees(ball.alpha());
+  const double beta = radians_to_degrees(ball.beta());
+
+  const speed_regime regime = calculate_regime(settings(), alpha, beta);
 
   // Switch off feedback entirely if cruise; else proceed
   switch(regime) {
@@ -95,10 +100,12 @@ void flyonspeed_scheme::update() {
   // changes that from (1.0, 0.0) in one extreme to (0.0, 1.0) on the other.
   balance_.set_ramp_period(ramp_period);
   double beta_ratio =
-      (ball.beta() + settings().beta_bias()) /
+      (beta + settings().beta_bias()) /
       settings().beta_full_scale();
   balance_.set_gains(
+      settings().audio_volume() *
       std::min(1.0, (-beta_ratio + 1.0) / 2.0),
+      settings().audio_volume() *
       std::min(1.0, (beta_ratio + 1.0) / 2.0));
 
   // Set tone frequency based on regime.
@@ -131,13 +138,13 @@ void flyonspeed_scheme::update() {
       pwm_frequency = interpolate(
           kPwmFrequencyFastLDMax, kPwmFrequencyFastOnspeed,
           settings().alpha_y(), settings().alpha_ref(),
-          ball.alpha());
+          alpha);
       break;
     case SLOW:
       pwm_frequency = interpolate(
           kPwmFrequencySlowOnspeed, kPwmFrequencySlowStallWarning,
           settings().alpha_ref(), settings().alpha_stall_warning(),
-          ball.alpha());
+          alpha);
       break;
     case STALL_WARNING:
       pwm_frequency = kPwmFrequencyStallWarning;
