@@ -383,8 +383,6 @@ void setup() {
   timerAttachInterrupt(timer, &timer_fired, true);
   timerAlarmWrite(timer, MEASUREMENT_INTERVAL_US, true);
   timerAlarmEnable(timer);
-
-  Serial.println("setup() end");
 }
 
 void loop() {
