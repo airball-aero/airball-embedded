@@ -6,7 +6,7 @@
 
 #include "telemetry_client.h"
 #include "sampler.h"
-#include "deadline_tcp_line_reader.h"
+#include "udp_packet_reader.h"
 
 namespace airball {
 
@@ -22,7 +22,7 @@ public:
   std::unique_ptr<sample> get() override;
 
 private:
-  deadline_tcp_line_reader reader_;
+  udp_packet_reader reader_;
   sampler telemetry_;
   std::map<std::string, std::ofstream *> files_;
 };

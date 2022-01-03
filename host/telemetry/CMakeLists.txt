@@ -15,7 +15,7 @@ add_library(airball_telemetry_client
         xbee_telemetry_client.cpp xbee.cpp xbee_api_payload.cpp sample.cpp format.cpp
         battery_sample.cpp airdata_sample.cpp xbee_api_frame.cpp xbee_known_types.cpp
         xbee_utils.cpp esp32_telemetry_client.cpp airdata_reduced_sample.cpp
-        deadline_tcp_line_reader.cpp)
+        deadline_tcp_line_reader.cpp udp_packet_reader.cpp)
 target_link_libraries(airball_telemetry_client
         Threads::Threads boost_system)
 
@@ -32,6 +32,11 @@ target_link_libraries(log_telemetry
 add_executable(send_dummy_data
         send_dummy_data_main.cpp)
 target_link_libraries(send_dummy_data
+        airball_telemetry_client)
+
+add_executable(udp_packet_reader
+        udp_packet_reader_main.cpp)
+target_link_libraries(udp_packet_reader
         airball_telemetry_client)
 
 enable_testing()

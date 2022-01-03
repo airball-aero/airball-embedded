@@ -9,8 +9,12 @@
 
 namespace airball {
 
+static constexpr int kAirballUdpPort = 30123;
+
 ESP32TelemetryClient::ESP32TelemetryClient()
-    : reader_("192.168.4.1", "80", boost::posix_time::seconds(1)) {
+    : reader_(kAirballUdpPort) {
+  reader_.open();
+
   telemetry_.add_sample_type(airdata_reduced_sample::PREFIX,
                              airdata_reduced_sample::create);
   telemetry_.add_sample_type(battery_sample::PREFIX, battery_sample::create);
@@ -39,8 +43,8 @@ ESP32TelemetryClient::~ESP32TelemetryClient() {
 std::unique_ptr<sample> ESP32TelemetryClient::get() {
   while (true) {
     try {
-      std::string data = reader_.read_line();
-      uint8_t rssi = 0; // TODO: RSSI is useless for TCP
+      std::string data = reader_.read_packet();
+      uint8_t rssi = 0; // TODO: RSSI is useless for UDP
       auto current_time = std::chrono::system_clock::now();
       if (sample *s = telemetry_.parse(current_time, rssi, data)) {
         *files_[s->type()] << s->format().c_str() << std::endl;

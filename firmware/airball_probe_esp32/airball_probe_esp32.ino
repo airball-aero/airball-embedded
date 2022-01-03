@@ -68,36 +68,21 @@ void metrics_send() {
 // WiFi base station with sensor readings sent over TCP
 
 #define WIFI_SSID "AirballProbe_00000001"
-#define WIFI_PORT 80
+#define WIFI_UDP_PORT 30123
 
-WiFiServer wifi_server(WIFI_PORT);
-std::vector<WiFiClient> wifi_clients;
+WiFiUDP wifi_udp;
+IPAddress wifi_broadcast_ip;
 
 void wifi_begin() {
   WiFi.softAP(WIFI_SSID, "");
-  wifi_server.begin();
+  wifi_broadcast_ip = WiFi.broadcastIP();
 }
 
 void wifi_send(const char* sentence) {
   metrics_wifi_time.mark();
-  while (true) {
-    WiFiClient client = wifi_server.available();
-    if (client) {
-      client.setNoDelay(true);
-      wifi_clients.push_back(client);
-    } else {
-      break;
-    }
-  }
-
-  for (auto it = wifi_clients.begin() ; it != wifi_clients.end(); ) {
-    if (it->connected()) {
-      it->printf("%s\n", sentence);
-      ++it;
-    } else {
-      wifi_clients.erase(it);
-    }
-  }
+  wifi_udp.beginPacket(wifi_broadcast_ip, WIFI_UDP_PORT);
+  wifi_udp.write((const uint8_t*) sentence, strlen(sentence));
+  wifi_udp.endPacket();
   metrics_wifi_time.record();
 }
 
@@ -172,7 +157,6 @@ struct pressures_struct pressures_read() {
   metrics_dpb_time.mark();
   p.dpb = pressure_read_one(&pressure_dpb);
   metrics_dpb_time.record();
-
   if (pressure_autozero_complete) {
     p.dp0 -= pressure_autozero_offset.dp0;
     p.dpa -= pressure_autozero_offset.dpa;
@@ -399,6 +383,8 @@ void setup() {
   timerAttachInterrupt(timer, &timer_fired, true);
   timerAlarmWrite(timer, MEASUREMENT_INTERVAL_US, true);
   timerAlarmEnable(timer);
+
+  Serial.println("setup() end");
 }
 
 void loop() {
