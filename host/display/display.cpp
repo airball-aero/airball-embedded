@@ -164,35 +164,31 @@ void Display::layout() {
 
   vsiHeight_ = altimeterHeight_ - 2 * displayMargin_;
 
-  vsiPrecisionFpm_ = 100;
-  vsiMaxFpm_ = 2000;
-
   vsiStepsFpm_.clear();
   vsiStepsFpm_.push_back(
       {
-          .fpm = 200,
+          .fpm = 250,
           .thick = 1,
       });
   vsiStepsFpm_.push_back(
       {
-      .fpm = 300,
-      .thick = 1,
+          .fpm = 500,
+          .thick = 1.5,
       });
-  vsiStepsFpm_.push_back(      {
-      .fpm = 400,
-      .thick = 1,
+  vsiStepsFpm_.push_back(
+      {
+          .fpm = 750,
+          .thick = 1,
       });
-  vsiStepsFpm_.push_back({
-      .fpm = 500,
-      .thick = 1.5,
+  vsiStepsFpm_.push_back(
+      {
+          .fpm = 1000,
+          .thick = 2,
       });
-  vsiStepsFpm_.push_back(      {
-      .fpm = 1000,
-      .thick = 2,
-      });
-  vsiStepsFpm_.push_back(      {
-      .fpm = 1500,
-      .thick = 1.5,
+  vsiStepsFpm_.push_back(
+      {
+          .fpm = 2000,
+          .thick = 2,
       });
 
   vsiTickLength_ = 7;
@@ -698,14 +694,13 @@ void Display::paintCowCatcher() {
 }
 
 void Display::paintVsi() {
-  double radians_per_fpm = (M_PI / 2.0) / vsiMaxFpm_;
-  double vsi_width = vsiHeight_ / 2 / tan(vsiPrecisionFpm_ * radians_per_fpm);
-  double vsi_x_left = (width_ - vsi_width) / 2;
+  double radians_per_fpm =
+      atan(vsiHeight_ / 2 / width_) / vsiStepsFpm_[0].fpm;
   Point top_left(
-      vsi_x_left,
+      0,
       airballHeight_ + displayMargin_);
   Point top_right(
-      vsi_x_left + vsi_width,
+      width_,
       top_left.y());
   Point bottom_left(
       top_left.x(),
@@ -723,7 +718,7 @@ void Display::paintVsi() {
       screen_->cr(),
       top_left,
       Size(
-          vsi_width,
+          width_,
           vsiHeight_),
       altimeterBackgroundColor_);
   paintVsiTicMarks(
@@ -839,10 +834,10 @@ void Display::paintVsiPointer(
     double radians_per_fpm) {
   double climb_rate =
       airdata_->climb_rate() / kMetersPerFoot * kSecondsPerMinute;
-  climb_rate = fmin(climb_rate, vsiMaxFpm_);
-  climb_rate = fmax(climb_rate, -vsiMaxFpm_);
+  climb_rate = fmin(climb_rate, vsiStepsFpm_.back().fpm);
+  climb_rate = fmax(climb_rate, -vsiStepsFpm_.back().fpm);
   double angle = climb_rate * radians_per_fpm;
-  if (fabs(climb_rate) <= vsiPrecisionFpm_) {
+  if (fabs(climb_rate) <= vsiStepsFpm_[0].fpm) {
     line(
         screen_->cr(),
         center_left,

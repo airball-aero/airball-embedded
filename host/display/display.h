@@ -86,8 +86,6 @@ private:
   bool statusDisplayNumericalData_;
   Color linkColor_;
   double vsiHeight_;
-  double vsiPrecisionFpm_;
-  double vsiMaxFpm_;
   std::vector<VsiStep> vsiStepsFpm_;
   double vsiTickLength_;
   double vsiKneeOffset_;
