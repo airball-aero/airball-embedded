@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
     std::string v = vm["screen"].as<std::string>();
     if (v == "x11") {
       screen = std::unique_ptr<airball::Screen>
-          (airball::Screen::NewX11Screen(480, 272));
+          (airball::Screen::NewX11Screen(480, 320));
     } else if (v == "fb") {
       screen = std::unique_ptr<airball::Screen>
           (airball::Screen::NewFramebufferScreen());
