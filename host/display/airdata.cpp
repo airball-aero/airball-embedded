@@ -13,6 +13,9 @@ constexpr double kProbeHalfAngle = degrees_to_radians(45);
 constexpr double kPiOver2 = M_PI / 2.0;
 constexpr double kR = 9.0 / 4.0;
 
+constexpr int kClimbRateFilterSizeMin = 1;
+constexpr int kClimbRateFilterSizeMax = 20;
+
 double cos_sq(double x) {
   double y = cos(x);
   return y * y;
@@ -52,9 +55,9 @@ double find_dpr_to_angle(InterpolationTable &table, double dpr) {
 
 Airdata::Airdata()
     : climb_rate_(0),
-      raw_balls_(kNumBalls) {
+      raw_balls_(kNumBalls),
+      climb_rate_filter_(1) {
   populate_table(dpr_to_angle);
-  climbrateFilter_init(&climb_rate_filter_);
 }
 
 static double
@@ -135,12 +138,14 @@ void Airdata::update(
   }
   raw_balls_[0] = Ball(new_alpha, new_beta, new_ias, new_tas);
 
-  double old_pressure_altitude = pressure_altitude_;
   pressure_altitude_ = pressure_to_altitude(t, p, QNH_STANDARD);
-  climbrateFilter_put(
-      &climb_rate_filter_,
-      (pressure_altitude_ - old_pressure_altitude) / (1.0 / kSamplesPerSecond));
-  climb_rate_ = climbrateFilter_get(&climb_rate_filter_);
+
+  climb_rate_filter_.set_size(
+      kClimbRateFilterSizeMin +
+      (int) (vsi_smoothing_factor *
+             (kClimbRateFilterSizeMax - kClimbRateFilterSizeMin)));
+  climb_rate_filter_.put(pressure_altitude_);
+  climb_rate_ = climb_rate_filter_.get_rate() / (1.0 / kSamplesPerSecond);
 
   altitude_ = pressure_to_altitude(t, p, qnh);
 

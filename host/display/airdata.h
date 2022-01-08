@@ -5,8 +5,8 @@
 #include "interpolation_table.h"
 #include "../telemetry/airdata_sample.h"
 #include "../telemetry/airdata_reduced_sample.h"
-#include "climb_rate_filter.h"
 #include "iairdata.h"
+#include "cubic_rate_filter.h"
 
 namespace airball {
 
@@ -59,7 +59,7 @@ private:
   Ball smooth_ball_;
   std::vector<Ball> raw_balls_;
 
-  climbrateFilter climb_rate_filter_;
+  cubic_rate_filter climb_rate_filter_;
   double climb_rate_;
 
   double altitude_;
