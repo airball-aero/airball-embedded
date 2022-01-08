@@ -4,6 +4,7 @@
 #include <chrono>
 #include <thread>
 #include <memory>
+#include <iostream>
 
 #include "units.h"
 #include "aerodynamics.h"
@@ -17,7 +18,10 @@ constexpr static std::chrono::duration<unsigned int, std::milli>
     kSendDelay(20);
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
-    kPeriodAirdata(20000);
+    kPeriodAirdata(30000);
+
+constexpr static std::chrono::duration<unsigned int, std::milli>
+    kPeriodBaro(10000);
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kPeriodProbeStatus(10000);
@@ -45,11 +49,11 @@ struct Model {
 
 constexpr static Model kAirdataBaro{
     .min = 65000,
-    .max = 70000,
+    .max = 65100,
 };
 
 constexpr static Model kAirdataOat{
-    .min =   0,
+    .min =   20,
     .max =  20,
 };
 
@@ -113,16 +117,35 @@ double compute_phase_ratio(const std::chrono::steady_clock::duration &period) {
   return (double) (now % period.count()) / (double) period.count();
 }
 
+constexpr int cols = 50;
+
+void print(const Model& model, const double value) {
+  double ratio = (value - model.min) / (model.max - model.min);
+  int counts = (int) (ratio * (double) cols);
+  for (int i = 0; i <= cols; i++) {
+    if (i == counts) {
+      std::cout << "*";
+    } else if (i == 0 || i == cols) {
+      std::cout << "|";
+    } else {
+      std::cout << " ";
+    }
+  }
+  std::cout << std::endl;
+}
+
 std::unique_ptr<sample> make_airdata(
     std::chrono::time_point<std::chrono::system_clock> time,
     unsigned long seq) {
-  const double phase_ratio = compute_phase_ratio(kPeriodAirdata);
-  double baro_pressure = interpolate_value(phase_ratio, kAirdataBaro);
-  double temperature = interpolate_value(phase_ratio, kAirdataOat);
+  const double phase_ratio_airdata = compute_phase_ratio(kPeriodAirdata);
   double dynamic_pressure = ias_to_q(
-      interpolate_value(phase_ratio, kAirdataIas));
-  double alpha = interpolate_value(phase_ratio, kAirdataAlpha);
-  double beta = interpolate_value(phase_ratio, kAirdataBeta);
+      interpolate_value(phase_ratio_airdata, kAirdataIas));
+  double alpha = interpolate_value(phase_ratio_airdata, kAirdataAlpha);
+  double beta = interpolate_value(phase_ratio_airdata, kAirdataBeta);
+
+  const double phase_ratio_baro = compute_phase_ratio(kPeriodBaro);
+  double baro_pressure = interpolate_value(phase_ratio_baro, kAirdataBaro);
+  double temperature = interpolate_value(phase_ratio_baro, kAirdataOat);
 
   double pressure_center = gage_pressure_at_point(
       dynamic_pressure,
@@ -145,11 +168,11 @@ std::unique_ptr<sample> make_airdata(
 
   return std::unique_ptr<sample>(new airdata_sample(
       time,
-      interpolate_rssi(phase_ratio),
+      interpolate_rssi(phase_ratio_airdata),
       seq,
       baro_pressure,
       temperature,
-      dynamic_pressure,
+      pressure_center,
       delta_p_alpha,
       delta_p_beta));
 }
