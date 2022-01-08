@@ -1028,7 +1028,7 @@ void Display::paintBatteryStatus() {
         Color(255, 255, 0));
   }
 
-  if (statusDisplayNumericalData_ || status_->battery_charging()) {
+  if (statusDisplayNumericalData_) {
     Point top_left_below(
         top_left.x(),
         top_left.y() + statusDisplayUnit_ + statusDisplayStrokeWidth_);

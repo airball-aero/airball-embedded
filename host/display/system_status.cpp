@@ -5,6 +5,9 @@ namespace airball {
 constexpr static uint8_t kRssiMin = 0x30;
 constexpr static uint8_t kRssiMax = 0x4f;
 
+constexpr static double kBatteryVoltsFull = 4.1;
+constexpr static double kBatteryVoltsEmpty = 3.3;
+
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kAirdataExpiryPeriod(250);
 
@@ -70,7 +73,10 @@ void SystemStatus::update(const airdata_reduced_sample* d) {
 void SystemStatus::update(const battery_sample* d) {
   if (d == nullptr) return;
   battery_sample_ = *d;
-  battery_health_ = std::min(1.0, (d->get_voltage() - 3.3) / 0.9);
+  double health =
+      (d->get_voltage() - kBatteryVoltsEmpty) /
+      (kBatteryVoltsFull - kBatteryVoltsEmpty);
+  battery_health_ = std::max(0.0, std::min(1.0, health));
   battery_charging_ = d->get_current() > 0.0;
 }
 
