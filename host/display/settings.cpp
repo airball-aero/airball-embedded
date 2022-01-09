@@ -1,6 +1,5 @@
 #include "settings.h"
 
-#include <iostream>
 #include <rapidjson/document.h>
 #include <fstream>
 #include <sstream>
@@ -133,17 +132,17 @@ constexpr Parameter<int> SCREEN_HEIGHT = {
     .initial=480,
 };
 
-constexpr Parameter<int> SHOW_ALTIMETER = {
+constexpr Parameter<bool> SHOW_ALTIMETER = {
     .name="show_altimeter",
     .initial=true,
 };
 
-constexpr Parameter<int> SHOW_LINK_STATUS = {
+constexpr Parameter<bool> SHOW_LINK_STATUS = {
     .name="show_link_status",
     .initial=true,
 };
 
-constexpr Parameter<int> SHOW_PROBE_BATTERY_STATUS = {
+constexpr Parameter<bool> SHOW_PROBE_BATTERY_STATUS = {
     .name="show_probe_battery_status",
     .initial=true,
 };
