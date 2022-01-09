@@ -169,7 +169,8 @@ void FramebufferScreen::setUpFb() {
   bits_per_pixel_ = vinfo.bits_per_pixel;
 
   // Set to graphics mode
-  ioctl(fbfd_, KDSETMODE, KD_GRAPHICS);
+  ioctl(STDOUT_FILENO, KDSETMODE, KD_GRAPHICS);
+  ioctl(STDERR_FILENO, KDSETMODE, KD_GRAPHICS);  
 }
 
 void FramebufferScreen::tearDownFb() {
