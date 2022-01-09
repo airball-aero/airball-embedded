@@ -1021,7 +1021,7 @@ void Display::paintBatteryStatus() {
   if (status_->battery_charging()) {
     text(
         screen_->cr(),
-        "⚡️⚡️⚡️",
+	"+++",
         Point(top_left_inside.x()+2, top_left_inside.y()),
         TextReferencePoint::TOP_LEFT,
         Font("Noto Sans", 15),
