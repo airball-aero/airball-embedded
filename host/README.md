@@ -1,27 +1,3 @@
-<!--
- The MIT License (MIT)
-
- Copyright (c) 2017-2018, Ihab A.B. Awad
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
--->
-
 # Airball Telemetry and Display Source
 
 ## Introduction
@@ -31,53 +7,115 @@ system. It is intended to be compiled on a Linux system. The actual
 display runs on a Raspberry Pi, and at the moment the system needs to
 be compiled from scratch on the Raspberry Pi as well.
 
+## Configuring monitor
+
+For the display we are using:
+
+https://www.waveshare.com/3.5inch-hdmi-lcd.htm
+
+Add the following to `config.txt` on the boot partition.
+
+```
+hdmi_group=2
+hdmi_mode=87
+hdmi_cvt 480 320 60 6 0 0 0
+hdmi_drive=1
+
+avoid_warnings=1
+```
+
+The `avoid_warnings` setting is based on the following advice:
+
+https://terminalwiki.com/disable-low-voltage-warning-in-raspberry-pi/
+
 ## Building
 
-### Install system dependencies ###
-
-Install the Cairo and asio libraries. The Cairo package will pull in X11-related
-dependencies as well, which is okay because the desktop demo of the display
-software uses X11 for rendering:
-
 ```
-sudo apt-get install libcairo2-dev libasio-dev
-```
+sudo apt-get install \
+     git \
+     cmake \
+     libcairo2-dev \
+     libasio-dev \
+     libboost-all-dev \
+     libasound2-dev \
+     libeigen3-dev \
 
-You also need to install [Portaudio](http://www.portaudio.com/) from source
-(there is no convenient Debian package).
-
-### Clone this repository ###
-
-First you'll need to get this repository on your machine:
-
-```
 git clone https://github.com/airball-aero/airball-embedded.git
-cd airball-embedded/display
-````
 
-Then you will need to create a subdirectory called `external` and clone a couple of dependencies into it:
-
-```
+cd airball-embedded/host
 mkdir external
 git clone https://github.com/google/googletest external/googletest
 git clone https://github.com/miloyip/rapidjson external/rapidjson
-```
 
-### Build Airball ###
-
-To build the system, in the top level directory (here), do:
-
-```
 mkdir build
 cd build
 cmake ..
+make ab
 ```
 
-This new directory `build` will contain all the generated `Makefile`s. In this
-directory, to build a given target, type:
+## Network setup
+
+We join the Wi-Fi network set up by the probe. We do not try to pull a
+DHCP lease; rather, we assign ourselves a static IP address that we
+know the probe will not assign to anyone else.
+
+We allow the probe to be the base station because we have had trouble
+getting the Raspberry Pi to act as a base station. We assign ourselves
+a static address to avoid any delay in getting started. The well-known
+address also makes sure that the Raspberry Pi has a predictable IP
+address, so that a user can go to that address to get the Web
+configuration interface.
+
+### `/etc/wpa_supplicant.conf`
+
+Depending on the "serial number" of the device being configured, the
+SSID will be {`airball0001`, `airball0002`, ...}.
 
 ```
-make <target>
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+network={
+  ssid="airball0001"
+  psk="relativewind"
+}
 ```
 
-where your `<target>` is any of the binaries defined in `src/CMakeLists.txt`.
+### `/etc/dhcpcd.conf`
+
+Add the following lines:
+
+```
+interface wlan0
+static ip_address=192.168.4.1/24
+```
+
+## System configuration
+
+```
+sudo apt install python-pip
+sudo pip install flask
+```
+
+Copy each of the contents of `rootfs/` into the target system.
+
+## Web settings editor
+
+On a separate system, clone and build:
+
+https://github.com/airball-aero/airball-settings-editor
+
+Build this using:
+
+```
+flutter build web --release --web-renderer=html
+```
+
+Copy all the _contents_ of `build/web` into a new directory called
+`/var/www/app/`.
+
+Edit the file `/var/www/app/index.html` and ensure the `<base>` tag reads:
+
+```
+<base href="/app/">
+```
