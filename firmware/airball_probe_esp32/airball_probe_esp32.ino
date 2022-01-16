@@ -328,7 +328,7 @@ void airdata_read_and_send() {
 // How many airdata samples per battery sample?
 #define BATTERY_MEASUREMENT_INTERVAL 50
 
-#define ENABLE_BATTERY_MESSAGES false
+#define ENABLE_BATTERY_MESSAGES true
 
 // Initialize our sensor
 BQ27441 battery_sensor;
