@@ -27,6 +27,7 @@
 #include <cairo/cairo-xlib.h>
 #include <fcntl.h>
 #include <linux/fb.h>
+#include <linux/kd.h>
 #include <stdio.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
@@ -141,7 +142,7 @@ void FramebufferScreen::setUpFb() {
     perror("Error: cannot open framebuffer device");
     exit(1);
   }
-
+  
   // Get fixed screen information
   if (ioctl(fbfd_, FBIOGET_FSCREENINFO, &finfo) == -1) {
     perror("Error reading fixed information");
@@ -166,6 +167,10 @@ void FramebufferScreen::setUpFb() {
   xres_ = vinfo.xres;
   yres_ = vinfo.yres;
   bits_per_pixel_ = vinfo.bits_per_pixel;
+
+  // Set to graphics mode
+  ioctl(STDOUT_FILENO, KDSETMODE, KD_GRAPHICS);
+  ioctl(STDERR_FILENO, KDSETMODE, KD_GRAPHICS);  
 }
 
 void FramebufferScreen::tearDownFb() {
