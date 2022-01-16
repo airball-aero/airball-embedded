@@ -65,16 +65,52 @@ void metrics_send() {
 
 ////////////////////////////////////////////////////////////////////////
 //
+// Status LED
+//
+
+#define STATUS_LED_GPIO 33
+
+bool status_led_initializing = true;
+bool status_led_high = true;
+
+void status_led_begin() {
+  pinMode(STATUS_LED_GPIO, OUTPUT);
+  digitalWrite(STATUS_LED_GPIO, HIGH);
+}
+
+void status_led_complete_initializing() {
+  status_led_initializing = false;
+}
+
+void status_led_measure() {
+  if (status_led_initializing) {
+    digitalWrite(STATUS_LED_GPIO, HIGH);
+  } else {
+    digitalWrite(STATUS_LED_GPIO, status_led_high ? HIGH : LOW);
+    status_led_high = !status_led_high;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////
+//
 // WiFi base station with sensor readings sent over TCP
 
-#define WIFI_SSID "AirballProbe_00000001"
+#define WIFI_SSID "airball0001"
+#define WIFI_PASS "relativewind"
 #define WIFI_UDP_PORT 30123
 
 WiFiUDP wifi_udp;
 IPAddress wifi_broadcast_ip;
 
+IPAddress local_ip(192, 168, 4, 10);
+IPAddress gateway_ip(192, 168, 4, 254);
+IPAddress subnet_ip_mask(255, 255, 255, 0);
+
 void wifi_begin() {
-  WiFi.softAP(WIFI_SSID, "");
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP(WIFI_SSID, WIFI_PASS);
+  delay(1000); // Hack -- should wait for SYSTEM_EVENT_AP_START
+  WiFi.softAPConfig(local_ip, gateway_ip, subnet_ip_mask);
   wifi_broadcast_ip = WiFi.broadcastIP();
 }
 
@@ -158,6 +194,7 @@ struct pressures_struct pressures_read() {
   p.dpb = pressure_read_one(&pressure_dpb);
   metrics_dpb_time.record();
   if (pressure_autozero_complete) {
+    status_led_complete_initializing();
     p.dp0 -= pressure_autozero_offset.dp0;
     p.dpa -= pressure_autozero_offset.dpa;
     p.dpb -= pressure_autozero_offset.dpb;
@@ -361,9 +398,11 @@ void timer_fired() {
 
 // How frequently (in uS) should measurements be taken?
 
-#define MEASUREMENT_INTERVAL_US 100000 // 100 ms = 10 Hz
+#define MEASUREMENT_INTERVAL_US 50000 // 50 ms = 20 Hz
 
 void setup() {
+  status_led_begin();
+  
   // Initialize the SPI bus
   SPI.begin();
   
@@ -396,6 +435,8 @@ void loop() {
   portEXIT_CRITICAL(&timer_mux);
 
   if (measure) {
+    status_led_measure();
+    
     metrics_looptime.mark();
 
     metrics_loopint.record();
