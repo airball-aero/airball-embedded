@@ -6,7 +6,7 @@
 namespace  airball {
 
 sine_envelope_layer::sine_envelope_layer(snd_pcm_uframes_t period)
-    : period_(period), pos_(0) {}
+  : period_(std::max((snd_pcm_uframes_t) 1, period)), pos_(0) {}
 
 snd_pcm_uframes_t sine_envelope_layer::period() const {
   return period_;

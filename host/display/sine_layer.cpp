@@ -7,7 +7,7 @@
 namespace  airball {
 
 sine_layer::sine_layer(snd_pcm_uframes_t period)
-    : period_(period),
+  : period_(std::max((snd_pcm_uframes_t) 1, period)),
       pos_(0),
       changing_(false),
       next_period_(0) {}
@@ -15,7 +15,7 @@ sine_layer::sine_layer(snd_pcm_uframes_t period)
 void sine_layer::set_period(snd_pcm_uframes_t period) {
   std::lock_guard<std::mutex> lock(mu_);
   changing_ = true;
-  next_period_ = period;
+  next_period_ = std::max((snd_pcm_uframes_t) 1, period);
 }
 
 snd_pcm_uframes_t sine_layer::period() {

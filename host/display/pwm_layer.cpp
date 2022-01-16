@@ -37,7 +37,7 @@ pwm_layer::parameters pwm_layer::make_adjusted_parameters(
     snd_pcm_uframes_t on_period,
     snd_pcm_uframes_t fade_period) {
   return {
-      .period = period,
+      .period = std::max((snd_pcm_uframes_t) 1, period),
       .on_period = std::min(on_period, period),
       .fade_period = std::min(
           fade_period,
