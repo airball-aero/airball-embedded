@@ -26,7 +26,7 @@ cd /var/www
 /home/pi/airball-embedded/host/build/display/ab \
     --screen fb \
     --telemetry esp32 \
-    --audio_device hw:0 \
+    --audio_device hw:1 \
     --settings_path /var/www/airball-settings.json &
 
 exit 0
