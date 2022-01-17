@@ -7,7 +7,6 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <WiFiClient.h>
-#include <WiFiAP.h>
 #include <vector>
 
 #include "calibration_surface.h"
@@ -100,23 +99,23 @@ void status_led_measure() {
 #define WIFI_UDP_PORT 30123
 
 WiFiUDP wifi_udp;
-IPAddress wifi_broadcast_ip;
 
-IPAddress local_ip(192, 168, 4, 10);
-IPAddress gateway_ip(192, 168, 4, 254);
+IPAddress local_ip(192, 168, 4, 200);
+IPAddress gateway_ip(192, 168, 4, 1);
 IPAddress subnet_ip_mask(255, 255, 255, 0);
+IPAddress broadcast_ip(192, 168, 4, 255);
 
 void wifi_begin() {
-  WiFi.mode(WIFI_AP);
-  WiFi.softAP(WIFI_SSID, WIFI_PASS);
-  delay(1000); // Hack -- should wait for SYSTEM_EVENT_AP_START
-  WiFi.softAPConfig(local_ip, gateway_ip, subnet_ip_mask);
-  wifi_broadcast_ip = WiFi.broadcastIP();
+  WiFi.config(local_ip, gateway_ip, subnet_ip_mask);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(100);
+  }
 }
 
 void wifi_send(const char* sentence) {
   metrics_wifi_time.mark();
-  wifi_udp.beginPacket(wifi_broadcast_ip, WIFI_UDP_PORT);
+  wifi_udp.beginPacket(broadcast_ip, WIFI_UDP_PORT);
   wifi_udp.write((const uint8_t*) sentence, strlen(sentence));
   wifi_udp.endPacket();
   metrics_wifi_time.record();

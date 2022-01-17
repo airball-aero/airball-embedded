@@ -39,6 +39,8 @@ sudo apt-get install \
      libboost-all-dev \
      libasound2-dev \
      libeigen3-dev \
+     hostapd \
+     dnsmasq
 
 git clone https://github.com/airball-aero/airball-embedded.git
 
@@ -55,39 +57,83 @@ make ab
 
 ## Network setup
 
-We join the Wi-Fi network set up by the probe. We do not try to pull a
-DHCP lease; rather, we assign ourselves a static IP address that we
-know the probe will not assign to anyone else.
+* `eth0` on the RPi by default is set up as a DHCP client. It can be
+  used for connecting via wired Ethernet for development.
+* `wlan0` is configured with a static IP of `192.168.4.1`.
+* We configure an access point on `wlan0`:
+  * Depending on the "serial number" of the device being configured, the
+    SSID will be {`airball0001`, `airball0002`, ...}.
+  * The default password is `relativewind`.
+* The probe joins the same network statically.
+  * The probe assigns itself `191.168.4.200`.
+  * The RPi must know not to assign that to anyone.
 
-We allow the probe to be the base station because we have had trouble
-getting the Raspberry Pi to act as a base station. We assign ourselves
-a static address to avoid any delay in getting started. The well-known
-address also makes sure that the Raspberry Pi has a predictable IP
-address, so that a user can go to that address to get the Web
-configuration interface.
+See also:
 
-### `/etc/wpa_supplicant.conf`
+https://thepi.io/how-to-use-your-raspberry-pi-as-a-wireless-access-point/
 
-Depending on the "serial number" of the device being configured, the
-SSID will be {`airball0001`, `airball0002`, ...}.
+Run:
 
 ```
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-country=US
-network={
-  ssid="airball0001"
-  psk="relativewind"
-}
+sudo systemctl stop hostapd
+sudo systemctl stop dnsmasq
 ```
 
-### `/etc/dhcpcd.conf`
-
-Add the following lines:
+Add to `/etc/dhcpcd.conf`:
 
 ```
 interface wlan0
 static ip_address=192.168.4.1/24
+denyinterfaces eth0
+denyinterfaces wlan0
+```
+
+Run:
+
+```
+sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+```
+
+Put into `/etc/dnsmasq.conf`:
+
+```
+interface=wlan0
+  dhcp-range=192.168.4.10,192.168.4.100,255.255.255.0,24h
+```
+
+Put into `/etc/hostapd/hostapd.conf`:
+
+```
+interface=wlan0
+# bridge=br0
+hw_mode=g
+channel=7
+wmm_enabled=0
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+ssid=airball0001
+wpa_passphrase=relativewind
+```
+
+In the file `/etc/default/hostapd` ensure:
+
+```
+DAEMON_CONF="/etc/hostapd/hostapd.conf"
+```
+
+Run the commands:
+
+```
+sudo systemctl disable systemd-resolved
+sudo systemctl mask systemd-resolved
+sudo systemctl unmask hostapd
+sudo systemctl start hostapd
+sudo systemctl start dnsmasq
 ```
 
 ## System configuration
@@ -97,7 +143,8 @@ sudo apt install python-pip
 sudo pip install flask
 ```
 
-Copy each of the contents of `rootfs/` into the target system.
+Copy each of the contents of `rootfs/` (in this repository) into the
+target system.
 
 ## Web settings editor
 
