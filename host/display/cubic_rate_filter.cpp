@@ -1,4 +1,3 @@
-#include <complex>
 #include "cubic_rate_filter.h"
 
 #include "polyfit.h"
@@ -14,7 +13,11 @@ int cubic_rate_filter::size() const {
 }
 
 void cubic_rate_filter::set_size(int size) {
+  values_x_.resize(size, 0);
   values_y_.resize(size, 0);
+  for (int i = 0; i < size; i++) {
+    values_x_[i] = double(-i);
+  }
 }
 
 void cubic_rate_filter::put(double y) {
@@ -29,16 +32,8 @@ double cubic_rate_filter::get_rate() {
 
 void cubic_rate_filter::compute_rate() {
   std::vector<double> coeff;
-  std::vector<double> values_x;
-  for (int i = 0; i < values_y_.size(); i++) {
-    values_x.insert(values_x.begin(), (double) i);
-  }
-  polyfit(values_x, values_y_, coeff, 3);
-  const double x = values_x[0];
-  rate_ = 0;
-  for (int i = 1; i < coeff.size(); i++) {
-    rate_ += coeff[i] * ((double) i) * std::pow(x, i - 1);
-  }
+  polyfit(values_x_, values_y_, coeff, 3);
+  rate_ = coeff[1];
 }
 
 }

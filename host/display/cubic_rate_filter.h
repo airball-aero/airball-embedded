@@ -19,6 +19,7 @@ public:
 private:
   void compute_rate();
 
+  std::vector<double> values_x_;
   std::vector<double> values_y_;
   double rate_;
 };

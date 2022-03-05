@@ -167,17 +167,7 @@ void Display::layout() {
   vsiStepsFpm_.clear();
   vsiStepsFpm_.push_back(
       {
-          .fpm = 250,
-          .thick = 1,
-      });
-  vsiStepsFpm_.push_back(
-      {
           .fpm = 500,
-          .thick = 1.5,
-      });
-  vsiStepsFpm_.push_back(
-      {
-          .fpm = 750,
           .thick = 1,
       });
   vsiStepsFpm_.push_back(
@@ -187,7 +177,17 @@ void Display::layout() {
       });
   vsiStepsFpm_.push_back(
       {
+          .fpm = 1500,
+          .thick = 1,
+      });
+  vsiStepsFpm_.push_back(
+      {
           .fpm = 2000,
+          .thick = 2,
+      });
+  vsiStepsFpm_.push_back(
+      {
+          .fpm = 3000,
           .thick = 2,
       });
 

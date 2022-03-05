@@ -1,5 +1,9 @@
 #!/bin/sh -e
 
+# https://raspberrypi.stackexchange.com/questions/27475/wifi-disconnects-after-period-of-time-on-raspberry-pi-doesnt-reconnect
+
+iw dev wlan0 set power_save off
+
 # Logging to be enabled for development only. Otherwise,
 # the disk will be filled with logs from flask!
 #
@@ -19,7 +23,7 @@ echo -e '\033[?17;0;0c' > /dev/tty1
 echo -e '\033[9;0]'     > /dev/tty1
 
 cd /var/www
-/usr/local/bin/flask run -p 80 -h ${IP} &
+/usr/local/bin/flask run -p 80 -h ${IP} > /dev/null 2>&1 &
 
 /usr/bin/sleep 1
 
