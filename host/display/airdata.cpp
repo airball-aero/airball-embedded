@@ -14,7 +14,7 @@ constexpr double kPiOver2 = M_PI / 2.0;
 constexpr double kR = 9.0 / 4.0;
 
 constexpr int kClimbRateFilterSizeMin = 1;
-constexpr int kClimbRateFilterSizeMax = 20;
+constexpr int kClimbRateFilterSizeMax = 100;
 
 double cos_sq(double x) {
   double y = cos(x);
