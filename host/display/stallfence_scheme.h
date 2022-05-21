@@ -11,8 +11,9 @@ namespace airball {
 class stallfence_scheme: public sound_scheme {
 public:
   explicit stallfence_scheme(std::string device_name,
-                             ISettings* settings,
-                             IAirdata* airdata);
+                             const ISettings* settings,
+                             const ILocalParams* local_params,
+                             const IAirdata* airdata);
   ~stallfence_scheme() override = default;
 
 protected:

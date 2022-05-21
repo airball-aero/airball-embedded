@@ -1,19 +1,15 @@
 #ifndef AIRBALL_SETTINGS_H
 #define AIRBALL_SETTINGS_H
 
-#include <string>
-#include <rapidjson/rapidjson.h>
-#include <rapidjson/document.h>
 #include "isettings.h"
+#include "parameter_file.h"
 
 namespace airball {
 
-template <class T> class Parameter;
-
 class Settings : public ISettings {
 public:
-  Settings();
-  ~Settings() {}
+  explicit Settings(const std::string& path);
+  ~Settings() = default;
 
   double v_full_scale() const override;
   double v_r() const override;
@@ -39,18 +35,10 @@ public:
   std::string sound_scheme() const override;
   double audio_volume() const override;
 
-  /**
-   * Load settings from a specified file path.
-   */
-   void load(const std::string &path);
+  void load();
 
 private:
-
-  void load_str(std::string);
-
-  template <class T> T get_value(const Parameter<T>* p) const;
-
-  rapidjson::Document document_;
+  ParameterFile file_;
 };
 
 } // namespace airball

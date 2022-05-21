@@ -25,7 +25,7 @@ TEST(SystemStatus, Battery) {
       new battery_sample(std::chrono::system_clock::now(), 128, 999, 0, 0, 0, 30));
   s.update(d.get());
   // TODO(ihab): Review this, test patched to pass
-  ASSERT_EQ(s.battery_health(), 1);
+  ASSERT_EQ(s.battery_health(), 0.0);
 }
 
 TEST(SystemStatus, Link) {

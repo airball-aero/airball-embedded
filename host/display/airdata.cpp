@@ -128,8 +128,8 @@ void Airdata::update(
   new_tas = isnan(new_tas) ? smooth_ball_.tas() : new_tas;
 
   smooth_ball_ = Ball(
-      smooth(smooth_ball_.alpha(), alpha, ball_smoothing_factor),
-      smooth(smooth_ball_.beta(), beta, ball_smoothing_factor),
+      smooth(smooth_ball_.alpha(), new_alpha, ball_smoothing_factor),
+      smooth(smooth_ball_.beta(), new_beta, ball_smoothing_factor),
       smooth(smooth_ball_.ias(), new_ias, ball_smoothing_factor),
       smooth(smooth_ball_.tas(), new_tas, ball_smoothing_factor));
 

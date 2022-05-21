@@ -11,8 +11,9 @@ namespace airball {
 class flyonspeed_scheme : public sound_scheme {
 public:
   explicit flyonspeed_scheme(std::string device_name,
-                             ISettings* settings,
-                             IAirdata* airdata);
+                             const ISettings* settings,
+                             const ILocalParams* local_params,
+                             const IAirdata* airdata);
   ~flyonspeed_scheme() override = default;
 
 protected:

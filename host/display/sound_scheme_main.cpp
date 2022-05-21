@@ -73,6 +73,22 @@ private:
   std::vector<Ball> balls_;
 };
 
+class TestLocalParams : public airball::ILocalParams {
+public:
+  virtual double audio_volume() const { return audio_volume_; }
+  virtual void audio_volume(double value) {}
+
+  virtual double screen_brightness() const { return screen_brightness_; }
+  virtual void screen_brightness(double value) {}
+
+  virtual double baro_setting_in_hg() const { return baro_setting_in_hg_; }
+  virtual void baro_setting_in_hg(double value) {}
+
+  double audio_volume_ = 0.0;
+  double screen_brightness_ = 0.0;
+  double baro_setting_in_hg_ = 0.0;
+};
+
 void print_alpha_beta(double alpha, double beta) {
   int k = beta * kDisplayHalfSize;
   std::cout << "|";
@@ -104,6 +120,9 @@ int main(int argc, char**argv) {
   settings.alpha_stall_warning_ = 0.95;
   settings.beta_full_scale_ = 1.0;
 
+  TestLocalParams local_params;
+  local_params.audio_volume_ = 1.0;
+
   TestAirdata airdata;
 
   std::string device_name(argv[1]);
@@ -114,11 +133,13 @@ int main(int argc, char**argv) {
     scheme.reset(new airball::flyonspeed_scheme(
         device_name,
         &settings,
+        &local_params,
         &airdata));
   } else if (scheme_name == "stallfence") {
     scheme.reset(new airball::stallfence_scheme(
         device_name,
         &settings,
+        &local_params,
         &airdata));
   } else {
     std::cerr << "Unknown scheme: " << scheme_name << std::endl;

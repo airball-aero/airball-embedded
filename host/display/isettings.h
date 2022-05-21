@@ -1,6 +1,8 @@
 #ifndef AIRBALL_DISPLAY_ISETTINGS_H
 #define AIRBALL_DISPLAY_ISETTINGS_H
 
+#include <string>
+
 namespace airball {
 
 class ISettings {

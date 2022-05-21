@@ -21,12 +21,14 @@ public:
    *
    * @param screen a target onto which to display the output.
    * @param settings_path path for settings file.
+   * @param local_params_path path for local params file.
    * @param audio_device name of ALSA audio device for sound output.
    * @param telemetry a source of sensor data.
    * @param logger a place to log sensor (and other) data.
    */
   Controller(Screen* screen,
              const std::string& settings_path,
+             const std::string& local_params_path,
              const std::string& audio_device,
              TelemetryClient* telemetry);
 
@@ -38,6 +40,7 @@ public:
 private:
   Screen* screen_;
   const std::string settings_path_;
+  const std::string local_params_path_;
   const std::string audio_device_;
   TelemetryClient* telemetry_;
 };

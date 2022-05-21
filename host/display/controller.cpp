@@ -10,6 +10,7 @@
 #include "sound_scheme.h"
 #include "stallfence_scheme.h"
 #include "flyonspeed_scheme.h"
+#include "localparams.h"
 
 #include <iostream>
 #include <thread>
@@ -59,17 +60,18 @@ std::ostream& operator<<(
 
 Controller::Controller(Screen* screen,
                        const std::string& settings_path,
+                       const std::string& local_params_path,
                        const std::string& audio_device,
                        TelemetryClient* telemetry)
     : screen_(screen),
       settings_path_(settings_path),
+      local_params_path_(local_params_path),
       audio_device_(audio_device),
       telemetry_(telemetry) {}
 
 void Controller::run() {
   InputQueue<std::unique_ptr<sample>> data;
   InputQueue<bool> settings_read;
-  InputQueue<std::string> log;
 
   bool running = true;
 
@@ -90,21 +92,22 @@ void Controller::run() {
   });
 
   std::thread paint_thread([&]() {
-    Settings settings;
+    Settings settings(settings_path_);
+    LocalParams local_params(local_params_path_);
     SystemStatus status;
     Airdata airdata;
     Display display(screen_, &airdata, &settings, &status);
-
-    settings.load(settings_path_);
 
     std::unique_ptr<sound_scheme> sound_scheme;
     if (settings.sound_scheme() == kStallfenceScheme) {
       sound_scheme.reset(new stallfence_scheme(audio_device_,
                                                &settings,
+                                               &local_params,
                                                &airdata));
     } else if (settings.sound_scheme() == kFlyonspeedScheme) {
       sound_scheme.reset(new flyonspeed_scheme(audio_device_,
                                                &settings,
+                                               &local_params,
                                                &airdata));
     } else {
       std::cerr << "Unrecognized sound scheme "
@@ -122,7 +125,7 @@ void Controller::run() {
       std::vector<std::unique_ptr<sample>> cycle_data = data.get();
 
       if (settings_reads.size() > 0) {
-        settings.load(settings_path_);
+        settings.load();
       }
 
       for (auto it = cycle_data.begin(); it < cycle_data.end(); ++it) {

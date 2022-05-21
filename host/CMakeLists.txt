@@ -7,7 +7,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_subdirectory(external/rapidjson)
 include_directories(external/rapidjson/include)
-# TODO: Googletest CMake developed issues
 # add_subdirectory(external/googletest/googletest)
 
 add_subdirectory(display)

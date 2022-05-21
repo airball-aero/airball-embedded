@@ -11,7 +11,8 @@ add_library(airball_display
         log_reader_telemetry_client.cpp image_screen.cpp cubic_rate_filter.cpp
         http_server.cpp file_write_watch.cpp sound_mixer.cpp sound_layer.cpp
 		sine_layer.cpp sine_envelope_layer.cpp pwm_layer.cpp balance_layer.cpp
-		sound_scheme.cpp stallfence_scheme.cpp flyonspeed_scheme.cpp polyfit.cpp)
+		sound_scheme.cpp stallfence_scheme.cpp flyonspeed_scheme.cpp polyfit.cpp
+		settings.cpp localparams.cpp parameter_file.cpp)
 target_link_libraries(airball_display
         X11 cairo pthread asound
         airball_telemetry_client
@@ -65,7 +66,7 @@ target_link_libraries(file_write_watch_test
 enable_testing()
 add_executable(display_tests
         aerodynamics_test.cpp one_shot_timer_test.cpp delay_timer_test.cpp
-        interpolation_table_test.cpp airdata_test.cpp
-        fake_telemetry_client_test.cpp system_status_test.cpp)
+        interpolation_table_test.cpp fake_telemetry_client_test.cpp
+		system_status_test.cpp parameter_file_test.cpp)
 target_link_libraries(display_tests
         gtest gtest_main airball_display)

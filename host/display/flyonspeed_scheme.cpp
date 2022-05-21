@@ -27,9 +27,10 @@ constexpr double kAlphaRefToleranceFactor = 0.05;
 
 flyonspeed_scheme::flyonspeed_scheme(
     std::string device_name,
-    ISettings *settings,
-    IAirdata *airdata)
-    : sound_scheme(device_name, settings, airdata),
+    const ISettings *settings,
+    const ILocalParams* local_params,
+    const IAirdata *airdata)
+    : sound_scheme(device_name, settings, local_params, airdata),
       tone_(1),
       pwm_(1, 1, 1),
       balance_(1, 1, 1) {

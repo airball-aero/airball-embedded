@@ -6,6 +6,7 @@
 #include "sound_layer.h"
 #include "sound_mixer.h"
 #include "isettings.h"
+#include "ilocalparams.h"
 #include "iairdata.h"
 
 namespace airball {
@@ -13,8 +14,9 @@ namespace airball {
 class sound_scheme {
 public:
   explicit sound_scheme(std::string device_name,
-                        ISettings* settings,
-                        IAirdata *airdata);
+                        const ISettings* settings,
+                        const ILocalParams* local_params,
+                        const IAirdata *airdata);
   virtual ~sound_scheme() = default;
 
   bool start();
@@ -26,11 +28,14 @@ protected:
 
   const ISettings& settings() { return *settings_; }
 
+  const ILocalParams& local_params() { return *local_params_; }
+
   const IAirdata& airdata() { return *airdata_; }
 
 private:
   sound_mixer mixer_;
   const ISettings* const settings_;
+  const ILocalParams* const local_params_;
   const IAirdata* const airdata_;
 };
 
