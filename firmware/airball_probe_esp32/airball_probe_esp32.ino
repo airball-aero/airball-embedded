@@ -94,7 +94,7 @@ void status_led_measure() {
 //
 // WiFi base station with sensor readings sent over TCP
 
-#define WIFI_SSID "airball0001"
+#define WIFI_SSID "airball0014"
 #define WIFI_PASS "relativewind"
 #define WIFI_UDP_PORT 30123
 
@@ -108,9 +108,6 @@ IPAddress broadcast_ip(192, 168, 4, 255);
 void wifi_begin() {
   WiFi.config(local_ip, gateway_ip, subnet_ip_mask);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(100);
-  }
 }
 
 void wifi_send(const char* sentence) {
