@@ -18,10 +18,10 @@ constexpr static std::chrono::duration<unsigned int, std::milli>
     kSendDelay(20);
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
-    kPeriodAirdata(30000);
+    kPeriodAirdata(250);
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
-    kPeriodBaro(10000);
+    kPeriodBaro(250);
 
 constexpr static std::chrono::duration<unsigned int, std::milli>
     kPeriodProbeStatus(10000);
@@ -49,7 +49,7 @@ struct Model {
 
 constexpr static Model kAirdataBaro{
     .min = 65000,
-    .max = 65100,
+    .max = 65200,
 };
 
 constexpr static Model kAirdataOat{
@@ -59,17 +59,17 @@ constexpr static Model kAirdataOat{
 
 constexpr static Model kAirdataAlpha{
     .min = degrees_to_radians(0),
-    .max = degrees_to_radians(15),
+    .max = degrees_to_radians(20),
 };
 
 constexpr static Model kAirdataBeta{
-    .min = degrees_to_radians(-10),
-    .max = degrees_to_radians(10),
+    .min = degrees_to_radians(-20),
+    .max = degrees_to_radians(20),
 };
 
 constexpr static Model kAirdataIas{
-    .min = knots_to_meters_per_second(100),
-    .max = knots_to_meters_per_second(0),
+    .min = knots_to_meters_per_second(70),
+    .max = knots_to_meters_per_second(70),
 };
 
 constexpr static Model kProbeStatusVoltage{

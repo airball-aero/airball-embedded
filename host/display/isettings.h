@@ -46,6 +46,11 @@ public:
   virtual double alpha_min() const = 0;
 
   /**
+   * @return the display setting, maximum angle of attack shown. (Degrees)
+   */
+  virtual double alpha_max() const = 0;
+
+  /**
    * @return the maximum climb rate angle of attack. (Degrees)
    */
   virtual double alpha_x() const = 0;
@@ -109,6 +114,11 @@ public:
    * @return whether to display the probe battery status.
    */
   virtual bool show_probe_battery_status() const = 0;
+
+  /**
+   * @return whether to declutter the displayed annotations.
+   */
+  virtual bool declutter() const = 0;
 
   /**
    * @return the name of the sound scheme to use.

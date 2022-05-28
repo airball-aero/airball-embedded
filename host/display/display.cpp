@@ -35,15 +35,11 @@ void Display::layout() {
     airballHeight_ = height_;
   }
 
+  cowCatcherHeight_ = 24;
+
   displayMargin_ = 3;
 
-  topBottomRegionRatio_ = 0.075;
-
   displayXMid_ = ce_floor(width_ / 2.0);
-
-  displayRegionYMin_ = ce_floor(airballHeight_ * topBottomRegionRatio_);
-  displayRegionYMax_ = ce_floor(airballHeight_ * (1.0 - topBottomRegionRatio_));
-  displayRegionHeight_ = displayRegionYMax_ - displayRegionYMin_;
 
   displayRegionWidth_ = width_;
   displayRegionHalfWidth_ = displayRegionWidth_ / 2;
@@ -65,7 +61,7 @@ void Display::layout() {
 
   totemPoleAlphaUnit_ = 20;
 
-  numCowCatcherLines_ = 3;
+  numCowCatcherLines_ = 4;
 
   background_= Color(0, 0, 0);
 
@@ -224,8 +220,8 @@ double Display::alpha_to_y(const double alpha) {
 
 double Display::alpha_degrees_to_y(const double alpha_degrees) {
   double ratio = (alpha_degrees - settings_->alpha_min())
-                 / (settings_->alpha_stall() - settings_->alpha_min());
-  return displayRegionYMin_ + ratio * displayRegionHeight_;
+                 / (settings_->alpha_max() - settings_->alpha_min());
+  return ratio * airballHeight_;
 }
 
 double Display::beta_to_x(const double beta) {
@@ -238,11 +234,11 @@ double Display::beta_degrees_to_x(const double beta_degrees) {
 }
 
 double Display::airspeed_to_radius(const double airspeed) {
-  return airspeed_knots_to_radius(meters_per_second_to_knots(airspeed));
+  return airspeed_mph_to_radius(meters_per_second_to_mph(airspeed));
 }
 
-double Display::airspeed_knots_to_radius(const double airspeed_nots_) {
-  double ratio = airspeed_nots_ / settings_->v_full_scale();
+double Display::airspeed_mph_to_radius(const double airspeed_mph) {
+  double ratio = airspeed_mph / settings_->v_full_scale();
   return ratio * width_ / 2;
 }
 
@@ -272,6 +268,7 @@ void Display::paint() {
   if (settings_->show_link_status()) {
     paintLinkStatus();
   }
+  paintUnitsAnnotation();
   cairo_restore(screen_->cr());
 
   if (settings_->show_altimeter()) {
@@ -361,12 +358,12 @@ void Display::paintAirballAirspeed(const Point& center, const double radius) {
 
 void Display::paintAirballAirspeedText(const Point& center, const double ias) {
   char buf[printBufSize_];
-  double ias_nots_ = meters_per_second_to_knots(ias);
+  double ias_display_units_ = meters_per_second_to_mph(ias);
   snprintf(
       buf,
       printBufSize_,
       "%.0f",
-      ias_nots_);
+      ias_display_units_);
   Size sz = text_size(screen_->cr(), buf, iASTextFont_);
   rectangle(
       screen_->cr(),
@@ -387,7 +384,7 @@ void Display::paintAirballAirspeedText(const Point& center, const double ias) {
 }
 
 void Display::paintAirballAirspeedLimits(const Point& center) {
-  if (meters_per_second_to_knots(airdata_->smooth_ball().ias()) < settings_->v_r()) {
+  if (meters_per_second_to_mph(airdata_->smooth_ball().ias()) < settings_->v_r()) {
     paintAirballAirspeedLimitsRotate(center);
   } else {
     paintAirballAirspeedLimitsNormal(center);
@@ -395,7 +392,10 @@ void Display::paintAirballAirspeedLimits(const Point& center) {
 }
 
 void Display::paintAirballAirspeedLimitsRotate(const Point& center) {
-  double r = airspeed_knots_to_radius(settings_->v_r());
+  if (settings_->v_r() == 0) {
+    return;
+  }
+  double r = airspeed_mph_to_radius(settings_->v_r());
   line(
       screen_->cr(),
       Point(
@@ -471,54 +471,60 @@ void Display::paintAirballAirspeedLimitsRotate(const Point& center) {
 }
 
 void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
-  rosette(
-      screen_->cr(),
-      center,
-      airspeed_knots_to_radius(settings_->v_fe()),
-      4,
-      speedLimitsRosetteHalfAngle_,
-      M_PI_4,
-      vBackgroundStroke_);
-  rosette(
-      screen_->cr(),
-      center,
-      airspeed_knots_to_radius(settings_->v_fe()),
-      4,
-      speedLimitsRosetteHalfAngle_,
-      M_PI_4,
-      vfeStroke_);
-  rosette(
-      screen_->cr(),
-      center,
-      airspeed_knots_to_radius(settings_->v_no()),
-      4,
-      speedLimitsRosetteHalfAngle_,
-      M_PI_4,
-      vBackgroundStroke_);
-  rosette(
-      screen_->cr(),
-      center,
-      airspeed_knots_to_radius(settings_->v_no()),
-      4,
-      speedLimitsRosetteHalfAngle_,
-      M_PI_4,
-      vnoStroke_);
-  rosette(
-      screen_->cr(),
-      center,
-      airspeed_knots_to_radius(settings_->v_ne()),
-      4,
-      speedLimitsRosetteHalfAngle_,
-      M_PI_4,
-      vBackgroundStroke_);
-  rosette(
-      screen_->cr(),
-      center,
-      airspeed_knots_to_radius(settings_->v_ne()),
-      4,
-      speedLimitsRosetteHalfAngle_,
-      M_PI_4,
-      vneStroke_);
+  if (settings_->v_fe() > 0) {
+    rosette(
+        screen_->cr(),
+        center,
+        airspeed_mph_to_radius(settings_->v_fe()),
+        4,
+        speedLimitsRosetteHalfAngle_,
+        M_PI_4,
+        vBackgroundStroke_);
+    rosette(
+        screen_->cr(),
+        center,
+        airspeed_mph_to_radius(settings_->v_fe()),
+        4,
+        speedLimitsRosetteHalfAngle_,
+        M_PI_4,
+        vfeStroke_);
+  }
+  if (settings_->v_no() > 0) {
+    rosette(
+        screen_->cr(),
+        center,
+        airspeed_mph_to_radius(settings_->v_no()),
+        4,
+        speedLimitsRosetteHalfAngle_,
+        M_PI_4,
+        vBackgroundStroke_);
+    rosette(
+        screen_->cr(),
+        center,
+        airspeed_mph_to_radius(settings_->v_no()),
+        4,
+        speedLimitsRosetteHalfAngle_,
+        M_PI_4,
+        vnoStroke_);
+  }
+  if (settings_->v_ne() > 0) {
+    rosette(
+        screen_->cr(),
+        center,
+        airspeed_mph_to_radius(settings_->v_ne()),
+        4,
+        speedLimitsRosetteHalfAngle_,
+        M_PI_4,
+        vBackgroundStroke_);
+    rosette(
+        screen_->cr(),
+        center,
+        airspeed_mph_to_radius(settings_->v_ne()),
+        4,
+        speedLimitsRosetteHalfAngle_,
+        M_PI_4,
+        vneStroke_);
+  }
 }
 
 void Display::paintAirballTrueAirspeed(const Point& center) {
@@ -554,33 +560,46 @@ void Display::paintTotemPole() {
 }
 
 void Display::paintTotemPoleLine() {
-  line(
-      screen_->cr(),
-      Point(displayXMid_, 0),
-      Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref()) - alphaRefRadius_),
-      totemPoleStroke_);
-  line(
-      screen_->cr(),
-      Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref()) + alphaRefRadius_),
-      Point(displayXMid_, displayRegionYMax_),
-      totemPoleStroke_);
-  arc(
-      screen_->cr(),
-      Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref())),
-      alphaRefRadius_,
-      alphaRefTopAngle0_,
-      alphaRefTopAngle1_,
-      totemPoleStroke_);
-  arc(
-      screen_->cr(),
-      Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref())),
-      alphaRefRadius_,
-      alphaRefBotAngle0_,
-      alphaRefBotAngle1_,
-      totemPoleStroke_);
+  if (settings_->declutter()) {
+    line(
+        screen_->cr(),
+        Point(displayXMid_, 0),
+        Point(displayXMid_,airballHeight_),
+        totemPoleStroke_);
+  } else {
+    line(
+        screen_->cr(),
+        Point(displayXMid_, 0),
+        Point(displayXMid_,
+              alpha_degrees_to_y(settings_->alpha_ref()) - alphaRefRadius_),
+        totemPoleStroke_);
+    line(
+        screen_->cr(),
+        Point(displayXMid_,
+              alpha_degrees_to_y(settings_->alpha_ref()) + alphaRefRadius_),
+        Point(displayXMid_, airballHeight_),
+        totemPoleStroke_);
+    arc(
+        screen_->cr(),
+        Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref())),
+        alphaRefRadius_,
+        alphaRefTopAngle0_,
+        alphaRefTopAngle1_,
+        totemPoleStroke_);
+    arc(
+        screen_->cr(),
+        Point(displayXMid_, alpha_degrees_to_y(settings_->alpha_ref())),
+        alphaRefRadius_,
+        alphaRefBotAngle0_,
+        alphaRefBotAngle1_,
+        totemPoleStroke_);
+  }
 }
 
 void Display::paintTotemPoleAlphaX() {
+  if (settings_->declutter()) {
+    return;
+  }
   line(
       screen_->cr(),
       Point(
@@ -620,6 +639,9 @@ void Display::paintTotemPoleAlphaX() {
 }
 
 void Display::paintTotemPoleAlphaY() {
+  if (settings_->declutter()) {
+    return;
+  }
   line(
       screen_->cr(),
       Point(
@@ -659,37 +681,41 @@ void Display::paintTotemPoleAlphaY() {
 }
 
 void Display::paintCowCatcher() {
+  if (settings_->declutter()) {
+    return;
+  }
   double xStep =
       (displayRegionWidth_ - (2 * displayMargin_)) /
       (2 * numCowCatcherLines_);
+  double yStall = alpha_degrees_to_y(settings_->alpha_stall());
   for (int i = 0; i < numCowCatcherLines_; i++) {
     line(
         screen_->cr(),
         Point(
             displayXMid_ + i * xStep,
-            displayRegionYMax_),
+            yStall),
         Point(
             displayXMid_ + (i + 1) * xStep,
-            airballHeight_),
+            yStall + cowCatcherHeight_),
         cowCatcherStroke_);
     line(
         screen_->cr(),
         Point(
             displayXMid_ - i * xStep,
-            displayRegionYMax_),
+            yStall),
         Point(
             displayXMid_ - (i + 1) * xStep,
-            airballHeight_),
+            yStall + cowCatcherHeight_),
         cowCatcherStroke_);
   }
   line(
       screen_->cr(),
       Point(
           displayXMid_ - (numCowCatcherLines_ - 1) * xStep,
-          displayRegionYMax_),
+          yStall),
       Point(
           displayXMid_ + (numCowCatcherLines_ - 1) * xStep,
-          displayRegionYMax_),
+          yStall),
       cowCatcherStroke_);
 }
 
@@ -969,12 +995,12 @@ void Display::paintNoFlightData() {
   line(
       screen_->cr(),
       Point(0, 0),
-      Point(width_, displayRegionYMax_),
+      Point(width_, airballHeight_),
       noFlightDataStroke_);
   line(
       screen_->cr(),
       Point(width_, 0),
-      Point(0, displayRegionYMax_),
+      Point(0, airballHeight_),
       noFlightDataStroke_);
 }
 
@@ -1102,6 +1128,18 @@ void Display::paintLinkStatus() {
       3,
       corners,
       statusDisplayStroke_);
+}
+
+void Display::paintUnitsAnnotation() {
+  text(
+      screen_->cr(),
+      settings_->show_altimeter() ?
+      "mph ft fpm inHg" :
+      "mph",
+      Point(statusRegionMargin_, statusRegionMargin_),
+      TextReferencePoint ::TOP_LEFT,
+      statusTextFont_,
+      statusTextColor_);
 }
 
 } // namespace airball

@@ -31,13 +31,10 @@ private:
   double width_ = 272;
   double height_ = 480;
   double altimeterHeight_;
+  double cowCatcherHeight_;
   double airballHeight_;
   double displayMargin_;
-  double topBottomRegionRatio_;
   double displayXMid_;
-  double displayRegionYMin_;
-  double displayRegionYMax_;
-  double displayRegionHeight_;
   double displayRegionWidth_;
   double displayRegionHalfWidth_;
   double speedLimitsRosetteHalfAngle_;
@@ -155,6 +152,7 @@ private:
   void paintNoFlightData();
   void paintBatteryStatus();
   void paintLinkStatus();
+  void paintUnitsAnnotation();
 
   double alpha_to_y(const double alpha);
   double beta_to_x(const double beta);
@@ -163,7 +161,7 @@ private:
   double beta_degrees_to_x(const double beta_degrees);
 
   double airspeed_to_radius(const double ias);
-  double airspeed_knots_to_radius(const double airspeed_knots);
+  double airspeed_mph_to_radius(const double airspeed_mph_);
 
   Screen* screen_;
   const Airdata* airdata_;

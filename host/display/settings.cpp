@@ -82,6 +82,11 @@ constexpr Parameter<double> ALPHA_MIN = {
     .initial=0.0,
 };
 
+constexpr Parameter<double> ALPHA_MAX = {
+    .name="alpha_max",
+    .initial=20.0,
+};
+
 constexpr Parameter<double> ALPHA_X = {
     .name="alpha_x",
     .initial=12.0,
@@ -145,6 +150,11 @@ constexpr Parameter<bool> SHOW_LINK_STATUS = {
 constexpr Parameter<bool> SHOW_PROBE_BATTERY_STATUS = {
     .name="show_probe_battery_status",
     .initial=true,
+};
+
+constexpr Parameter<bool> DECLUTTER = {
+    .name="declutter",
+    .initial=false,
 };
 
 const Parameter<std::string> SOUND_SCHEME = {
@@ -212,6 +222,10 @@ double Settings::alpha_min() const {
   return get_value(&ALPHA_MIN);
 }
 
+double Settings::alpha_max() const {
+  return get_value(&ALPHA_MAX);
+}
+
 double Settings::alpha_x() const {
   return get_value(&ALPHA_X);
 }
@@ -262,6 +276,10 @@ bool Settings::show_link_status() const {
 
 bool Settings::show_probe_battery_status() const {
   return get_value(&SHOW_PROBE_BATTERY_STATUS);
+}
+
+bool Settings::declutter() const {
+  return get_value(&DECLUTTER);
 }
 
 std::string Settings::sound_scheme() const {

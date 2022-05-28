@@ -23,6 +23,7 @@ public:
   double alpha_stall() const override;
   double alpha_stall_warning() const override;
   double alpha_min() const override;
+  double alpha_max() const override;
   double alpha_x() const override;
   double alpha_y() const override;
   double alpha_ref() const override;
@@ -36,6 +37,7 @@ public:
   bool show_altimeter() const override;
   bool show_link_status() const override;
   bool show_probe_battery_status() const override;
+  bool declutter() const override;
   std::string sound_scheme() const override;
   double audio_volume() const override;
 
