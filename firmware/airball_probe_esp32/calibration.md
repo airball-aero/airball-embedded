@@ -22,33 +22,33 @@ The data showed asymmetry because of a strut that was installed as part of the d
 
 ### Pc / q (Center)
 
-<img src="alpha_beta_to_c_over_q.png">
+<img src="alpha_beta_to_raw_data_c.png">
 
 ### Pu / q (Up)
 
-<img src="alpha_beta_to_u_over_q.png">
+<img src="alpha_beta_to_raw_data_u.png">
 
 ### Pd / q (Down)
 
-<img src="alpha_beta_to_d_over_q.png">
+<img src="alpha_beta_to_raw_data_d.png">
 
 ### Pl / q (Left)
 
-<img src="alpha_beta_to_l_over_q.png">
+<img src="alpha_beta_to_raw_data_l.png">
 
 ### Pr / q (Right)
 
-<img src="alpha_beta_to_r_over_q.png">
+<img src="alpha_beta_to_raw_data_r.png">
 
-### Pb / q (Bottom)
+### Ps / q (Static)
 
-<img src="alpha_beta_to_b_over_q.png">
+<img src="alpha_beta_to_raw_data_s.png">
 
 ## Measurement strategy
 
 We decided to _measure_ the following three pressure differences as our means of calculating _alpha_, _beta_, and _q_:
 
-* dp0 = (Pc - Pb)
+* dp0 = (Pc - Ps)
 * dpA = (Pd - Pu)
 * dpB = (Pr - Pl)
 
