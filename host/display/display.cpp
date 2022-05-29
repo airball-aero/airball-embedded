@@ -51,7 +51,7 @@ void Display::layout() {
 
   alphaRefGapDegrees_ = 40;
 
-  lowSpeedThresholdAirballRadius_ = 0.1 * (width_ / 2.0);
+  lowSpeedThresholdAirballRadius_ = 0.05 * (width_ / 2.0);
 
   alphaRefTopAngle0_ = M_PI + (alphaRefGapDegrees_ / 2 / 180 * M_PI);
   alphaRefTopAngle1_ =      - (alphaRefGapDegrees_ / 2 / 180 * M_PI);
@@ -113,14 +113,14 @@ void Display::layout() {
       6);
 
   iASTextFontSize_ =
-      width_ / 5.0;
+      width_ / 6.0;
 
   iASTextFont_ = Font(
       fontName_.c_str(),
       iASTextFontSize_);
 
   iASTextMargin_ =
-      2;
+      8;
 
   iASTextColor_ = Color(0, 0, 0);
 
@@ -320,9 +320,6 @@ void Display::paintSmoothAirball() {
     paintAirballLowAirspeed(center);
   } else {
     paintAirballAirspeed(center, radius);
-    if ((radius * 2) > (iASTextFontSize_ * 1.5)) {
-      paintAirballAirspeedText(center, airdata_->smooth_ball().ias());
-    }
     paintAirballTrueAirspeed(center);
     paintAirballAirspeedLimits(center);
   }
@@ -339,6 +336,36 @@ void Display::paintAirballLowAirspeed(const Point& center) {
 }
 
 void Display::paintAirballAirspeed(const Point& center, const double radius) {
+  // Determine the size of the airspeed text
+  char airspeedText[printBufSize_];
+  double ias_display_units_ =
+      meters_per_second_to_mph(airdata_->smooth_ball().ias());
+  snprintf(
+      airspeedText,
+      printBufSize_,
+      "%.0f",
+      ias_display_units_);
+  Size airspeedTextSize =
+      text_size(screen_->cr(), airspeedText, iASTextFont_);
+  Size airspeedBoundingBoxSize(
+      airspeedTextSize.w() + 2 * iASTextMargin_,
+      airspeedTextSize.h() + 2 * iASTextMargin_);
+
+  double airspeedTickMarkLength = 4; // IHAB todo
+  double airspeedTickMarkStrokeWidth = 3; // IHAB todo
+
+  line(
+      screen_->cr(),
+      Point(center.x() - (airspeedBoundingBoxSize.w() / 2 + airspeedTickMarkLength), center.y()),
+      Point(center.x() + (airspeedBoundingBoxSize.w() / 2 + airspeedTickMarkLength), center.y()),
+      Stroke(airballFill_, airspeedTickMarkStrokeWidth)); // IHAB todo
+
+  line(
+      screen_->cr(),
+      Point(center.x(), center.y() - (airspeedBoundingBoxSize.h() / 2 + airspeedTickMarkLength)),
+      Point(center.x(), center.y() + (airspeedBoundingBoxSize.h() / 2 + airspeedTickMarkLength)),
+      Stroke(airballFill_, airspeedTickMarkStrokeWidth)); // IHAB todo
+
   disc(
       screen_->cr(),
       center,
@@ -354,29 +381,19 @@ void Display::paintAirballAirspeed(const Point& center, const double radius) {
       Point(center.x() - radius, center.y()),
       Point(center.x() + radius, center.y()),
       airballCrosshairsStroke_);
-}
 
-void Display::paintAirballAirspeedText(const Point& center, const double ias) {
-  char buf[printBufSize_];
-  double ias_display_units_ = meters_per_second_to_mph(ias);
-  snprintf(
-      buf,
-      printBufSize_,
-      "%.0f",
-      ias_display_units_);
-  Size sz = text_size(screen_->cr(), buf, iASTextFont_);
-  rectangle(
+  round_rectangle(
       screen_->cr(),
       Point(
-          center.x() - sz.w() / 2 - iASTextMargin_,
-          center.y() - sz.h() / 2 - iASTextMargin_),
-      Size(
-          sz.w() + 2 * iASTextMargin_,
-          sz.h() + 2 * iASTextMargin_),
-      airballFill_);
+          center.x() - airspeedBoundingBoxSize.w() / 2,
+          center.y() - airspeedBoundingBoxSize.h() / 2),
+      airspeedBoundingBoxSize,
+      iASTextMargin_,
+      airballFill_); // IHAB todo
+
   text(
       screen_->cr(),
-      buf,
+      airspeedText,
       center,
       TextReferencePoint::CENTER_MID_UPPERCASE,
       iASTextFont_,

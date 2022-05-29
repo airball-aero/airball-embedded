@@ -128,6 +128,60 @@ void rectangle(
   cairo_fill(cr);
 }
 
+void round_rectangle(
+    cairo_t* cr,
+    const Point& top_left,
+    const Size& size,
+    const double corner_radius,
+    const Color& fill) {
+  rectangle(
+      cr,
+      Point(
+          top_left.x() + corner_radius,
+          top_left.y()),
+      Size(
+          size.w() - 2 * corner_radius,
+          size.h()),
+      fill);
+  rectangle(
+      cr,
+      Point(
+          top_left.x(),
+          top_left.y() + corner_radius),
+      Size(
+          size.w(),
+          size.h() - 2 * corner_radius),
+      fill);
+  disc(
+      cr,
+      Point(
+          top_left.x() + corner_radius,
+          top_left.y() + corner_radius),
+      corner_radius,
+      fill);
+  disc(
+      cr,
+      Point(
+          top_left.x() + size.w() - corner_radius,
+          top_left.y() + corner_radius),
+      corner_radius,
+      fill);
+  disc(
+      cr,
+      Point(
+          top_left.x() + corner_radius,
+          top_left.y() + size.h() - corner_radius),
+      corner_radius,
+      fill);
+  disc(
+      cr,
+      Point(
+          top_left.x() + size.w() - corner_radius,
+          top_left.y() + size.h() - corner_radius),
+      corner_radius,
+      fill);
+}
+
 void box(
     cairo_t* cr,
     const Point& top_left,

@@ -140,6 +140,13 @@ void rectangle(
     const Size& size,
     const Color& fill);
 
+void round_rectangle(
+    cairo_t* cr,
+    const Point& top_left,
+    const Size& size,
+    const double corner_radius,
+    const Color& fill);
+
 void box(
     cairo_t* cr,
     const Point& top_left,
