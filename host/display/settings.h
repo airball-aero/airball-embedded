@@ -40,6 +40,7 @@ public:
   bool declutter() const override;
   std::string sound_scheme() const override;
   double audio_volume() const override;
+  std::string speed_units() const override;
 
   /**
    * Load settings from a specified file path.

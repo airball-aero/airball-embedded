@@ -167,6 +167,11 @@ const Parameter<double> AUDIO_VOLUME = {
     .initial=1.0,
 };
 
+const Parameter<std::string> SPEED_UNITS = {
+    .name="speed_units",
+    .initial="mph",
+};
+
 Settings::Settings() {
   document_.Parse("{}");
 }

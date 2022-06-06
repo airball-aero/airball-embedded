@@ -129,6 +129,11 @@ public:
    * @return the desired audio volume, from 0.0 (none) to 1.0 (full).
    */
   virtual double audio_volume() const = 0;
+
+  /**
+   * @return the speed units, which can be "mph" or "knots".
+   */
+   virtual std::string speed_units() const = 0;
 };
 
 } // namespace airball

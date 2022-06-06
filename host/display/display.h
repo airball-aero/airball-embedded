@@ -159,8 +159,9 @@ private:
   double alpha_degrees_to_y(const double alpha_degrees);
   double beta_degrees_to_x(const double beta_degrees);
 
-  double airspeed_to_radius(const double ias);
-  double airspeed_mph_to_radius(const double airspeed_mph_);
+  double airspeed_to_display_units(const double airspeed);
+  double airspeed_to_radius(const double airspeed);
+  double airspeed_display_units_to_radius(const double airspeed_display_units);
 
   Screen* screen_;
   const Airdata* airdata_;

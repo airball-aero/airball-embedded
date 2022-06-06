@@ -1,6 +1,7 @@
 #include "display.h"
 
 #include <math.h>
+#include <sstream>
 
 #include "units.h"
 #include "widgets.h"
@@ -233,12 +234,22 @@ double Display::beta_degrees_to_x(const double beta_degrees) {
   return displayRegionHalfWidth_ * (1.0 + ratio);
 }
 
-double Display::airspeed_to_radius(const double airspeed) {
-  return airspeed_mph_to_radius(meters_per_second_to_mph(airspeed));
+double Display::airspeed_to_display_units(const double airspeed) {
+  if (settings_->speed_units() == "knots") {
+    return meters_per_second_to_knots(airspeed);
+  }
+  if (settings_->speed_units() == "mph") {
+    return meters_per_second_to_mph(airspeed);
+  }
+  return 0.0;
 }
 
-double Display::airspeed_mph_to_radius(const double airspeed_mph) {
-  double ratio = airspeed_mph / settings_->v_full_scale();
+double Display::airspeed_to_radius(const double airspeed) {
+  return airspeed_display_units_to_radius(airspeed_to_display_units(airspeed));
+}
+
+double Display::airspeed_display_units_to_radius(const double airspeed_display_units) {
+  double ratio = airspeed_display_units / settings_->v_full_scale();
   return ratio * width_ / 2;
 }
 
@@ -412,7 +423,7 @@ void Display::paintAirballAirspeedLimitsRotate(const Point& center) {
   if (settings_->v_r() == 0) {
     return;
   }
-  double r = airspeed_mph_to_radius(settings_->v_r());
+  double r = airspeed_display_units_to_radius(settings_->v_r());
   line(
       screen_->cr(),
       Point(
@@ -492,7 +503,7 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
     rosette(
         screen_->cr(),
         center,
-        airspeed_mph_to_radius(settings_->v_fe()),
+        airspeed_display_units_to_radius(settings_->v_fe()),
         4,
         speedLimitsRosetteHalfAngle_,
         M_PI_4,
@@ -500,7 +511,7 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
     rosette(
         screen_->cr(),
         center,
-        airspeed_mph_to_radius(settings_->v_fe()),
+        airspeed_display_units_to_radius(settings_->v_fe()),
         4,
         speedLimitsRosetteHalfAngle_,
         M_PI_4,
@@ -510,7 +521,7 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
     rosette(
         screen_->cr(),
         center,
-        airspeed_mph_to_radius(settings_->v_no()),
+        airspeed_display_units_to_radius(settings_->v_no()),
         4,
         speedLimitsRosetteHalfAngle_,
         M_PI_4,
@@ -518,7 +529,7 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
     rosette(
         screen_->cr(),
         center,
-        airspeed_mph_to_radius(settings_->v_no()),
+        airspeed_display_units_to_radius(settings_->v_no()),
         4,
         speedLimitsRosetteHalfAngle_,
         M_PI_4,
@@ -528,7 +539,7 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
     rosette(
         screen_->cr(),
         center,
-        airspeed_mph_to_radius(settings_->v_ne()),
+        airspeed_display_units_to_radius(settings_->v_ne()),
         4,
         speedLimitsRosetteHalfAngle_,
         M_PI_4,
@@ -536,7 +547,7 @@ void Display::paintAirballAirspeedLimitsNormal(const Point& center) {
     rosette(
         screen_->cr(),
         center,
-        airspeed_mph_to_radius(settings_->v_ne()),
+        airspeed_display_units_to_radius(settings_->v_ne()),
         4,
         speedLimitsRosetteHalfAngle_,
         M_PI_4,
@@ -1148,11 +1159,14 @@ void Display::paintLinkStatus() {
 }
 
 void Display::paintUnitsAnnotation() {
+  std::stringstream buf;
+  buf << settings_->speed_units();
+  if (settings_->show_altimeter()) {
+    buf << " ft fpm inHg";
+  }
   text(
       screen_->cr(),
-      settings_->show_altimeter() ?
-      "mph ft fpm inHg" :
-      "mph",
+      buf.str(),
       Point(statusRegionMargin_, statusRegionMargin_),
       TextReferencePoint ::TOP_LEFT,
       statusTextFont_,
