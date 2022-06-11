@@ -295,5 +295,9 @@ double Settings::audio_volume() const {
   return get_value(&AUDIO_VOLUME);
 }
 
+std::string Settings::speed_units() const {
+  return get_value(&SPEED_UNITS);
+}
+  
 } // namespace airball
 
