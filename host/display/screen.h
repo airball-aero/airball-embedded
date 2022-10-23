@@ -64,6 +64,13 @@ public:
    * @return a Screen.
    */
   static Screen* NewFramebufferScreen();
+
+  /**
+   * Creates a Screen that draws to an ST7789VI connected display.
+   *
+   * @return a Screen.
+   */
+  static Screen* NewST7789VIScreen();
 };
 
 }  // namespace airball

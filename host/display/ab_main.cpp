@@ -20,7 +20,7 @@ static po::options_description add_options() {
       (
           "screen",
           po::value<std::string>(),
-          "screen type (x11, fb)"
+          "screen type (x11, fb, st7789vi)"
       )
       (
           "settings_path",
@@ -80,6 +80,9 @@ int main(int argc, char **argv) {
     } else if (v == "fb") {
       screen = std::unique_ptr<airball::Screen>
           (airball::Screen::NewFramebufferScreen());
+    } else if (v == "st7789vi") {
+      screen = std::unique_ptr<airball::Screen>
+          (airball::Screen::NewST7789VIScreen());
     } else {
       std::cout << "Invalid screen option " << v << std::endl;
       std::cout << options << std::endl;

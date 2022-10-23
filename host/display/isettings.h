@@ -134,6 +134,11 @@ public:
    * @return the speed units, which can be "mph" or "knots".
    */
    virtual std::string speed_units() const = 0;
+
+  /**
+   * @return whether the material displayed on the screen should be rotated 90 degrees.
+   */
+   virtual bool rotate_screen() const = 0;
 };
 
 } // namespace airball
