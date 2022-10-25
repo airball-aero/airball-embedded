@@ -292,6 +292,8 @@ void Display::paint() {
   cairo_pop_group_to_source(screen_->cr());
   cairo_paint(screen_->cr());
   cairo_surface_flush(screen_->cs());
+
+  screen_->flush();
 }
 
 void Display::paintBackground() {

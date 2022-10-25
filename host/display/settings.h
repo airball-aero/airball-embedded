@@ -1,7 +1,6 @@
 #ifndef AIRBALL_SETTINGS_H
 #define AIRBALL_SETTINGS_H
 
-#include <string>
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
 #include "isettings.h"

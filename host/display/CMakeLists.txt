@@ -12,12 +12,16 @@ add_library(airball_display
         http_server.cpp file_write_watch.cpp sound_mixer.cpp sound_layer.cpp
 	sine_layer.cpp sine_envelope_layer.cpp pwm_layer.cpp balance_layer.cpp
 	sound_scheme.cpp stallfence_scheme.cpp flyonspeed_scheme.cpp polyfit.cpp
-	st7789vi_frame_writer.cpp)
-	      
+        st7789vi_frame_writer.cpp)
 target_link_libraries(airball_display
         X11 cairo pthread asound pigpio
         airball_telemetry_client
         ${Boost_LIBRARIES})
+
+add_library(bcm2835_smi_ioctl_defs
+        bcm2835_smi_ioctl_defs.cpp)
+target_include_directories(bcm2835_smi_ioctl_defs PRIVATE
+        /usr/src/linux-headers-5.10.103-v7+/include)
 
 add_executable(sound_mixer
 		sound_mixer_main.cpp)
@@ -37,7 +41,7 @@ target_link_libraries(pwm_layer
 add_executable(ab
         ab_main.cpp)
 target_link_libraries(ab
-        airball_display)
+  airball_display bcm2835_smi_ioctl_defs)
 
 add_executable(replay
         replay_main.cpp)
@@ -65,13 +69,12 @@ target_link_libraries(file_write_watch_test
         airball_display)
 
 add_executable(st7789vi_frame_writer_test
-        st7789vi_frame_writer_test.cpp)
+        st7789vi_frame_writer_test_main.cpp)
 target_link_libraries(st7789vi_frame_writer_test
-        airball_display)
+        airball_display bcm2835_smi_ioctl_defs)
 
 add_executable(fb_fps_test
         fb_fps_test_main.cpp)	
-
 
 add_executable(display_tests
         aerodynamics_test.cpp one_shot_timer_test.cpp delay_timer_test.cpp

@@ -1,14 +1,17 @@
 #include "st7789vi_frame_writer.h"
 
+#include <fcntl.h>
+#include <stdint.h>
+#include <sys/ioctl.h>
 #include <pigpio.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <stdlib.h>
 
-constexpr unsigned char kPinDataBit0    = 8;
-constexpr unsigned char kPinDataCommand = 0;
-constexpr unsigned char kPinWriteEnable = 1;
-constexpr unsigned char kPinReadEnable  = 2;
-constexpr unsigned char kPinReset       = 3;
+#include "bcm2835_smi_ioctl_defs.h"
+
+constexpr unsigned char kPinDataCommand = 26; // RasPi header pin 37
+constexpr unsigned char kPinReset       = 27; // RasPi header pin 13
 
 constexpr unsigned char kPinStateLow  = 0;
 constexpr unsigned char kPinStateHigh = 1;
@@ -19,6 +22,8 @@ constexpr int kDisplayPixels = kDisplayWidth * kDisplayHeight;
 
 static volatile uint32_t barrier;
 
+static int fd;
+
 void delay(uint16_t ms) {
   usleep(1000 * ms);
 }
@@ -27,12 +32,7 @@ void setup_gpio_pins() {
   if (gpioInitialise() < 0) {
     exit(-1);
   }
-  for (int i = 0; i < 16; i++) {
-    gpioSetMode(i + kPinDataBit0, PI_OUTPUT);
-  }
   gpioSetMode(kPinDataCommand, PI_OUTPUT);
-  gpioSetMode(kPinWriteEnable, PI_OUTPUT);
-  gpioSetMode(kPinReadEnable, PI_OUTPUT);
   gpioSetMode(kPinReset, PI_OUTPUT);
 }
 
@@ -50,30 +50,28 @@ void write_single_gpio(unsigned char bit, unsigned char state) {
 }
 
 void write_word(uint16_t b) {
-  uint16_t on = b;
-  uint16_t off = ~b;
-  write_single_gpio(kPinWriteEnable, kPinStateLow);
-  gpioWrite_Bits_0_31_Clear(off << kPinDataBit0);
-  gpioWrite_Bits_0_31_Set(on << kPinDataBit0);
-  barrier = gpioRead_Bits_0_31();
-  write_single_gpio(kPinWriteEnable, kPinStateHigh);
-  barrier = gpioRead_Bits_0_31();  
+  ::write(fd, &b, 2);
 }
 
-void comm_out(uint8_t c)
-{
+void comm_out(uint8_t c) {
   write_single_gpio(kPinDataCommand, kPinStateLow);
   write_word((uint16_t) c);
+  for (int i = 0; i < 100; i++) {}
 }
 
-void data_out(uint16_t d)
-{
+void data_out(uint16_t d) {
   write_single_gpio(kPinDataCommand, kPinStateHigh);
   write_word(d);
+  for (int i = 0; i < 100; i++) {}
 }
 
 void data_out(uint8_t d0, uint8_t d1) {
-  data_out(d0 + d1 << 8);
+  data_out((uint16_t) (d0 + (d1 << 8)));
+}
+
+void fail(const char *msg) {
+  perror(msg);
+  exit(1);
 }
 
 namespace airball {
@@ -84,18 +82,33 @@ st7789vi_frame_writer::~st7789vi_frame_writer() {}
 
 void st7789vi_frame_writer::initialize() {
   setup_gpio_pins();
+
+  fd = open("/dev/smi", O_RDWR);
+  if (fd < 0) fail("cannot open");
+
+  void* settings = bcm2835_smi_ioctl_defs::settings_allocate();
   
-  write_single_gpio(kPinReadEnable, kPinStateHigh);
-  write_single_gpio(kPinWriteEnable, kPinStateLow);
+  int ret = ioctl(fd, bcm2835_smi_ioctl_defs::bcm2835_smi_ioc_get_settings(), settings);
+  if (ret != 0) fail("ioctl 1");
+
+  bcm2835_smi_ioctl_defs::settings_apply(settings);
+      
+  ret = ioctl(fd, bcm2835_smi_ioctl_defs::bcm2835_smi_ioc_write_settings(), settings);
+  if (ret != 0) fail("ioctl 2");
+  
+  bcm2835_smi_ioctl_defs::settings_free(settings);
+
+  delay(100);
+  
   write_single_gpio(kPinReset, kPinStateLow);
   delay(250);
   write_single_gpio(kPinReset, kPinStateHigh);
   delay(250);
-  
+
   comm_out(0x28);   //display off
   comm_out(0x11);  //exit SLEEP mode
   delay(100);
-  
+
   comm_out(0x36);  //MADCTL: memory data access control
   data_out(0x00);
 
@@ -148,15 +161,13 @@ void st7789vi_frame_writer::initialize() {
   delay(10);
   
   comm_out(0x29);  //display ON
-  delay(10);
+  delay(100);
 }    
   
-void st7789vi_frame_writer::write(uint16_t* frame) {
+void st7789vi_frame_writer::write(void* frame) {
   comm_out(0x2C);
   write_single_gpio(kPinDataCommand, kPinStateHigh);
-  for (int i = 0; i < kDisplayPixels; i++) {
-    write_word(frame[i]);
-  }
+  ::write(fd, frame, 320 * 240 * 2);
 }    
   
 }  // namespace airball

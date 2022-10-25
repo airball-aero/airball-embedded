@@ -49,6 +49,11 @@ public:
   virtual cairo_surface_t* cs() const = 0;
 
   /**
+   * Indicate to this Screen that the current image is to be flushed.
+   */
+  virtual void flush() = 0;
+
+  /**
    * Creates a Screen that draws to an X11 window.
    *
    * @param x the X size of the window.

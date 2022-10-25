@@ -1,10 +1,15 @@
+#include <limits.h>
+#include <stdint.h>
+
+#include "boost/program_options.hpp"
+
 #include <functional>
 #include <iostream>
 #include <memory>
-#include "boost/program_options.hpp"
 #include "controller.h"
 #include "fake_telemetry_client.h"
 #include "log_reader_telemetry_client.h"
+
 #include "../telemetry/xbee_telemetry_client.h"
 #include "../telemetry/esp32_telemetry_client.h"
 

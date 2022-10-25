@@ -54,6 +54,8 @@ public:
 
   virtual cairo_surface_t* cs() const override { return cs_; }
 
+  virtual void flush() override {}
+
 private:
   cairo_t *cr_;
   cairo_surface_t *cs_;
@@ -103,6 +105,8 @@ public:
 
   virtual cairo_surface_t* cs() const override { return cs_; }
 
+  virtual void flush() override {}
+  
 private:
   void setUpFb();
 
@@ -193,6 +197,8 @@ public:
 
   virtual cairo_surface_t* cs() const override { return cs_; }
 
+  virtual void flush() override {}
+  
 private:
   st7789vi_frame_writer w_;
   unsigned char* data_;

@@ -1,8 +1,6 @@
 #ifndef ST7789VI_FRAME_WRITER_H
 #define ST7789VI_FRAME_WRITER_H
 
-#include <stdint.h>
-
 namespace airball {
 
 class st7789vi_frame_writer {
@@ -12,7 +10,7 @@ class st7789vi_frame_writer {
 
   void initialize();
   
-  void write(uint16_t* frame);
+  void write(void* frame);
 };
 
 }  // namespace airball
