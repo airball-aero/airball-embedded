@@ -1,7 +1,6 @@
 #ifndef AIRBALL_SETTINGS_H
 #define AIRBALL_SETTINGS_H
 
-#include <string>
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
 #include "isettings.h"
@@ -41,7 +40,8 @@ public:
   std::string sound_scheme() const override;
   double audio_volume() const override;
   std::string speed_units() const override;
-
+  bool rotate_screen() const override;
+  
   /**
    * Load settings from a specified file path.
    */

@@ -24,6 +24,8 @@
 
 #include "screen.h"
 
+#include "st7789vi_frame_writer.h"
+
 #include <cairo/cairo-xlib.h>
 #include <fcntl.h>
 #include <linux/fb.h>
@@ -38,6 +40,7 @@
 #include <X11/Xutil.h>
 #include <iostream>
 #include <math.h>
+#include <thread>
 
 namespace airball {
 
@@ -50,6 +53,8 @@ public:
   virtual cairo_t* cr() const override { return cr_; }
 
   virtual cairo_surface_t* cs() const override { return cs_; }
+
+  virtual void flush() override {}
 
 private:
   cairo_t *cr_;
@@ -100,6 +105,8 @@ public:
 
   virtual cairo_surface_t* cs() const override { return cs_; }
 
+  virtual void flush() override {}
+  
 private:
   void setUpFb();
 
@@ -178,6 +185,56 @@ void FramebufferScreen::tearDownFb() {
   close(fbfd_);
 }
 
+////////////////////////////////////////////////////////////////////////
+
+class ST7789VIScreen : public Screen {
+public:
+  ST7789VIScreen();
+
+  ~ST7789VIScreen();
+
+  virtual cairo_t* cr() const override { return cr_; }
+
+  virtual cairo_surface_t* cs() const override { return cs_; }
+
+  virtual void flush() override {}
+  
+private:
+  st7789vi_frame_writer w_;
+  unsigned char* data_;
+  cairo_surface_t *cs_;
+  cairo_t *cr_;
+  std::thread paint_;
+};
+
+ST7789VIScreen::ST7789VIScreen() {
+  w_.initialize();
+  data_ = (unsigned char*) malloc(sizeof(uint16_t) * 320 * 240 * 50);
+  std::cout << "data_ = " << data_ << std::endl;
+  cs_ = cairo_image_surface_create_for_data(
+      data_,
+      CAIRO_FORMAT_RGB16_565,
+      240,
+      320,
+      cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, 240));
+  cr_ = cairo_create(cs_);
+  std::cout << "cr_ = " << cr_ << std::endl;
+  paint_ = std::thread([&]() {
+		      while (true) {
+			w_.write((uint16_t*) data_);
+			usleep(100 * 1000);
+		      }
+		    });
+}
+
+ST7789VIScreen::~ST7789VIScreen() {
+  cairo_destroy(cr_);
+  cairo_surface_destroy(cs_);
+  free(data_);
+}
+
+////////////////////////////////////////////////////////////////////////  
+  
 Screen* Screen::NewX11Screen(const int x, const int y) {
   return new X11Screen(x, y);
 }
@@ -186,4 +243,8 @@ Screen* Screen::NewFramebufferScreen() {
   return new FramebufferScreen();
 }
 
+Screen* Screen::NewST7789VIScreen() {
+  return new ST7789VIScreen();
+}
+  
 }  // namespace airball

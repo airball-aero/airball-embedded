@@ -257,8 +257,11 @@ void Display::paint() {
   layout();
 
   cairo_push_group(screen_->cr());
-  cairo_translate(screen_->cr(), 0, width_);
-  cairo_rotate(screen_->cr(), -M_PI / 2);
+
+  if (settings_->rotate_screen()) {
+    cairo_translate(screen_->cr(), 0, width_);
+    cairo_rotate(screen_->cr(), -M_PI / 2);
+  }
 
   paintBackground();
 
@@ -289,6 +292,8 @@ void Display::paint() {
   cairo_pop_group_to_source(screen_->cr());
   cairo_paint(screen_->cr());
   cairo_surface_flush(screen_->cs());
+
+  screen_->flush();
 }
 
 void Display::paintBackground() {

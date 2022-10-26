@@ -172,6 +172,11 @@ const Parameter<std::string> SPEED_UNITS = {
     .initial="mph",
 };
 
+const Parameter<bool> ROTATE_SCREEN = {
+    .name="rotate_screen",
+    .initial=false,
+};
+
 Settings::Settings() {
   document_.Parse("{}");
 }
@@ -298,6 +303,10 @@ double Settings::audio_volume() const {
 std::string Settings::speed_units() const {
   return get_value(&SPEED_UNITS);
 }
-  
+
+bool Settings::rotate_screen() const {
+  return get_value(&ROTATE_SCREEN);
+}
+
 } // namespace airball
 
