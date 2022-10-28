@@ -12,6 +12,9 @@
 
 #include "../telemetry/xbee_telemetry_client.h"
 #include "../telemetry/esp32_telemetry_client.h"
+#include "x11_screen.h"
+#include "framebuffer_screen.h"
+#include "st7789vi_screen.h"
 
 namespace po = boost::program_options;
 
@@ -81,13 +84,13 @@ int main(int argc, char **argv) {
     std::string v = vm["screen"].as<std::string>();
     if (v == "x11") {
       screen = std::unique_ptr<airball::Screen>
-          (airball::Screen::NewX11Screen(480, 320));
+          (new airball::X11Screen(480, 320));
     } else if (v == "fb") {
       screen = std::unique_ptr<airball::Screen>
-          (airball::Screen::NewFramebufferScreen());
+          (new airball::FramebufferScreen());
     } else if (v == "st7789vi") {
       screen = std::unique_ptr<airball::Screen>
-          (airball::Screen::NewST7789VIScreen());
+          (new airball::ST7789VIScreen());
     } else {
       std::cout << "Invalid screen option " << v << std::endl;
       std::cout << options << std::endl;

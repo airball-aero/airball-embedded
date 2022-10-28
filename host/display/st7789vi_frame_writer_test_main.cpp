@@ -1,4 +1,5 @@
-#include "st7789vi_frame_writer.h"
+#include "st7789vi_frame_writer_gpio.h"
+#include "st7789vi_frame_writer_smi.h"
 
 #include <unistd.h>
 #include <stdint.h>
@@ -17,30 +18,30 @@ void alternating_bits(uint16_t* data) {
 }
 
 int main(int argc, char**argv) {
-  airball::st7789vi_frame_writer w;
+  airball::st7789vi_frame_writer_smi w;
   w.initialize();
-
+  
   uint16_t data[320 * 240];
   
   while (true) {
     alternating_bits(data);    
-    w.write(data);
+    w.write_frame(data, 320 * 240);
     usleep(500 * 1000);
     
     color(data, 0xffff);
-    w.write(data);
+    w.write_frame(data, 320 * 240);
     usleep(500 * 1000);
     
     color(data, 0xf800);
-    w.write(data);
+    w.write_frame(data, 320 * 240);
     usleep(500 * 1000);  
     
     color(data, 0x07e0);
-    w.write(data);
+    w.write_frame(data, 320 * 240);
     usleep(500 * 1000);
     
     color(data, 0x001f);
-    w.write(data);
+    w.write_frame(data, 320 * 240);
     usleep(500 * 1000);
   }
 }

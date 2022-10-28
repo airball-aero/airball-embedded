@@ -1,29 +1,5 @@
-/**
- * The MIT License (MIT)
- *
- * Copyright (c) 2017-2018, Ihab A.B. Awad
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-#ifndef AIRBALL_SCREEN_H
-#define AIRBALL_SCREEN_H
+#ifndef AIRBALL_ISCREEN_H
+#define AIRBALL_ISCREEN_H
 
 #include <cairo/cairo.h>
 
@@ -41,43 +17,28 @@ public:
   /**
    * @return a Cairo context allowing an application to draw to the Screen.
    */
-  virtual cairo_t* cr() const = 0;
+  cairo_t *cr() const { return cr_; }
 
   /**
    * @return a Cairo surface corresponding to the context cr().
    */
-  virtual cairo_surface_t* cs() const = 0;
+  cairo_surface_t *cs() const { return cs_; }
 
   /**
    * Indicate to this Screen that the current image is to be flushed.
    */
   virtual void flush() = 0;
 
-  /**
-   * Creates a Screen that draws to an X11 window.
-   *
-   * @param x the X size of the window.
-   * @param y the Y size of the window.
-   *
-   * @return a Screen.
-   */
-  static Screen* NewX11Screen(const int x, const int y);
+protected:
+  void set_cr(cairo_t* cr) { cr_ = cr; }
 
-  /**
-   * Creates a Screen that draws to the current Linux frame buffer.
-   *
-   * @return a Screen.
-   */
-  static Screen* NewFramebufferScreen();
+  void set_cs(cairo_surface_t* cs) { cs_ = cs; }
 
-  /**
-   * Creates a Screen that draws to an ST7789VI connected display.
-   *
-   * @return a Screen.
-   */
-  static Screen* NewST7789VIScreen();
+private:
+  cairo_t *cr_;
+  cairo_surface_t *cs_;
 };
 
 }  // namespace airball
 
-#endif //AIRBALL_SCREEN_H
+#endif //AIRBALL_ISCREEN_H
