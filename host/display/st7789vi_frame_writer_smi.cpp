@@ -7,6 +7,8 @@
 
 #include "bcm2835_smi_ioctl_defs.h"
 
+#include <pigpio.h>
+
 namespace airball {
 
 st7789vi_frame_writer_smi::~st7789vi_frame_writer_smi() {

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+constexpr unsigned char kPinBrightPwm   =  2; // raspi header pin  3
 constexpr unsigned char kPinDataCommand = 26; // raspi header pin 37
 constexpr unsigned char kPinReset       = 27; // raspi header pin 13
 
@@ -18,9 +19,12 @@ void st7789vi_frame_writer::initialize() {
     exit(-1);
   }
 
+  gpioSetMode(kPinBrightPwm, PI_OUTPUT);
   gpioSetMode(kPinDataCommand, PI_OUTPUT);
   gpioSetMode(kPinReset, PI_OUTPUT);
 
+  gpioSetPWMfrequency(kPinBrightPwm, 1000);
+  
   delay(100);
 
   write_single_gpio(kPinReset, kPinStateLow);
@@ -136,5 +140,9 @@ void st7789vi_frame_writer::write_frame(uint16_t* frame, int len) {
   write_single_gpio(kPinDataCommand, kPinStateHigh);
   write_data(frame, len);
 }
+
+void st7789vi_frame_writer::set_brightness(uint8_t brightness) {
+  gpioPWM(kPinBrightPwm, brightness);
+}    
   
 }  // namespace airball

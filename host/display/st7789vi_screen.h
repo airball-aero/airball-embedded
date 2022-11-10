@@ -16,8 +16,6 @@ public:
 private:
   st7789vi_frame_writer_smi w_;
   unsigned char *data_;
-  cairo_surface_t *cs_;
-  cairo_t *cr_;
   std::thread paint_;
 };
 

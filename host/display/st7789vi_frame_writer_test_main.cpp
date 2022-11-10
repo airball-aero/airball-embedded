@@ -22,9 +22,36 @@ int main(int argc, char**argv) {
   w.initialize();
   
   uint16_t data[320 * 240];
+
+  color(data, 0xffff);
+  w.write_frame(data, 320 * 240);
+  usleep(500 * 1000);
+
+  while (true) {
+    color(data, 0xf800);
+    w.write_frame(data, 320 * 240);
+    std::cout << "increasing" << std::endl;
+    for (int i = 0; i <= 255; i++) {
+      w.set_brightness(i);
+      std::cout << "." << std::flush;      
+      usleep(10 * 1000);
+    }
+    std::cout << std::endl;
+    usleep(2000 * 1000);
+    color(data, 0x07e0);
+    w.write_frame(data, 320 * 240);
+    std::cout << "decreasing" << std::endl;    
+    for (int i = 255; i >= 0; i--) {
+      w.set_brightness(i);
+      std::cout << "." << std::flush;
+      usleep(10 * 1000);
+    }
+    std::cout << std::endl;    
+    usleep(2000 * 1000);
+  }
   
   while (true) {
-    alternating_bits(data);    
+    alternating_bits(data);
     w.write_frame(data, 320 * 240);
     usleep(500 * 1000);
     
@@ -35,6 +62,7 @@ int main(int argc, char**argv) {
     color(data, 0xf800);
     w.write_frame(data, 320 * 240);
     usleep(500 * 1000);  
+
     
     color(data, 0x07e0);
     w.write_frame(data, 320 * 240);

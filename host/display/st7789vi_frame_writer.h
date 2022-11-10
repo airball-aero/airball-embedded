@@ -15,6 +15,8 @@ class st7789vi_frame_writer {
 
   void write_frame(uint16_t* frame, int len);
 
+  void set_brightness(uint8_t brightness);
+
 protected:
   constexpr static unsigned char kPinStateLow  = 0;
   constexpr static unsigned char kPinStateHigh = 1;
