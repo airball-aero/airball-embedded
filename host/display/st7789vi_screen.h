@@ -1,6 +1,9 @@
+#include <condition_variable>
+#include <mutex>
+#include <thread>
+
 #include "screen.h"
 
-#include <thread>
 #include "st7789vi_frame_writer_smi.h"
 
 namespace airball {
@@ -11,12 +14,14 @@ public:
 
   ~ST7789VIScreen() override;
 
-  virtual void flush() override {}
+  virtual void flush() override;
 
 private:
   st7789vi_frame_writer_smi w_;
   unsigned char *data_;
   std::thread paint_;
+  std::mutex paint_mu_;
+  std::condition_variable paint_cond_;
 };
 
 }  // namespace airball
