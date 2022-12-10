@@ -16,21 +16,24 @@ while ! /usr/sbin/ifconfig wlan0 | /usr/bin/grep -q 'inet ' ; do
     /usr/bin/sleep 0.5
 done
 
-export IP=$(/usr/sbin/ip a l wlan0 | /usr/bin/awk '/inet / {print $2}' | /usr/bin/cut -f1 -d/)
-export FLASK_APP=server
-
 echo -e '\033[?17;0;0c' > /dev/tty1
 echo -e '\033[9;0]'     > /dev/tty1
 
-cd /var/www
-/usr/local/bin/flask run -p 80 -h ${IP} > /dev/null 2>&1 &
-
 /usr/bin/sleep 1
 
+systemctl stop hostapd
+systemctl start hostapd
+
+/var/www/server.py &
+
+if [ -f /var/run/pigpio.pid ]; then
+   rm /var/run/pigpio.pid
+fi
+
 /home/pi/airball-embedded/host/build/display/ab \
-    --screen fb \
+    --screen st7789vi \
     --telemetry esp32 \
-    --audio_device hw:1 \
+    --audio_device hw:0 \
     --settings_path /var/www/airball-settings.json &
 
 exit 0

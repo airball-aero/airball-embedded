@@ -42,6 +42,8 @@ sudo apt-get install \
      hostapd \
      dnsmasq
 
+pip install netifaces
+
 git clone https://github.com/airball-aero/airball-embedded.git
 
 cd airball-embedded/host
@@ -166,3 +168,13 @@ Edit the file `/var/www/app/index.html` and ensure the `<base>` tag reads:
 ```
 <base href="/app/">
 ```
+
+## Raspberry Pi configuration
+
+In `/boot/config.txt` put the lines:
+
+```
+dtoverlay=smi
+dtoverlay=smi-dev
+```
+
