@@ -94,7 +94,7 @@ void status_led_measure() {
 //
 // WiFi base station with sensor readings sent over TCP
 
-#define WIFI_SSID "airball0014"
+#define WIFI_SSID "airball0013"
 #define WIFI_PASS "relativewind"
 #define WIFI_UDP_PORT 30123
 
@@ -105,12 +105,27 @@ IPAddress gateway_ip(192, 168, 4, 1);
 IPAddress subnet_ip_mask(255, 255, 255, 0);
 IPAddress broadcast_ip(192, 168, 4, 255);
 
-void wifi_begin() {
-  WiFi.config(local_ip, gateway_ip, subnet_ip_mask);
+void wifi_station_connected(WiFiEvent_t event, WiFiEventInfo_t info) { }
+
+void wifi_got_ip(WiFiEvent_t event, WiFiEventInfo_t info) { }
+
+void wifi_station_disconnected(WiFiEvent_t event, WiFiEventInfo_t info){
   WiFi.begin(WIFI_SSID, WIFI_PASS);
 }
 
+// See advice on WiFi reconnection here:
+// https://stackoverflow.com/questions/73485702/esp32-event-based-reconnect-to-wifi-on-connection-lost-disconnect
+
+void wifi_begin() {
+  WiFi.config(local_ip, gateway_ip, subnet_ip_mask);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  WiFi.onEvent(wifi_station_connected, ARDUINO_EVENT_WIFI_STA_CONNECTED);
+  WiFi.onEvent(wifi_got_ip, ARDUINO_EVENT_WIFI_STA_GOT_IP);
+  WiFi.onEvent(wifi_station_disconnected, ARDUINO_EVENT_WIFI_STA_DISCONNECTED); 
+}
+
 void wifi_send(const char* sentence) {
+  if (!WiFi.isConnected()) return;
   metrics_wifi_time.mark();
   wifi_udp.beginPacket(broadcast_ip, WIFI_UDP_PORT);
   wifi_udp.write((const uint8_t*) sentence, strlen(sentence));
