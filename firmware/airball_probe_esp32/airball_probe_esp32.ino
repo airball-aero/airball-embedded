@@ -4,15 +4,14 @@
 #include <Adafruit_BMP3XX.h>
 #include <SparkFunTMP102.h>
 #include <SparkFunBQ27441.h>
-#include <WiFi.h>
-#include <WiFiUdp.h>
-#include <WiFiClient.h>
 #include <vector>
 
 #include "calibration_surface.h"
+#include "metric.h"
 #include "probe_calibration.h"
 #include "pressures_to_airdata.h"
-#include "metric.h"
+#include "wifi_access_point.h"
+#include "wifi_client.h"
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -20,7 +19,11 @@
 
 char data_sentence_buffer[1024];
 
-void wifi_send(const char* sentence);
+////////////////////////////////////////////////////////////////////////
+//
+// Wifi interface
+
+WifiInterface* wifi = new WifiAccessPoint();
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -39,12 +42,12 @@ Metric metrics_dpb_time("dpb_time", METRICS_REPORTING_INTERVAL);
 Metric metrics_baro_time("dpb_time", METRICS_REPORTING_INTERVAL);
 Metric metrics_t_time("t_time", METRICS_REPORTING_INTERVAL);
 Metric metrics_battery_time("battery_time", 10);
-Metric metrics_wifi_time("wifi_time", METRICS_REPORTING_INTERVAL);
+// Metric metrics_wifi_time("wifi_time", METRICS_REPORTING_INTERVAL);
 
 void metrics_send_one(Metric& metric) {
   if (metric.ready()) {
     sprintf(data_sentence_buffer, "$M,%s", metric.str());
-    wifi_send(data_sentence_buffer);
+    Serial.println(data_sentence_buffer);
   }
 }
 
@@ -59,7 +62,7 @@ void metrics_send() {
   metrics_send_one(metrics_dpb_time);
   metrics_send_one(metrics_t_time);
   metrics_send_one(metrics_battery_time);
-  metrics_send_one(metrics_wifi_time);
+  // metrics_send_one(metrics_wifi_time);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -88,49 +91,6 @@ void status_led_measure() {
     digitalWrite(STATUS_LED_GPIO, status_led_high ? HIGH : LOW);
     status_led_high = !status_led_high;
   }
-}
-
-////////////////////////////////////////////////////////////////////////
-//
-// WiFi base station with sensor readings sent over TCP
-
-#define WIFI_SSID "airball0013"
-#define WIFI_PASS "relativewind"
-#define WIFI_UDP_PORT 30123
-
-WiFiUDP wifi_udp;
-
-IPAddress local_ip(192, 168, 4, 200);
-IPAddress gateway_ip(192, 168, 4, 1);
-IPAddress subnet_ip_mask(255, 255, 255, 0);
-IPAddress broadcast_ip(192, 168, 4, 255);
-
-void wifi_station_connected(WiFiEvent_t event, WiFiEventInfo_t info) { }
-
-void wifi_got_ip(WiFiEvent_t event, WiFiEventInfo_t info) { }
-
-void wifi_station_disconnected(WiFiEvent_t event, WiFiEventInfo_t info){
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-}
-
-// See advice on WiFi reconnection here:
-// https://stackoverflow.com/questions/73485702/esp32-event-based-reconnect-to-wifi-on-connection-lost-disconnect
-
-void wifi_begin() {
-  WiFi.config(local_ip, gateway_ip, subnet_ip_mask);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-  WiFi.onEvent(wifi_station_connected, ARDUINO_EVENT_WIFI_STA_CONNECTED);
-  WiFi.onEvent(wifi_got_ip, ARDUINO_EVENT_WIFI_STA_GOT_IP);
-  WiFi.onEvent(wifi_station_disconnected, ARDUINO_EVENT_WIFI_STA_DISCONNECTED); 
-}
-
-void wifi_send(const char* sentence) {
-  if (!WiFi.isConnected()) return;
-  metrics_wifi_time.mark();
-  wifi_udp.beginPacket(broadcast_ip, WIFI_UDP_PORT);
-  wifi_udp.write((const uint8_t*) sentence, strlen(sentence));
-  wifi_udp.endPacket();
-  metrics_wifi_time.record();
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -284,7 +244,7 @@ long airdata_count = 0L;
 void airdata_read_and_send() {
   pressures p = pressures_read();
   float baro = barometer_read();
-  float temp = thermometer_read();
+  float temp = 0.0f; // thermometer_read();
   
   int err = 0;
   airdata_triple airdata =
@@ -308,7 +268,7 @@ void airdata_read_and_send() {
 	    p.dp0,
 	    p.dpa,
 	    p.dpb);
-    wifi_send(data_sentence_buffer);
+    wifi->send(data_sentence_buffer);
   }
 
   if (airdata.q < 0) {
@@ -323,7 +283,7 @@ void airdata_read_and_send() {
 	  airdata.q,       // q
 	  baro,            // p TODO(ihab): Correction
 	  temp);           // T
-  wifi_send(data_sentence_buffer);
+  wifi->send(data_sentence_buffer);
 
   airdata_count++;
 }
@@ -339,7 +299,7 @@ void airdata_read_and_send() {
 // How many airdata samples per battery sample?
 #define BATTERY_MEASUREMENT_INTERVAL 50
 
-#define ENABLE_BATTERY_MESSAGES true
+#define ENABLE_BATTERY_MESSAGES false
 
 // Initialize our sensor
 BQ27441 battery_sensor;
@@ -371,7 +331,7 @@ void battery_read_and_send() {
     metrics_battery_time.record();
   }
 
-  wifi_send(data_sentence_buffer);
+  wifi->send(data_sentence_buffer);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -380,7 +340,7 @@ void battery_read_and_send() {
 
 void measurements_begin() {
   metrics_begin();
-  wifi_begin();
+  wifi->begin();
   airdata_begin();
   battery_begin();
 }
@@ -412,6 +372,7 @@ void timer_fired() {
 #define MEASUREMENT_INTERVAL_US 50000 // 50 ms = 20 Hz
 
 void setup() {
+  Serial.begin(115200);
   status_led_begin();
   
   // Initialize the SPI bus
@@ -422,9 +383,6 @@ void setup() {
   Wire.setClock(I2C_BUS_SPEED);
 
   measurements_begin();
-
-  // Create semaphore to inform us when the timer has fired
-  // timerSemaphore = xSemaphoreCreateBinary();
 
   // Use 1st timer of 4 (counted from zero).
   // Set 80 divider for prescaler (see ESP32 Technical Reference Manual
@@ -448,15 +406,15 @@ void loop() {
   if (measure) {
     status_led_measure();
     
-    metrics_looptime.mark();
+    // metrics_looptime.mark();
 
-    metrics_loopint.record();
-    metrics_loopint.mark();
+    // metrics_loopint.record();
+    // metrics_loopint.mark();
 
     measurements_read_and_send();
 
-    metrics_looptime.record();
+    // metrics_looptime.record();
 
-    metrics_send();
+    // metrics_send();
   }
 }
